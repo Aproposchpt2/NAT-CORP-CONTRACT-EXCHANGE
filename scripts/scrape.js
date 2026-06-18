@@ -1,19 +1,51 @@
 'use strict';
-/* CalStateGen — PlanetBids ingest (DIAGNOSTIC v2: why won't the SPA boot headless?).
-   Adds a stealth browser context + captures console errors / page errors so we can see
-   whether it's bot-detection or a boot crash. */
+/* CalStateGen — headless PlanetBids ingest.
+   A stealth browser boots each agency's PUBLIC PlanetBids portal; the Ember app runs its own
+   anonymous bootstrap and fetches the public bid list from papi. We intercept that
+   `/papi/bids?...cid={portal}` JSON response (200, no login) and normalize it → bids.json.
+   Logs the raw shape on first capture so field mapping is verifiable. */
 
 const { chromium } = require('playwright');
+const fs = require('fs');
 
-const PORTALS = [{ id: 17950, agency: 'City of San Diego' }];
+// California agency PlanetBids portals (portalId = cid). Start with proven ones, then expand.
+const PORTALS = [
+  { id: 17950, agency: 'City of San Diego' },
+  { id: 27411, agency: 'Inland Empire Utilities Agency' },
+];
 const PORTAL_URL = id => `https://vendors.planetbids.com/portal/${id}/bo/bo-search`;
+
+function daysUntil(v) {
+  if (!v) return null;
+  const t = typeof v === 'number' ? v : Date.parse(v);
+  if (Number.isNaN(t)) return null;
+  return Math.ceil((t - Date.now()) / 86400000);
+}
+
+function normalize(item, portal) {
+  const a = (item && item.attributes) ? { ...item.attributes, id: item.id } : (item || {});
+  const pick = (...keys) => { for (const k of keys) if (a[k] != null && a[k] !== '') return a[k]; return null; };
+  const close = pick('bidCloseDateTime', 'bidCloseDate', 'closeDateTime', 'closeDate', 'dueDate', 'bidDueDate', 'endDate');
+  const title = pick('title', 'bidName', 'projectTitle', 'name', 'description');
+  if (!title) return null;
+  return {
+    id: String(a.id || pick('bidId', 'id') || Math.random().toString(36).slice(2)),
+    title: String(title),
+    solicitation_no: pick('bidNumber', 'referenceNumber', 'number', 'bidNo') || '',
+    agency: pick('agencyName', 'organization') || portal.agency,
+    bid_type: pick('bidType', 'bidTypeName', 'type', 'category') || '—',
+    close_date: close ? String(close) : '',
+    due_in_days: daysUntil(close),
+    url: PORTAL_URL(portal.id),
+  };
+}
+
+let loggedShape = false;
 
 async function scrapePortal(browser, portal) {
   const ctx = await browser.newContext({
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-    viewport: { width: 1366, height: 900 },
-    locale: 'en-US',
-    timezoneId: 'America/Los_Angeles',
+    viewport: { width: 1366, height: 900 }, locale: 'en-US', timezoneId: 'America/Los_Angeles',
   });
   await ctx.addInitScript(() => {
     Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
@@ -23,36 +55,50 @@ async function scrapePortal(browser, portal) {
   });
   const page = await ctx.newPage();
 
-  const pageErrors = [], consoleErrors = [], apiUrls = [];
-  page.on('pageerror', e => pageErrors.push(String(e.message).slice(0, 200)));
-  page.on('console', m => { if (m.type() === 'error') consoleErrors.push(m.text().slice(0, 200)); });
-  page.on('response', r => { const u = r.url(); if (/api-external\.prod\.planetbids/i.test(u)) apiUrls.push(`${r.status()} ${u.slice(0, 120)}`); });
+  let bidsBody = null;
+  page.on('response', async (r) => {
+    if (!/\/papi\/bids\?/i.test(r.url())) return;
+    try { bidsBody = await r.json(); } catch (e) {}
+  });
 
   try {
     await page.goto(PORTAL_URL(portal.id), { waitUntil: 'networkidle', timeout: 60000 });
-    await page.waitForTimeout(12000);
+    await page.waitForTimeout(8000);
   } catch (e) { console.log(`[${portal.id}] nav: ${e.message}`); }
-
-  let title = '', bodyLen = 0, htmlSnippet = '';
-  try {
-    title = await page.title();
-    bodyLen = await page.evaluate(() => (document.body ? document.body.innerText.length : 0));
-    htmlSnippet = await page.evaluate(() => (document.querySelector('#main, .ember-application, [class*="portal"]') || document.body || {}).innerHTML?.slice(0, 200) || '');
-  } catch (e) {}
   await ctx.close();
 
-  console.log(`[${portal.id}] title="${title}" bodyTextLen=${bodyLen}`);
-  console.log(`[${portal.id}] api-external calls: ${apiUrls.length}`); apiUrls.slice(0, 10).forEach(u => console.log('   ' + u));
-  console.log(`[${portal.id}] pageErrors(${pageErrors.length}):`); pageErrors.slice(0, 6).forEach(e => console.log('   ! ' + e));
-  console.log(`[${portal.id}] consoleErrors(${consoleErrors.length}):`); consoleErrors.slice(0, 6).forEach(e => console.log('   c ' + e));
-  console.log(`[${portal.id}] mount HTML snippet: ${htmlSnippet.replace(/\s+/g, ' ').slice(0, 180)}`);
+  const data = bidsBody && (Array.isArray(bidsBody.data) ? bidsBody.data
+    : Array.isArray(bidsBody.bids) ? bidsBody.bids
+    : Array.isArray(bidsBody) ? bidsBody : []);
+  console.log(`[${portal.id}] ${portal.agency}: bids array = ${data.length}`);
+  if (data[0] && !loggedShape) {
+    loggedShape = true;
+    const it = data[0];
+    console.log(`[shape] keys: ${JSON.stringify(Object.keys(it.attributes || it))}`);
+    console.log(`[shape] sample: ${JSON.stringify(it).slice(0, 700)}`);
+  }
+  return data.map(it => normalize(it, portal)).filter(Boolean);
 }
 
 (async () => {
   const browser = await chromium.launch({ args: ['--disable-blink-features=AutomationControlled', '--no-sandbox'] });
+  let all = [];
   for (const portal of PORTALS) {
-    try { await scrapePortal(browser, portal); } catch (e) { console.log(`[${portal.id}] failed: ${e.message}`); }
+    try { all = all.concat(await scrapePortal(browser, portal)); }
+    catch (e) { console.log(`[${portal.id}] failed: ${e.message}`); }
   }
   await browser.close();
-  console.log('DIAGNOSTIC v2 complete.');
+
+  all = all.filter(b => b.due_in_days === null || b.due_in_days >= 0)
+           .sort((a, b) => (a.due_in_days ?? 9999) - (b.due_in_days ?? 9999));
+
+  const payload = { source: 'planetbids', state: 'CA', scanMode: all.length ? 'live' : 'sample',
+    generatedAt: new Date().toISOString(), count: all.length, bids: all };
+
+  if (all.length) {
+    fs.writeFileSync('bids.json', JSON.stringify(payload, null, 2));
+    console.log(`WROTE bids.json — ${all.length} live CA bids across ${PORTALS.length} portals.`);
+  } else {
+    console.log('No bids captured — bids.json left untouched (check shape log).');
+  }
 })();
