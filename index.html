@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CalStateGen — Win California Government Contracts</title>
+<meta name="description" content="CalStateGen surfaces open California state, county, city, and education contracts — matched to what your business does. No SAM.gov registration required. Launching soon."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a1422;--bg2:#0f2138;--deep:#060d18;
+  --panel:rgba(255,255,255,.045);--panel2:rgba(255,255,255,.02);
+  --line:rgba(180,200,225,.13);--line2:rgba(180,200,225,.26);
+  --white:#eef4fb;--silver:#bccadd;--muted:#8497ad;
+  --gold:#f5b526;--gold2:#e09a18;--sky:#33c5d6;
+  --disp:'Fraunces',Georgia,serif;--body:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--body);color:var(--silver);font-weight:400;line-height:1.6;min-height:100vh;display:flex;flex-direction:column;
+  background:
+    radial-gradient(circle at 15% -8%,rgba(245,181,38,.14),transparent 36%),
+    radial-gradient(circle at 88% 4%,rgba(51,197,214,.10),transparent 34%),
+    linear-gradient(180deg,var(--bg),var(--deep));
+  background-attachment:fixed}
+.shell{position:relative;z-index:1;width:min(1080px,92%);margin:0 auto;flex:1;display:flex;flex-direction:column}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:1.5rem 0;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .mark{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:.82rem;
+  background:linear-gradient(135deg,#fff,var(--gold) 58%,var(--gold2));color:#231703;box-shadow:0 0 28px rgba(245,181,38,.25)}
+.brand .bname{font-family:var(--disp);font-size:1.42rem;font-weight:600;color:var(--white);line-height:1}
+.brand .bsub{font-family:var(--mono);font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);background:rgba(245,181,38,.08);border:1px solid rgba(245,181,38,.26);border-radius:999px;padding:.5rem 1rem}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(245,181,38,.16)}
+
+.hero{flex:1;display:flex;flex-direction:column;justify-content:center;padding:3rem 0;max-width:820px}
+.eyebrow{font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;color:var(--sky);display:inline-flex;align-items:center;gap:.6rem;margin-bottom:1.2rem}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--sky)}
+.hero h1{font-family:var(--disp);font-weight:600;font-size:clamp(2.7rem,6.5vw,4.8rem);line-height:1.02;letter-spacing:-.015em;color:var(--white);margin-bottom:1.2rem}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero-copy{font-size:clamp(1.05rem,1.6vw,1.25rem);color:var(--muted);max-width:60ch;margin-bottom:1.8rem}
+.hero-copy strong{color:var(--silver);font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:2rem}
+.chip{font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;color:var(--silver);border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:.5rem .9rem}
+.note{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.note b{color:var(--gold)}
+
+.foot{border-top:1px solid var(--line);padding:1.4rem 0;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.foot a{color:var(--silver);text-decoration:none}
+.foot a:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark">CS</span>
+      <span>
+        <span class="bname">CalStateGen</span><br>
+        <span class="bsub">California Procurement · Apropos Group LLC</span>
+      </span>
+    </div>
+    <span class="pill">Launching soon</span>
+  </header>
+
+  <section class="hero">
+    <span class="eyebrow">State · County · City · Education Contracts</span>
+    <h1>Win California <em>government contracts.</em></h1>
+    <p class="hero-copy">
+      The biggest procurement market in the country, finally in one place. <strong>CalStateGen</strong> surfaces open
+      <strong>State of California, county, city, school district, and university</strong> bids — matched to what your
+      business actually does. <strong>No SAM.gov registration required.</strong>
+    </p>
+    <div class="chips">
+      <span class="chip">Every open CA bid</span>
+      <span class="chip">Matched to your work</span>
+      <span class="chip">Straight to the solicitation</span>
+      <span class="chip">No SAM.gov needed</span>
+    </div>
+    <p class="note">🛠️ Building now · <b>Live bid board coming soon</b></p>
+  </section>
+
+  <footer class="foot">
+    <span>© <span id="yr"></span> Apropos Group LLC · CalStateGen</span>
+    <span>Sister site to <a href="https://stategen.aproposgroupllc.com">StateGen (Nevada)</a> · Sourced from public California procurement records</span>
+  </footer>
+
+</div>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+</body>
+</html>
