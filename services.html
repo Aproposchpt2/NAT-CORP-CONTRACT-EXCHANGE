@@ -135,6 +135,7 @@ var esc = function(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace
 
 var PROFILE = JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}');
 var SESSION = JSON.parse(localStorage.getItem(SESSION_KEY) || '{}');
+function localToken(){ return 'local-' + Math.random().toString(36).slice(2) + Date.now().toString(36); }
 
 // CA commodity codes sourced from live PlanetBids agency data (9 CA agencies:
 // San Diego, Sacramento, Fresno, Port of Long Beach, San Bernardino, National
@@ -287,11 +288,12 @@ function saveAndGo(){
   PROFILE.state = 'CA';
   localStorage.setItem(PROFILE_KEY, JSON.stringify(PROFILE));
 
-  // Update session
-  if(SESSION.token){
-    SESSION.keywords = names;
-    localStorage.setItem(SESSION_KEY, JSON.stringify(SESSION));
-  }
+  // Update session (mint a local free-tier token if this is a fresh visitor)
+  if(!SESSION.token) SESSION.token = localToken();
+  SESSION.state = 'CA';
+  SESSION.business_name = PROFILE.business_name || SESSION.business_name || '';
+  SESSION.keywords = names;
+  localStorage.setItem(SESSION_KEY, JSON.stringify(SESSION));
 
   // Show loader with messages
   var loader = $('loader');
