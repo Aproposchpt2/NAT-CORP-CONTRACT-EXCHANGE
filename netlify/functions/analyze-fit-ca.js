@@ -42,11 +42,18 @@ Deadline: ${bid.close_date || bid.deadline || 'Not provided'}
 Days remaining: ${bid.due_in_days != null ? bid.due_in_days : bid.daysToClose != null ? bid.daysToClose : 'Unknown'}
 Description: ${(bid.description || 'Not provided').slice(0, 2400)}
 
-Evaluate actual fit. Do not invent credentials, certifications, licenses, bonding, past performance, staffing, or experience. Treat undocumented items as requiring verification.
+Score primarily on actual fit: do this business's NAICS codes, services/keywords, certifications, and past performance genuinely align with what this bid is asking for? Weigh that independent of paperwork the business simply hasn't listed yet.
 
-Apply California-specific checks where relevant: SB/MB, DVBE, prevailing wage, CSLB licensing, bonding, insurance, CARB, CalRecycle, local geography, mandatory pre-bid meetings, and deadline feasibility.
+Do not invent credentials the business hasn't claimed. But do not treat an unlisted, addable item — bonding, insurance, a specific license, prevailing-wage registration — as a confirmed disqualifier either. Profiles built from capability statements routinely omit these even when the business could obtain or already holds them; that omission is not evidence of ineligibility.
 
-A confirmed mandatory eligibility failure must result in NO-GO regardless of capability alignment.
+Reserve NO-GO for a genuinely confirmed mismatch: the business's line of work has nothing to do with what the bid is asking for, a certification or set-aside status the bid EXPLICITLY requires is absent from the profile, or a stated size/geographic standard is clearly violated. If the bid text doesn't mention a requirement (e.g. bonding) at all, do not penalize its absence from the profile.
+
+If the bid's own description states a specific requirement (bonding, a license, a certification) and the profile doesn't show it, that's a REVIEW-level caveat to confirm before bidding, not an automatic NO-GO. List it in "requirements" phrased as something to confirm (e.g. "Confirm bonding capacity — required per solicitation, not found in profile"), not as a stated failure.
+
+Scoring:
+GO (70-100): Services/NAICS/experience genuinely align with the bid's core scope.
+REVIEW (40-69): Partial alignment, or a bid-specific requirement needs confirmation before bidding.
+NO-GO (0-39): Confirmed mismatch as defined above — not merely undocumented paperwork.
 
 Return only the requested structured result.`;
 }
@@ -103,7 +110,7 @@ async function analyzeWithOpenAI(prompt, apiKey) {
       messages: [
         {
           role: 'system',
-          content: 'You produce conservative, evidence-aware California government contract fit analyses. Mandatory eligibility failures override technical fit.',
+          content: 'You produce evidence-aware California government contract fit analyses. Score primarily on genuine service/NAICS/experience alignment. Only a bid-specific requirement that is explicitly stated in the solicitation and confirmed absent from the profile should lower a score to NO-GO — an item simply not mentioned in a capability statement (e.g. bonding, insurance) is not a confirmed failure.',
         },
         { role: 'user', content: prompt },
       ],

@@ -307,6 +307,7 @@ function renderResults(results) {
     +'<div class="hero-agency">'+esc(b.agency||'California State Agency')+(b.solicitation_no?' &middot; '+esc(b.solicitation_no):'')+'</div>'
     +'<div class="hero-score-row"><span class="hero-score" style="color:'+recColor(a.recommendation)+'">'+a.score+'%</span><span class="hero-rec" style="color:'+recColor(a.recommendation)+'">'+esc(a.recommendation)+'</span></div>'
     +'<div class="hero-summary">'+esc(a.summary)+'</div>'
+    +(a.requirements&&a.requirements.length?'<div class="hero-summary"><b style="color:#fff">To confirm:</b> '+a.requirements.map(function(r){return esc(r);}).join(' &middot; ')+'</div>':'')
     +(a.next_steps?'<div class="hero-summary"><b style="color:#fff">Next step:</b> '+esc(a.next_steps)+'</div>':'')
     +'<div class="hero-actions"><a class="btn-ghost" href="/dashboard.html">View on dashboard →</a></div>';
 
