@@ -64,6 +64,7 @@ h2 em{font-style:italic;font-family:var(--subdisp);color:rgba(255,255,255,.45)}
 .step h3{font-family:var(--disp);font-weight:400;font-size:1.25rem;color:#fff;margin-bottom:.5rem}
 .step p{color:rgba(255,255,255,.5);font-size:.9rem;line-height:1.7}
 .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.faq-list{display:grid;gap:12px;max-width:900px;margin:0 auto}
 .card{background:rgba(255,255,255,.05);border:1px solid var(--line);padding:1.8rem}
 .card .ic{font-family:var(--body);font-size:.66rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1rem;display:block}
 .card h3{font-family:var(--disp);font-weight:400;font-size:1.3rem;color:#fff;margin-bottom:.5rem}
@@ -149,10 +150,6 @@ section.visual-landing{
 .nav-links{display:flex;gap:22px;align-items:center}
 .nav-links a{font-family:var(--body);font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6);white-space:nowrap}
 .nav-links a:hover{color:#fff}
-.nav-cta-group{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.btn.outline{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4);font-weight:600;font-size:.74rem;letter-spacing:.15em;text-transform:uppercase;padding:.78rem 1.5rem;border-radius:4px}
-.btn.outline:hover{border-color:#fff;background:rgba(255,255,255,.08);transform:translateY(-2px)}
-.nav .btn.outline{padding:.58rem 1.25rem;font-size:.68rem;letter-spacing:.14em;border-color:rgba(255,255,255,.6)}
 .hero-photo{position:relative;overflow:hidden;border-top:none;background-image:linear-gradient(100deg,rgba(7,15,34,.9) 0%,rgba(11,28,72,.64) 40%,rgba(15,42,106,.24) 68%,rgba(15,42,106,.06) 100%),linear-gradient(to bottom,transparent 84%,rgba(5,10,23,.28)),url('/headquarters.webp');background-size:cover;background-position:center bottom;background-repeat:no-repeat;padding-top:clamp(3.5rem,8vh,6rem);padding-bottom:clamp(7rem,16vh,12rem)}
 .hero-photo .container{max-width:none;width:auto;margin:0;padding-left:clamp(24px,6vw,96px);padding-right:24px}
 .hero-photo .hero-in{max-width:720px}
@@ -161,13 +158,6 @@ section.visual-landing{
 @media(max-width:820px){.nav-links{display:none}.hero-photo{background-image:linear-gradient(to bottom,rgba(7,15,34,.86),rgba(5,10,23,.93)),url('/headquarters.webp');background-position:center}}
 </style></head>
 <body>
-<style>
-.fam-nav{display:flex;align-items:center;gap:10px}
-.btn.famlink{background:rgba(255,255,255,.06);color:rgba(255,255,255,.88);border:1px solid rgba(255,255,255,.32);font-weight:600;font-size:.6rem;letter-spacing:.09em;text-transform:uppercase;padding:.55rem .95rem;border-radius:4px;white-space:nowrap}
-.btn.famlink::after{content:"↗";margin-left:6px;opacity:.55;font-weight:400}
-.btn.famlink:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,.14)}
-@media(max-width:1240px){.fam-nav{display:none}}
-</style>
 <header class="topbar">
 <div class="container nav">
 <a class="brand" href="/">
@@ -175,18 +165,12 @@ section.visual-landing{
 <span><span class="bname">California Government Contract Center</span><br/><span class="bsub">California Procurement · Apropos Group LLC</span></span>
 </a>
 <nav class="nav-links">
-<a href="#how">How It Works</a>
-<a href="#features">What You Get</a>
 <a href="#who">Who It's For</a>
+<a href="#how">How It Works</a>
+<a href="#analyze">Analyze Fit</a>
 <a href="#faq">FAQ</a>
+<a href="#get-started">Get Started</a>
 </nav>
-<div class="nav-cta-group">
-<div class="fam-nav">
-<a class="btn famlink" href="https://capgen.aproposgroupllc.com">Federal Govt. Contracts</a>
-<a class="btn famlink" href="https://nvgovcc.aproposgroupllc.com">Nevada State Contracts</a>
-</div>
-<a class="btn primary" href="/services.html">Build My Dashboard →</a>
-</div>
 </div>
 </header>
 <!-- HERO -->
@@ -238,6 +222,16 @@ section.visual-landing{
 </div>
 </div>
 </section>
+<!-- ANALYZE FIT -->
+<section id="analyze">
+<div class="container">
+<div class="head center"><span class="eyebrow">From discovery to decision</span><h2>Find the opportunity. Then decide whether it's <em>worth pursuing.</em></h2></div>
+<div class="cards">
+<div class="card"><span class="ic">Analyze Fit</span><h3>Understand the opportunity before you commit.</h3><p>Analyze Fit provides a deeper evaluation of a selected contract opportunity. The analysis may consider capability or service alignment, eligibility requirements, certifications, set-aside considerations, scope, deadlines, execution risk, and overall pursuit readiness.</p></div>
+<div class="card"><span class="ic">Professional Support</span><h3>Ready to compete? We can help you prepare.</h3><p>Businesses that decide to pursue an opportunity may request professional Contract Proposal Development services. This is a separate professional service designed to support the proposal-development process when you are ready to compete.</p></div>
+</div>
+</div>
+</section>
 <!-- WHAT YOU GET -->
 <section id="features">
 <div class="container">
@@ -265,8 +259,20 @@ section.visual-landing{
 <div class="actions"><a class="btn primary" href="/services.html">Build My Dashboard →</a></div>
 </div>
 </section>
-<!-- FINAL CTA -->
+<!-- FAQ -->
 <section id="faq">
+<div class="container">
+<div class="head center"><span class="eyebrow">Frequently asked questions</span><h2>Clear answers about access and <em>support.</em></h2></div>
+<div class="faq-list">
+<div class="card"><h3>What can I access for free?</h3><p>California Government Contract Center provides free access to California government contract discovery and opportunity-matching tools. Licensed State Businesses receive matches aligned with a service-based profile for relevant state and local opportunities.</p></div>
+<div class="card"><h3>Do I need a subscription to search for government contracts?</h3><p>No. California Government Contract Center's contract discovery and matching are available without a subscription.</p></div>
+<div class="card"><h3>What is Analyze Fit?</h3><p>Analyze Fit provides a deeper evaluation of a contract opportunity so you can better understand how it aligns with your business before committing significant time and resources.</p></div>
+<div class="card"><h3>What happens when I find a contract I want to pursue?</h3><p>You can review the opportunity, use Analyze Fit to understand the alignment and requirements, and then decide whether to move forward. Businesses that choose to compete may also access professional Contract Proposal Development services.</p></div>
+</div>
+</div>
+</section>
+<!-- GET STARTED -->
+<section id="get-started">
 <div class="container cta-band">
 <div><span class="eyebrow">Get started</span><h2>Never miss a California bid <em>again.</em></h2><p>100% free — no subscription, no trial code, no account required.</p></div>
 <div class="actions"><a class="btn primary" href="/services.html">Build My Dashboard →</a></div>
