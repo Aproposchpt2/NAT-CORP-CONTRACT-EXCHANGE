@@ -1,10 +1,10 @@
 {
   "source": "caleprocure",
   "search_url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
-  "generatedAt": "2026-07-18T05:38:49.424Z",
+  "generatedAt": "2026-07-18T05:51:21.053Z",
   "count": 289,
-  "detail_fetched_count": 47,
-  "flagged_count": 90,
+  "detail_fetched_count": 87,
+  "flagged_count": 82,
   "opportunities": [
     {
       "id": "0000039663",
@@ -367,7 +367,7 @@
       "department": "Department of Fish & Wildlife",
       "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-20T23:59:00",
-      "due_in_days": 4,
+      "due_in_days": 3,
       "status": "Posted",
       "published_date": "06/08/2026 10:00AM PDT",
       "description": "Pursuant to Fish and Game Code Sections 1010 and 1745.1(a), the California Department of Fish and Wildlife (CDFW), serving as an agent of the State of California\n(STATE), offers this Request for Proposal (RFP) to issue a Permit for Excess Vegetation Disposal (Grazing). The proposed vegetation disposal activity will be conducted with non-exclusive rights on approximately 613 acres of real property known as the Yuba Narrows Unit, referred to as the Premises, on the Daugherty Hill Wildlife Area (DHWA), in the Counties of Yuba and Nevada of California.",
@@ -1275,21 +1275,32 @@
       "id": "04A7487",
       "title": "**Certified SB, including MB, or a DVBE Only**  IFPQ 04A7487 Janitorial Services in Contra Costa County",
       "department": "Department of Transportation",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-22T15:00:00",
       "due_in_days": 5,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-details.aspx?Page=AUC_RESP_INQ_DTL&Action=U&AUC_ID=04A7487&AUC_ROUND=1&AUC_VERSION=1&BIDDER_ID=BID0000001&BIDDER_LOC=1&BIDDER_SETID=STATE&BIDDER_TYPE=B&BUSINESS_UNIT=2660",
+      "published_date": "07/03/2026  2:46PM PDT",
+      "description": "The documents and files attached to this solicitation do not have any updates for digital accessibility at this time. Updates will be applied as soon as they are available. For an accessible version of solicitation documents published on this page, please submit a request to ADAdocs@dot.ca.gov or call (833) 713-2922.\n\nContractor shall provide all labor, tools, user materials, cleaning supplies, and equipment necessary to provide janitorial services to Caltrans.",
+      "contact_name": "John Leyva",
+      "contact_email": "john.leyva@dot.ca.gov",
+      "contact_phone": "279/599-2837",
+      "unspsc_codes": [
+        {
+          "code": "76111500",
+          "description": "Cleaning & janitorial service - General building office cleaning & maint"
+        },
+        {
+          "code": "76111501",
+          "description": "Cleaning & janitorial service - General building office cleaning & maint - Building cleaning"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2660/04A7487",
       "concept_tags": [
         "facility_maintenance",
-        "transportation_logistics"
+        "construction_general",
+        "transportation_logistics",
+        "printing_publishing"
       ]
     },
     {
@@ -1481,56 +1492,99 @@
       "id": "0000039598",
       "title": "RFP# CFF 7795 Federal Advocacy",
       "department": "First 5 California",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T10:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
-      "concept_tags": []
+      "published_date": "06/18/2026  8:00AM PDT",
+      "description": "First 5 California (F5CA) invites submissions from qualified organizations to provide federal advocacy services that support F5CA's mission of advancing the healthy development and well-being of children prenatal to age five and their families across California. The selected contractor will serve as a strategic partner to F5CA by providing federal legislative and budget monitoring, policy analysis, relationship-building with California's congressional delegation and relevant federal agencies, development of advocacy materials, and strategic counsel to support the advancement and protection of early childhood policies and investments that benefit children and families in California.\n\nThis work will help elevate California's early childhood priorities in federal legislative, budget, and administrative processes and support the advancement of priorities identified in First 5 California's Strategic Plan and First 5 California's Policy Agenda.",
+      "contact_name": "David Huang",
+      "contact_email": "dhuang@ccfc.ca.gov",
+      "contact_phone": "916/263-1050",
+      "unspsc_codes": [
+        {
+          "code": "93111600",
+          "description": "Politics & Civic Affairs Services - Socio political conditions - Political rep & participation"
+        },
+        {
+          "code": "94132000",
+          "description": "Civic organizations associations & movements - Human rights advocacy & defense association srvcs"
+        },
+        {
+          "code": "93101501",
+          "description": "Politics & Civic Affairs Services - Political systems & institutions - Political bodies - parties representation"
+        },
+        {
+          "code": "93111606",
+          "description": "Politics & Civic Affairs Services - Socio political conditions - Political rep & participation - Pressure groups representation or participation"
+        },
+        {
+          "code": "93141513",
+          "description": "Politics & Civic Affairs Services - Community & social srvcs - Social dev & srvcs - Social justice or legislation"
+        },
+        {
+          "code": "86132216",
+          "description": "Specialized educational services - Educational support services - Educational legislation"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/4250/0000039598",
+      "concept_tags": [
+        "computer_hardware",
+        "construction_general",
+        "legal",
+        "financial_accounting",
+        "security_safety"
+      ]
     },
     {
       "id": "0000039235",
       "title": "IFB # 10218183 - Sonic Drilling",
       "department": "Department of Water Resources",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T11:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "05/11/2026  5:32PM PDT",
+      "description": "geological exploration sonic drilling services on an as-needed basis throughout the State of California.",
+      "contact_name": "Adam DellAringa",
+      "contact_email": "adam.dellaringa@water.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "20111600",
+          "description": "Drilling and Operation Machinery"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/3860/0000039235",
       "concept_tags": []
     },
     {
       "id": "0000039537",
       "title": "WEAPONS FIRING RANGE - IFB 26C650001",
       "department": "Dept of the CA Highway Patrol",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T11:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "published_date": "06/11/2026  6:56AM PDT",
+      "description": "07/16/26: Addendum #3 IFB date change posted.\n\n07/02/26: Addendum #2 IFB date change posted.\n\n06/23/26: Addendum #1 IFB date change posted.\n\nThe Department of California Highway Patrol (CHP) invites prospective bidders to review and respond to the attached Invitation for Bids (IFB) Number 26C650001 entitled, CHP Oceanside Area office Weapons Firing Range Facility Services.  When preparing and submitting a bid, compliance with the instructions found herein is imperative.\n\nDVBE participation requirement has been waived by CHP for this solicitation.",
+      "contact_name": "Zeanna Merilice",
+      "contact_email": "zeanna.merilice@chp.ca.gov",
+      "contact_phone": "916/843-3634",
+      "unspsc_codes": [
+        {
+          "code": "46201102",
+          "description": "Small arms weapons training equipment - Firing or shooting range"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2720/0000039537",
       "concept_tags": [
+        "facility_maintenance",
         "paving_concrete",
+        "legal",
         "security_safety"
       ]
     },
@@ -1538,20 +1592,26 @@
       "id": "0000039748",
       "title": "Protective Clothing and Operational Supplies Rental Services - IFB 26C660001",
       "department": "Dept of the CA Highway Patrol",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T11:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "published_date": "07/09/2026  9:32AM PDT",
+      "description": "The Department of California Highway Patrol (CHP) invites prospective bidders to review and respond to the attached Invitation for Bids (IFB) Number 26C660001 entitled, \"CHP Blythe Area Office - Protective Clothing and Operational Supplies Rental Services\". When preparing and submitting a bid, compliance with the instructions found herein is imperative.\n\nThe DBVE participation requirement has been waived by CHP for this solicitation.",
+      "contact_name": "DiAnna Marler",
+      "contact_email": "dianna.marler@chp.ca.gov",
+      "contact_phone": "916/843-3510",
+      "unspsc_codes": [
+        {
+          "code": "91111501",
+          "description": "Domestic & Personal Assistance Srvcs - Laundering srvcs - Uniform rental"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2720/0000039748",
       "concept_tags": [
         "paving_concrete",
+        "legal",
         "security_safety"
       ]
     },
@@ -1559,56 +1619,78 @@
       "id": "8CA07978",
       "title": "Mold Remediation and Abatement Services",
       "department": "CAL FIRE",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T13:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/02/2026 12:01AM PDT",
+      "description": "Contractor agrees to provide to the California Department of Forestry and Fire Protection       (CAL FIRE) Mold Remediation and Abatement Services, as described herein:\nContractor shall provide all materials, labor, equipment, tools, permits, taxes, transportation, and fees to perform mold remediation and abatement services for the walk-in refrigerator within the Seed Lab Building at CAL FIREs Lewis A. Moran Reforestation Center (LAMRC).",
+      "contact_name": "Timothy Bolton",
+      "contact_email": "timothy.bolton@fire.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "76101604",
+          "description": "Industrial Cleaning - Decontamination services - Hazardous mat's - Mold abatement"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/3540/8CA07978",
       "concept_tags": [
-        "environmental"
+        "construction_general",
+        "environmental",
+        "transportation_logistics",
+        "security_safety"
       ]
     },
     {
       "id": "0000039600",
       "title": "25-300211.FMD.EngineeringStaffing",
       "department": "Department of General Services",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T14:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "06/18/2026  8:00AM PDT",
+      "description": "Bay Region Engineering and Maintenance Staffing Services",
+      "contact_name": "Spencer Morton",
+      "contact_email": "spencer.morton@dgs.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
-      "concept_tags": []
+      "unspsc_codes": [
+        {
+          "code": "80111604",
+          "description": "HR Services - Temporary personnel srvcs - Temporary technician staffing needs"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/7760/0000039600",
+      "concept_tags": [
+        "facility_maintenance",
+        "engineering",
+        "staffing_hr"
+      ]
     },
     {
       "id": "0000039762",
       "title": "25-274966 OFAM Elevator Maintenance and Repair Services",
       "department": "Department of General Services",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T14:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/09/2026  3:28PM PDT",
+      "description": "Elevator Maintenance and Repair Services",
+      "contact_name": "Vanessa D Singh",
+      "contact_email": "vanessa.d.singh@dgs.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "72101506",
+          "description": "Building facility maintenance & repair services - Elevator maintenance services"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/7760/0000039762",
       "concept_tags": [
         "facility_maintenance"
       ]
@@ -1617,19 +1699,25 @@
       "id": "02-2K0004",
       "title": "Bridge replacement and roadway widening.",
       "department": "Department of Transportation",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T14:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "published_date": "06/01/2026 12:00AM PDT",
+      "description": "02-Sha-299-13.5/14.6   ***   SHASTA COUNTY NEAR SHASTA FROM 0.4 MILE WEST OF WHISKEY CREEK ROAD TO 0.1 MILE EAST OF LAKE VISTA OVERLOOK",
+      "contact_name": "Office Engineer",
+      "contact_email": "OCCA@dot.ca.gov",
+      "contact_phone": "916/227-6299",
+      "unspsc_codes": [
+        {
+          "code": "72141000",
+          "description": "Heavy construction services - Highway & road construction services"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2660/02-2K0004",
       "concept_tags": [
+        "paving_concrete",
         "transportation_logistics"
       ]
     },
@@ -1637,162 +1725,258 @@
       "id": "03A4155",
       "title": "03A4155 IFB Heating, Venting, and Air Conditioning (HVAC) Services in Yuba County",
       "department": "Department of Transportation",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T14:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/06/2026 11:50AM PDT",
+      "description": "The documents and files attached to this solicitation do not have any updates for digital accessibility at this time. Updates will be applied as soon as they are available. For an accessible version of solicitation documents published on this page, please submit a request at http://bit.ly/dpac-ada or call (916) 654-2852.",
+      "contact_name": "Angel Cervantes Jr",
+      "contact_email": "angel.cervantes.jr@dot.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "72103300",
+          "description": "Building Facility Infrastructure maintenance & repair services"
+        },
+        {
+          "code": "72151200",
+          "description": "Special trade construction & maintenance services - Heating cooling air condit. HVAC construction & maintenance"
+        },
+        {
+          "code": "72101511",
+          "description": "Building facility maintenance & repair services - Air conditioning installation or maintenance or repair service"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2660/03A4155",
       "concept_tags": [
         "plumbing_hvac",
-        "transportation_logistics"
+        "transportation_logistics",
+        "printing_publishing"
       ]
     },
     {
       "id": "03A4204",
       "title": "Multi-Provider On-Call, As Needed, Daily Rate, Service Contract for Snow Hauling Services in the Counties of Placer and Nevada",
       "department": "Department of Transportation",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T14:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/07/2026  3:43PM PDT",
+      "description": "This is a multiple provider on-call hourly rate service Agreement for snow haul service. Contractor\nshall provide all equipment, tools, materials, labor, travel, and incidentals to haul stockpiled snow\nremoved from state highways in the counties of Placer and Nevada to predetermined storage sites.\n\nThe documents and files attached to this solicitation do not have any updates for digital accessibility at this time. Updates will be applied as soon as they are available. For an accessible version of solicitation documents published on this page, please submit a request at http://bit.ly/dpac-ada or call (916) 654-2852.",
+      "contact_name": "Christian Miller",
+      "contact_email": "christian.miller@dot.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "72102903",
+          "description": "Facility maintenance & repair services - Snow removal services"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2660/03A4204",
       "concept_tags": [
-        "transportation_logistics"
+        "construction_general",
+        "paving_concrete",
+        "transportation_logistics",
+        "printing_publishing"
       ]
     },
     {
       "id": "05A2967",
       "title": "Inductive Loop Detector Replacement and/or Restoration in Santa Barbara, San Luis Obispo, Monterey, San Benito, and Santa Cruz Counties",
       "department": "Department of Transportation",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T14:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/06/2026  3:00PM PDT",
+      "description": "The documents and files attached to this solicitation do not have any updates for digital accessibility at this time. Updates will be applied as soon as they are available. For an accessible version of solicitation documents published on this page, please submit a request to ADAdocs@dot.ca.gov or call (833) 713-2922.\n\nPurpose and Description of Services\n1.\tContractor shall furnish all labor, tools, materials, equipment, travel, work signs, cones and/or traffic control equipment, traffic control flaggers, and incidentals necessary to provide Inductive Loop Detector replacement and/or restoration to an ¿as-built¿ condition services to Caltrans.\n2.\tRefer to the Proposed Form of Agreement, Exhibit A, which is attached to this IFB, for a more complete description of services",
+      "contact_name": "Queenann Herron",
+      "contact_email": "queenann.herron@dot.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "32101519",
+          "description": "Circuit assemblies & radio frequency RF components - Detectors"
+        },
+        {
+          "code": "46161525",
+          "description": "Public safety and control - Traffic control - Vehicle detection loop coil"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2660/05A2967",
       "concept_tags": [
-        "transportation_logistics"
+        "construction_general",
+        "transportation_logistics",
+        "printing_publishing"
       ]
     },
     {
       "id": "06A3313",
       "title": "Fuel Tank Inspection and Repair Services in Fresno, Madera, Kings, Tulare, and Kern Counties",
       "department": "Department of Transportation",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T14:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/08/2026 11:00AM PDT",
+      "description": "The documents and files attached to this solicitation do not have any updates for digital accessibility at this time. Updates will be applied as soon as they are available. For an accessible version of solicitation documents published on this page, please submit a request at http://bit.ly/dpac-ada or call (916) 654-2852.",
+      "contact_name": "Matthew Stephens",
+      "contact_email": "matthew.stephens@dot.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "25172400",
+          "description": "Transportation components & systems - Fuel tanks and systems"
+        },
+        {
+          "code": "24111808",
+          "description": "Material Stores - Tanks cylinders & acces - Fuel storage"
+        },
+        {
+          "code": "25172406",
+          "description": "Fuel tanks and systems - Fuel tanks"
+        },
+        {
+          "code": "25172408",
+          "description": "Fuel tanks and systems - Fuel or oil caps"
+        },
+        {
+          "code": "27112916",
+          "description": "Hand Tools - Dispensing - Liquid fuel dispenser or gasoline pump"
+        },
+        {
+          "code": "78181701",
+          "description": "Transportation repair or maint srvcs - Vehicle maint & repair srvcs - Vehicle fueling srvcs"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2660/06A3313",
       "concept_tags": [
         "facility_maintenance",
-        "transportation_logistics"
+        "transportation_logistics",
+        "printing_publishing"
       ]
     },
     {
       "id": "07A6436",
       "title": "IFB On-Call, and As-Needed Multi-Provider Title and Escrow Services in Los Angeles and Ventura Counties",
       "department": "Department of Transportation",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T14:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/07/2026  2:00PM PDT",
+      "description": "1.This is an on-call and as-needed Service Request based multi-provider Agreement. Contractor agrees to provide to the California Department of Transportation (Caltrans), Title and Escrow services as described herein.\n2.The services shall be performed for properties located in Los Angeles and Ventura Counties.\nThe documents and files attached to this solicitation do not have any updates for digital accessibility at this time. Updates will be applied as soon as they are available. For an accessible version of solicitation documents published on this page, please submit a request to ADAdocs@dot.ca.gov or call (833) 713-2922.",
+      "contact_name": "Gurinder Kaur",
+      "contact_email": "gurinder.kaur@dot.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "80131700",
+          "description": "Real estate services - Escrow & title srvcs"
+        },
+        {
+          "code": "93151518",
+          "description": "Politics & Civic Affairs Services - Public admin & finance srvcs - Public administration - Property title fee"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2660/07A6436",
       "concept_tags": [
-        "transportation_logistics"
+        "construction_general",
+        "transportation_logistics",
+        "printing_publishing"
       ]
     },
     {
       "id": "07A6438",
       "title": "Hazardous Waste Disposal Services in Los Angeles and Ventura",
       "department": "Department of Transportation",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T14:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/08/2026 11:00AM PDT",
+      "description": "The documents and files attached to this solicitation do not have any updates for digital accessibility at this time. Updates will be applied as soon as they are available. For an accessible version of solicitation documents published on this page, please submit a request at http://bit.ly/dpac-ada or call (916) 654-2852.",
+      "contact_name": "Matthew Stephens",
+      "contact_email": "matthew.stephens@dot.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "76121900",
+          "description": "Refuse disposal & treatment - Hazardous waste disposal"
+        },
+        {
+          "code": "76121905",
+          "description": "Refuse disposal & treatment - Hazardous waste disposal - Inorganic hazardous waste collection and disposal"
+        },
+        {
+          "code": "76122404",
+          "description": "Refuse disposal & treatment - Refuse disposal & treatment fees - Hazardous waste fee"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2660/07A6438",
       "concept_tags": [
-        "transportation_logistics"
+        "transportation_logistics",
+        "printing_publishing"
       ]
     },
     {
       "id": "08A3999",
       "title": "Septic Tank Pumping and Disposal Services in San Bernardino and Riverside Counties",
       "department": "Department of Transportation",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T14:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "06/25/2026  9:00AM PDT",
+      "description": "The documents and files attached to this solicitation do not have any updates for digital accessibility at this time. Updates will be applied as soon as they are available. For an accessible version of solicitation documents published on this page, please submit a request at http://bit.ly/dpac-ada or call (916) 654-2852.",
+      "contact_name": "Tiaja Watson",
+      "contact_email": "tiaja.watson@dot.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "47101531",
+          "description": "Water treatment & supply equipment - Septic tanks"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2660/08A3999",
       "concept_tags": [
-        "transportation_logistics"
+        "transportation_logistics",
+        "printing_publishing"
       ]
     },
     {
       "id": "11-431854",
       "title": "Install high tension cable, place HMA, landscape, and electrical.",
       "department": "Department of Transportation",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T14:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "published_date": "06/22/2026 12:00AM PDT",
+      "description": "11-SD-15-R49.9/R50.5   ***   SAN DIEGO COUNTY NEAR FALLBROOK FROM 0.7 MILE TO 0.1 MILE SOUTH OF MISSION ROAD OVERCROSSING",
+      "contact_name": "Office Engineer",
+      "contact_email": "OCCA@dot.ca.gov",
+      "contact_phone": "916/227-6299",
+      "unspsc_codes": [
+        {
+          "code": "72141000",
+          "description": "Heavy construction services - Highway & road construction services"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2660/11-431854",
       "concept_tags": [
         "electrical",
+        "paving_concrete",
         "landscaping",
         "transportation_logistics"
       ]
@@ -1801,19 +1985,25 @@
       "id": "0000039616",
       "title": "IFB 10218721 - Unarmed Security Services",
       "department": "Department of Water Resources",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T14:30:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "06/24/2026  6:00AM PDT",
+      "description": "The Contractor will unarmed security guard services to DWR's Delta Field Division.",
+      "contact_name": "Mao Yang",
+      "contact_email": "mao.yang@water.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "92121504",
+          "description": "Security & personal safety - Guard services - Security guard services"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/3860/0000039616",
       "concept_tags": [
+        "construction_general",
         "security_safety"
       ]
     },
@@ -1821,38 +2011,57 @@
       "id": "26-10016",
       "title": "RFP 26-10016 California Tobacco Prevention Clearinghouse",
       "department": "Department of Public Health",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T15:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "06/11/2026  3:00PM PDT",
+      "description": "***Questions and Answers posted 6/25/26***\n***Addendum 1 posted 6/25/26***\n\nThe California Department of Public Health/California Tobacco Prevention Program (CDPH/CTPP) is seeking one (1) qualified public or private nonprofit agency to operate and maintain a statewide tobacco prevention educational materials clearinghouse. The selected agency will be responsible for creating, managing, and coordinating access to high-quality educational materials that are culturally relevant and appropriate for diverse populations. Key services will include: 1) development and preparation of multilingual prevention materials; 2) technical assistance in the creation and adaptation of educational resources; and 3) management of materials distribution and fulfillment services with local and state tobacco prevention entities. \n\nThe goal of this Solicitation is to ensure that community programs have consistent access to accurate and appropriate resources that strengthen tobacco use prevention education and outreach throughout California. CDPH/CTPP will fund one agency that demonstrates exceptional capability in project management, materials development, cultural responsiveness, and the delivery of technical assistance and training. \n\nProposers must demonstrate an understanding of the role community norms have in influencing behavioral change regarding tobacco use by utilizing evidence-based strategies and innovative approaches to diminish tobacco use among target populations. Educational materials, and resources produced under the contract issued pursuant to this Solicitation must be aligned with the Tobacco Education Research Oversight Committee (TEROC) 2025-2026 Master Plan.",
+      "contact_name": "Kamilah Morton",
+      "contact_email": "kamilah.morton@cdph.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "93131701",
+          "description": "Politics & Civic Affairs Services - Humanitarian aid & relief - Health programs - Anti tobacco campaigns"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/4265/26-10016",
       "concept_tags": [
-        "healthcare"
+        "healthcare",
+        "professional_consulting",
+        "architecture_design",
+        "marketing_pr",
+        "training_education",
+        "transportation_logistics"
       ]
     },
     {
       "id": "0000039724",
       "title": "26RS0014 - Temporary Relief Medical Director services",
       "department": "Dept of Veterans Affairs",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T16:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "published_date": "07/10/2026 11:20AM PDT",
+      "description": "Addendum 1: Q&A\nThe Veterans Home of Redding is need of Temporary Relief Medical Director services.  The details can be found in the Scope of Work (Exhibit A and A-1).  All questions must be submitted via email.  See the timeline in the Notice to Prospective Bidders (IFB Letter).",
+      "contact_name": "Trinh Nguyen",
+      "contact_email": "trinh.nguyen@calvet.ca.gov",
+      "contact_phone": "916/503-8319",
+      "unspsc_codes": [
+        {
+          "code": "85121501",
+          "description": "Medical practice services - Primary care practitioner - physician home visits"
+        },
+        {
+          "code": "85121502",
+          "description": "Medical practice services - Primary care practitioner - physician consultation"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/8955/0000039724",
       "concept_tags": [
         "healthcare"
       ]
@@ -1861,98 +2070,157 @@
       "id": "0000039742",
       "title": "C26730014 Water Testing and Analysis",
       "department": "Dept of Parks & Recreation",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T16:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/08/2026  4:00PM PDT",
+      "description": "**** Samples attached July 17, 2026\n***Addendum #1 Posted July 16, 2026\n\nContractor will provide all labor and Supplies for Park staff to collect water samples for routine pickup by the contractor as specified herein Exhibit A, Attachment 1 Specifications.\n\nLocation of Pick up: San Luis Reservoir Recreation Area,  31426 Gonzaga Rd., Gustine, CA 95322, Merced County.\n\nInstructions to Download Bid Package: Prospective bidders may examine and obtain the bid forms, specifications, by downloading this bid package from this website.\n\nQuestions and Answers: Any discrepancies, Omissions, ambiguities, or conflicts in or among the contract documents or doubts as to meaning shall be brought to the State's attention by emailing your questions to Contracts.CVD@parks.ca.gov NO LATER THAN 2:00pm., Seven (7) calendar days prior to bid opening date.  Answers will be provided by Addendum on this website, and itis the responsibility of the bidders to download any addendum as needed.",
+      "contact_name": "Theresa Acosta",
+      "contact_email": "theresa.acosta@parks.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
-      "concept_tags": []
+      "unspsc_codes": [
+        {
+          "code": "41113319",
+          "description": "Lab monitoring & testing - Liquid & solid & elemental analyzers - Water analyzers"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/3790/0000039742",
+      "concept_tags": [
+        "construction_general",
+        "staffing_hr",
+        "printing_publishing"
+      ]
     },
     {
       "id": "08A4013",
       "title": "*Certified SB/MB/DVBE Only* Window Repair, Replacement, and Maintenance Services in Riverside and San Bernardino Counties",
       "department": "Department of Transportation",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T17:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/09/2026  2:00PM PDT",
+      "description": "The documents and files attached to this solicitation do not have any updates for digital accessibility at this time. Updates will be applied as soon as they are available. For an accessible version of solicitation documents published on this page, please submit a request at http://bit.ly/dpac-ada or call (916) 654-2852.",
+      "contact_name": "Matthew Stephens",
+      "contact_email": "matthew.stephens@dot.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "30171600",
+          "description": "Structural building products - Windows"
+        },
+        {
+          "code": "72152400",
+          "description": "Special trade construction & maint srvcs - Window door installation & erection"
+        },
+        {
+          "code": "72153608",
+          "description": "Special trade construction & maint srvcs - Interior finishing furnishing & remodeling - Window treatment installation"
+        },
+        {
+          "code": "72154032",
+          "description": "Special trade construction & maint srvcs - Specialty building & trades srvcs - Window & door & screening installation & repair"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2660/08A4013",
       "concept_tags": [
         "facility_maintenance",
-        "transportation_logistics"
+        "transportation_logistics",
+        "printing_publishing"
       ]
     },
     {
       "id": "04A7442",
       "title": "**Certified SB, including MB, or a DVBE Only** 04A7442 IFPQ Janitorial Services in Santa Clara County",
       "department": "Department of Transportation",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T17:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/06/2026  3:00PM PDT",
+      "description": "The documents and files attached to this solicitation do not have any updates for digital accessibility at this time. Updates will be applied as soon as they are available. For an accessible version of solicitation documents published on this page, please submit a request at http://bit.ly/dpac-ada or call (916) 654-2852.\n\nContractor shall provide all labor, tools, user materials, cleaning supplies, and equipment\nnecessary to provide janitorial services to Caltrans.",
+      "contact_name": "Angel Cervantes Jr",
+      "contact_email": "angel.cervantes.jr@dot.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "76111500",
+          "description": "Cleaning & janitorial service - General building office cleaning & maint"
+        },
+        {
+          "code": "76111501",
+          "description": "Cleaning & janitorial service - General building office cleaning & maint - Building cleaning"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2660/04A7442",
       "concept_tags": [
         "facility_maintenance",
-        "transportation_logistics"
+        "construction_general",
+        "transportation_logistics",
+        "printing_publishing"
       ]
     },
     {
       "id": "0000039756",
       "title": "WANTED TO LEASE BY THE STATE OF CALIFORNIA - Sacramentoeatedbya",
       "department": "Department of General Services",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-23T17:00:00",
       "due_in_days": 6,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
-      "concept_tags": []
+      "published_date": "07/13/2026  1:57PM PDT",
+      "description": "WANTED TO LEASE\nBY THE STATE OF CALIFORNIA - Sacramento\nThe California Department of Fish and Wildlife is looking for approximately 12,478 nusf of office, lab and storage space in the City of Sacramento plus parking spaces to Code.\nBuildings submitted must: 1) Be Asbestos Hazard-free upon occupancy; 2) Accommodate State plans, specifications, seismic safety, Americans with Disabilities Act (ADA) and applicable codes (California Building Code & Title 24); 3) Be close to public transportation; and 4) Comply with Disabled Veteran Business Enterprise requirements. The State of California will, where cost effective, give preference to those buildings which demonstrate LEED or Energy Star compliance. Please refer to http://energystar.gov for further details.\nThe Department of General Services is a full service commercial real estate provider for the State of California. This advertisement is a solicitation for commercial real estate properties that meet the criteria set forth in this advertisement. This solicitation is not for representing the State in any Real Estate transaction.\nPROPERTY OWNERS OR LEGALLY AUTHORIZED AGENTS REPRESENTING SUCH PROPERTIES MUST RESPOND TO CONTACT PERSON BY RESPONSE DATE WITH ADDRESS, MAP & PROJECT NUMBER BY EMAIL OR IN WRITING TO: RESD, 707 Third Street, 5th Floor, P.O. Box 989052, West Sacramento, CA 95798-9052.\nProject #: 16947\nCity: Sacramento\nCounty: Sacramento\nAgency: California Department of Fish and Wildlife\nType of Space: Office, Lab, Storage\nParking Spaces: per code\nBoundaries:\nNorth: W Elkhorn Blvd\nSouth: W El Camino Ave\nEast: Raley Blvd\nWest: El Centro Rd.\nContact: Blake Richie\nPhone: 279.799.4200\nEmail Address: blake.richie@dgs.ca.gov\nResponse Date: July 23, 2026",
+      "contact_name": "Blake Richie",
+      "contact_email": "blake.richie@dgs.ca.gov",
+      "contact_phone": "279.799.4200",
+      "unspsc_codes": [
+        {
+          "code": "80131500",
+          "description": "Real estate services - Lease & rental of property or building"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/7760/0000039756",
+      "concept_tags": [
+        "construction_general",
+        "environmental",
+        "legal",
+        "transportation_logistics",
+        "security_safety"
+      ]
     },
     {
       "id": "26-090",
       "title": "26-090 After-hours Janitorial services - REDWOOD CITY DMV",
       "department": "Department of Motor Vehicles",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-24T10:00:00",
       "due_in_days": 7,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/02/2026  3:25PM PDT",
+      "description": "26-090 Small Business Bid Solicitation After-hours Janitorial services at the REDWOOD CITY DMV Field Office \n\n\n***You must be a certified small business to participate in this Small Business Bid Solicitation. \n\n\nTotal Estimated Contract cost:  $186,300.00\n\n\nPrevious (current) Contractor:  Quality Cleaning Professionals, LLC\nPrevious (current) After-Hours Janitorial monthly:  $2,127.00 \n\n\nFinal Date for bid submission:  7/24/2026 by 10:00 a.m.",
+      "contact_name": "Cindy Huynh",
+      "contact_email": "cindy.huynh@dmv.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "76111500",
+          "description": "Cleaning & janitorial service - General building office cleaning & maint"
+        },
+        {
+          "code": "76111501",
+          "description": "Cleaning & janitorial service - General building office cleaning & maint - Building cleaning"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2740/26-090",
       "concept_tags": [
         "facility_maintenance",
+        "construction_general",
         "transportation_logistics"
       ]
     },
@@ -1960,20 +2228,26 @@
       "id": "0000039763",
       "title": "CHP Dublin Area office - Evidence Impound Tow and Storage Services - IFB #26C390002",
       "department": "Dept of the CA Highway Patrol",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-24T11:00:00",
       "due_in_days": 7,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "published_date": "07/10/2026  9:31AM PDT",
+      "description": "The Department of California Highway Patrol (CHP) invites prospective bidders to review and respond to the attached Invitation for Bids (IFB) Number #26C390002 entitled, \"CHP Dublin Area office - Evidence Impound Tow and Storage Services.\"  When preparing and submitting a bid, compliance with the instructions found herein is imperative.\n\nThe DVBE participation requirement has been waived by CHP for this solicitation.",
+      "contact_name": "Cameron MacGregor",
+      "contact_email": "cameron.macgregor@chp.ca.gov",
+      "contact_phone": "916/843-3600",
+      "unspsc_codes": [
+        {
+          "code": "78141505",
+          "description": "Transport srvcs - Transport arranging services - Towing service for commercial and private vehicles"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2720/0000039763",
       "concept_tags": [
         "paving_concrete",
+        "legal",
         "security_safety"
       ]
     },
@@ -1981,93 +2255,131 @@
       "id": "0000039707",
       "title": "IFB C5613338-D Real-Time Captioning Services",
       "department": "Dept of Corrections & Rehab",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-24T11:00:00",
       "due_in_days": 7,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/03/2026  3:13PM PDT",
+      "description": "This is a statewide Agreement in which the Contractor shall provide the Department of Corrections and Rehabilitation (CDCR), Board of Parole Hearings (BPH), with Communication Access Real-time Translation (CART) or ¿Real-Time Captioning¿ for Deaf or hearing-impaired incarcerated persons (IPs) to allow them to view captions instantly.",
+      "contact_name": "Maria Crews",
+      "contact_email": "maria.crews@cdcr.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
-      "concept_tags": []
+      "unspsc_codes": [
+        {
+          "code": "52161562",
+          "description": "Consumer Electronics - Audio & Visual Equip - Language Translation Device"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/5225/0000039707",
+      "concept_tags": [
+        "construction_general"
+      ]
     },
     {
       "id": "0000039772",
       "title": "25-269619 FMD Aboveground Storage Tank Services",
       "department": "Department of General Services",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-24T14:00:00",
       "due_in_days": 7,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/10/2026  3:59PM PDT",
+      "description": "Aboveground Storage Tank Services for Central Plant Building #095, located in Sacramento",
+      "contact_name": "Vanessa D Singh",
+      "contact_email": "vanessa.d.singh@dgs.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
-      "concept_tags": []
+      "unspsc_codes": [
+        {
+          "code": "72154056",
+          "description": "Special trade construction & maint srvcs - Specialty building & trades srvcs - Tank maintenance or repair"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/7760/0000039772",
+      "concept_tags": [
+        "construction_general"
+      ]
     },
     {
       "id": "04A7578",
       "title": "IFPQ Certified SB/MB or DVBE only* Demolition and Clearance in Alameda, Contra Costa, Marin, Napa, San Francisco, San Mateo, Santa Clara, Solano, and Sonoma Counties",
       "department": "Department of Transportation",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-24T14:00:00",
       "due_in_days": 7,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "06/26/2026  2:00PM PDT",
+      "description": "Contractor shall provide all labor, tools, parts, equipment, supplies, materials, permits, travel, traffic control, disposal costs, and incidentals necessary to remove and demolish real property structures, abate all hazardous materials to include, but not limited to, friable and non-friable asbestos and lead paint, according to all environmental laws and regulations, and provide any necessary SWPPP/WPCP and implementation of said Plan(s)/Program(s). The work shall be done in accordance with all city and county codes/regulations. The structures are to be demolished and removed out of the State right of way for Caltrans.\n\nThe documents and files attached to this solicitation do not have any updates for digital accessibility at this time. Updates will be applied as soon as they are available. For an accessible version of solicitation documents published on this page, please submit a request to ADAdocs@dot.ca.gov or call (833) 713-2922.",
+      "contact_name": "Cristina Martinez",
+      "contact_email": "cristina.martinez@dot.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "72141510",
+          "description": "Heavy construction services - Land preparation services - Demolition services"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2660/04A7578",
       "concept_tags": [
-        "transportation_logistics"
+        "construction_general",
+        "environmental",
+        "legal",
+        "transportation_logistics",
+        "printing_publishing"
       ]
     },
     {
       "id": "0000039764",
       "title": "CCC Los Pinos Center: Pre-Enrollment Physicals",
       "department": "CA Conservation Corps",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-24T14:00:00",
       "due_in_days": 7,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/10/2026 11:30AM PDT",
+      "description": "Project Type: Pre-Enrollment Physicals\nProject Location: CCC Los Pinos Center - 39251 Ortega Hwy, Lake Elsinore, CA 92530\nProject Manager: Maria Cornejo (951) 609-0302 maria.cornejo@ccc.ca.gov\nContractor agrees to provide all labor, materials, tools and incidentals necessary to provide physical examinations for Corpsmember Trainees of the California Conservation Corps, in accordance with the attached Participant Position Analysis and the Health Questionnaire completed by the Trainee. Please check the attachments for more details.",
+      "contact_name": "Mujib Sultani",
+      "contact_email": "mujib.sultani@ccc.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
-      "concept_tags": []
+      "unspsc_codes": [
+        {
+          "code": "42181500",
+          "description": "General Use Diagnostic assessment exam"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/3340/0000039764",
+      "concept_tags": [
+        "healthcare",
+        "construction_general"
+      ]
     },
     {
       "id": "0000039759",
       "title": "26YS0050 - Bus Rental Services",
       "department": "Dept of Veterans Affairs",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-24T17:00:00",
       "due_in_days": 7,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "published_date": "07/09/2026  3:54PM PDT",
+      "description": "The Contractor shall provide services, as specified, to California Department of Veterans Affairs (CalVet) at the Yountville Veterans Home (Home), located at 190 California Drive, Yountville CA 94599. Services shall include the provision of wheelchair-accessible buses, qualified drivers, dispatch coordination, and all labor, supervision, fuel, insurance, permits, licenses, maintenance, equipment, and other resources necessary to perform services under this Agreement. All transportation services shall comply with applicable federal,",
+      "contact_name": "Mohammad Sharif",
+      "contact_email": "mohammad.sharif@calvet.ca.gov",
+      "contact_phone": "916/503-8012",
+      "unspsc_codes": [
+        {
+          "code": "78111808",
+          "description": "Passenger transportation srvcs - Passenger road transportation - Vehicle rental"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/8955/0000039759",
       "concept_tags": [
+        "facility_maintenance",
+        "construction_general",
         "transportation_logistics"
       ]
     },
@@ -2075,21 +2387,28 @@
       "id": "4CA07673",
       "title": "4CA07673 - Remote Alarm Monitoring, Maintenance, and Repair Services",
       "department": "CAL FIRE",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-24T17:00:00",
       "due_in_days": 7,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "06/30/2026  4:00PM PDT",
+      "description": "Contractor agrees to provide to the California Department of Forestry and Fire Protection (CAL FIRE) Remote Alarm Monitoring, Maintenance, and Repair Services, as described herein:\n\nContractor shall provide all materials, labor, equipment, tools, permits, taxes, transportation, and fees to provide remote alarm monitoring, maintenance, and repair services 24 hours per day, 365 days a year at CAL FIRE Southern Region (CSR) Fresno Headquarters (HQ).",
+      "contact_name": "Antwanette Page",
+      "contact_email": "antwanette.page@fire.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "92121701",
+          "description": "Security & personal safety - Security systems services - Surveillance or alarm maintenance or monitoring"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/3540/4CA07673",
       "concept_tags": [
         "computer_hardware",
         "facility_maintenance",
+        "construction_general",
+        "transportation_logistics",
         "security_safety"
       ]
     },
@@ -2097,18 +2416,23 @@
       "id": "0000039426",
       "title": "IFB 25-0176590 D395 Huts - HVAC System",
       "department": "Department of Technology",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-24T17:00:00",
       "due_in_days": 7,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "published_date": "05/29/2026  2:30PM PDT",
+      "description": "The California Department of Technology (CDT) is inviting responses to this Invitation for Bid entitled: D395 Huts - HVAC System. Click on the \"",
+      "contact_name": "Michelle Snasel",
+      "contact_email": "michelle.snasel@state.ca.gov",
+      "contact_phone": "916/857-9155",
+      "unspsc_codes": [
+        {
+          "code": "72151200",
+          "description": "Special trade construction & maintenance services - Heating cooling air condit. HVAC construction & maintenance"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/7502/0000039426",
       "concept_tags": [
         "plumbing_hvac"
       ]
@@ -2117,38 +2441,51 @@
       "id": "0000039796",
       "title": "RFI - NASPO ValuePoint Commercial Card Services (State of Washington RFI # 03926)",
       "department": "DGS - Statewide Procurement",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Request For Information / RFx",
       "close_date": "2026-07-24T23:59:00",
-      "due_in_days": 8,
+      "due_in_days": 7,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
-      "concept_tags": []
+      "published_date": "07/15/2026  5:02PM PDT",
+      "description": "Request for Information (RFI) issued by the State of Washington (Lead State) in collaboration with the NASPO ValuePoint cooperative purchasing program. See attached document for link to RFI information.\n\nNOTE: This notice is posted for informational purposes only. All communications concerning this RFI must be directed to the Lead State.",
+      "contact_name": "Maureen Seiferling",
+      "contact_email": "maureen.seiferling@dgs.ca.gov",
+      "contact_phone": "279/946-8226",
+      "unspsc_codes": [
+        {
+          "code": "84141602",
+          "description": "Financial Services - Credit agencies - Personal credit agencies - Credit card service providers"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/77601/0000039796",
+      "concept_tags": [
+        "marketing_pr"
+      ]
     },
     {
       "id": "26-098",
       "title": "26-098 ¿ Wednesday and Friday Daytime Janitorial Services at the Hollister DMV Field Office",
       "department": "Department of Motor Vehicles",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-24T23:59:00",
-      "due_in_days": 8,
+      "due_in_days": 7,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "published_date": "07/01/2026  2:44PM PDT",
+      "description": "The awarded contractor agrees to provide the Department of Motor Vehicles (DMV) all labor, tools, materials, equipment, and travel necessary to perform Wednesday and Friday daytime janitorial services at the Hollister DMV field office for the term of this Agreement.\n\nThe anticipated term for this contract is 10/01/2026 - 09/30/2029\n\nMandatory pre-bid conference at 7/15/2026 - 1:00 p.m.\n\nQuestions are due 7/17/2026 at 5:00 p.m. \n\nAnswers will be posted 7/20/2026 by 5:00 p.m. \n\nBids are due 7/24/2026 and must be emailed. \n\nThe current contractor is CBJ Building Maintenance, Inc. dba California¿s Best Janitorial charging $1,860.87 per month for after-hours janitorial services.",
+      "contact_name": "Troy Larsen",
+      "contact_email": "troy.larsen@dmv.ca.gov",
+      "contact_phone": "916/657-8561",
+      "unspsc_codes": [
+        {
+          "code": "76111501",
+          "description": "Cleaning & janitorial service - General building office cleaning & maint - Building cleaning"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2740/26-098",
       "concept_tags": [
         "facility_maintenance",
+        "construction_general",
         "transportation_logistics"
       ]
     },
@@ -2156,20 +2493,26 @@
       "id": "26-097",
       "title": "26-097 ¿ After-Hours Janitorial Services at the Capitola DMV Field Office",
       "department": "Department of Motor Vehicles",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-24T23:59:00",
-      "due_in_days": 8,
+      "due_in_days": 7,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "published_date": "06/30/2026  4:08PM PDT",
+      "description": "The awarded contractor agrees to provide the Department of Motor Vehicles (DMV) all labor, tools, materials, equipment, and travel necessary to perform after-hours janitorial services at the Capitola DMV field office for the term of this Agreement.\n\nThe anticipated term for this contract is 10/01/2026 - 09/30/2029\n\nMandatory pre-bid conference at 7/15/2026 - 10:00 a.m.\n\nQuestions are due 7/17/2026 at 5:00 p.m. \n\nAnswers will be posted 7/20/2026 by 5:00 p.m. \n\nBids are due 7/24/2026 and must be emailed. \n\nThe current contractor is California¿s Best Janitorial charging $2,435.75 per month for after-hours janitorial services.",
+      "contact_name": "Troy Larsen",
+      "contact_email": "troy.larsen@dmv.ca.gov",
+      "contact_phone": "916/657-8561",
+      "unspsc_codes": [
+        {
+          "code": "76111501",
+          "description": "Cleaning & janitorial service - General building office cleaning & maint - Building cleaning"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2740/26-097",
       "concept_tags": [
         "facility_maintenance",
+        "construction_general",
         "transportation_logistics"
       ]
     },
@@ -2177,19 +2520,25 @@
       "id": "26-101",
       "title": "26-101 Telephone Interpreter Services for DMV Driver Safety Offices",
       "department": "Department of Motor Vehicles",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-24T23:59:00",
-      "due_in_days": 8,
+      "due_in_days": 7,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/09/2026  4:36PM PDT",
+      "description": "***Version 2: Questions and Answers - See attached.\n\nAs-Needed Telephone Interpreter for Various Driver Safety Offices\n\n***Bidders principal place of business shall reside within the State of California. -  Read Bidder Qualifications\n\nTotal Estimated Contract cost:  $339,623.00 Term (10/1/2026 - 6/30/2029) \n\n***Previous (current) Contractor:  WorldWide Interpreters, Inc.\n***Previous (current) Rate: $.60 per minute\n\nFinal Date for bid submission:  7/24/2026 by 11:59 p.m.",
+      "contact_name": "Cindy Huynh",
+      "contact_email": "cindy.huynh@dmv.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "90121700",
+          "description": "Travel facilitation - Guides & interpreters"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/2740/26-101",
       "concept_tags": [
+        "construction_general",
         "transportation_logistics",
         "security_safety"
       ]
@@ -2198,40 +2547,56 @@
       "id": "0000039656",
       "title": "C5613342-D - Asbestos, Lead-Based Paint, Mold, and Abatement Services",
       "department": "Dept of Corrections & Rehab",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-25T11:00:00",
       "due_in_days": 8,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "published_date": "06/25/2026 12:00PM PDT",
+      "description": "This is an Agreement in which the Contractor shall provide all labor, including travel and per diem, equipment, tools, parts, supplies, materials, Personal Protective Equipment (PPE), containment/de-containment, mobilization/demobilization, site cleanup, licenses, certifications and/or permits, and bond(s) necessary to provide cleaning, removal, transport and disposal of Asbestos Containing Material (ACM), Lead-Based Paint, Lead-Containing Paint, Mold and Abatement Services for the California Department of Corrections and Rehabilitation (CDCR), Sierra Conservation Center (SCC) located at 5100 O¿Byrne¿s Ferry Rd, Jamestown, CA 95327.",
+      "contact_name": "Nakia Breckenridge",
+      "contact_email": "nakia.breckenridge@cdcr.ca.gov",
+      "contact_phone": "209/944-6556",
+      "unspsc_codes": [
+        {
+          "code": "76101602",
+          "description": "Industrial Cleaning - Decontamination services - Hazardous mat's - Asbestos removal or encapsulation"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/5225/0000039656",
       "concept_tags": [
-        "environmental"
+        "facility_maintenance",
+        "construction_general",
+        "environmental",
+        "financial_accounting"
       ]
     },
     {
       "id": "0000039547",
       "title": "C5613375-D - Landfill, Sampling, Testing and Monitoring Service",
       "department": "Dept of Corrections & Rehab",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-27T11:00:00",
       "due_in_days": 10,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "published_date": "06/11/2026  5:00PM PDT",
+      "description": "The Contractor shall furnish all labor, including travel and per diem, materials, non-consumable supplies, transportation, equipment, and every other item of expense necessary to perform Landfill Sampling, Testing, and Monitoring Services for the California Department of Corrections and Rehabilitation (CDCR), Sierra Conservation Center (SCC), located at 5100 O'Byrne's Ferry Road, Jamestown, California 95327.",
+      "contact_name": "Nakia Breckenridge",
+      "contact_email": "nakia.breckenridge@cdcr.ca.gov",
+      "contact_phone": "209/944-6556",
+      "unspsc_codes": [
+        {
+          "code": "76122003",
+          "description": "Refuse disposal & treatment - Landfill services - Landfill for hazardous waste"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/5225/0000039547",
       "concept_tags": [
         "computer_hardware",
+        "construction_general",
+        "paving_concrete",
+        "transportation_logistics",
         "security_safety"
       ]
     },
@@ -2239,20 +2604,30 @@
       "id": "9CA07979",
       "title": "IFB 9CA07979 - Medical Consultant Services",
       "department": "CAL FIRE",
-      "bid_type": "SOLICITATION",
+      "bid_type": "Sell Event / RFx",
       "close_date": "2026-07-27T14:00:00",
       "due_in_days": 10,
       "status": "Posted",
-      "published_date": null,
-      "description": null,
-      "contact_name": null,
-      "contact_email": null,
+      "published_date": "07/06/2026  2:20PM PDT",
+      "description": "Contractor shall provide occupational medical consultation and technical medical oversight in support of CAL FIRE Medical Assessment Unit (MAU), including the review of occupational medical evaluations and medical clearance determinations for employees subject to occupational medical requirements.\n\nContractor shall consist of an individual physician or a group of physicians (Doctor of Medicine (MD) and/or Doctor of Osteopathic (DO)). If Contractor is a group, a Lead Medical Consultant shall be designated and shall be responsible for coordination of services, quality assurance, consistency of medical determinations, and all deliverables under this Agreement.\n\nContractor shall work in coordination with CAL FIRE MAU management and staff to ensure services are provided in a timely, consistent, and professional manner.\n\nServices are needed to ensure compliance with applicable federal and state laws, regulations, and occupational health standards while supporting CAL FIRE's operational readiness and employee safety.",
+      "contact_name": "Derek Fergason",
+      "contact_email": "derek.fergason@fire.ca.gov",
       "contact_phone": null,
-      "unspsc_codes": [],
-      "detail_fetched": false,
-      "url": "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx",
+      "unspsc_codes": [
+        {
+          "code": "85121502",
+          "description": "Medical practice services - Primary care practitioner - physician consultation"
+        }
+      ],
+      "detail_fetched": true,
+      "url": "https://caleprocure.ca.gov/event/3540/9CA07979",
       "concept_tags": [
-        "healthcare"
+        "it_services",
+        "healthcare",
+        "construction_general",
+        "legal",
+        "staffing_hr",
+        "security_safety"
       ]
     },
     {
@@ -2434,7 +2809,7 @@
       "department": "Department of Motor Vehicles",
       "bid_type": "SOLICITATION",
       "close_date": "2026-07-27T23:59:00",
-      "due_in_days": 11,
+      "due_in_days": 10,
       "status": "Posted",
       "published_date": null,
       "description": null,
@@ -3123,7 +3498,7 @@
       "department": "Department of Motor Vehicles",
       "bid_type": "SOLICITATION",
       "close_date": "2026-07-29T23:59:00",
-      "due_in_days": 13,
+      "due_in_days": 12,
       "status": "Posted",
       "published_date": null,
       "description": null,
@@ -3401,7 +3776,7 @@
       "department": "CSU, Sacramento",
       "bid_type": "SOLICITATION",
       "close_date": "2026-07-31T00:00:00",
-      "due_in_days": 14,
+      "due_in_days": 13,
       "status": "Posted",
       "published_date": null,
       "description": null,
@@ -3867,7 +4242,7 @@
       "department": "Department of General Services",
       "bid_type": "SOLICITATION",
       "close_date": "2026-08-03T23:59:00",
-      "due_in_days": 18,
+      "due_in_days": 17,
       "status": "Posted",
       "published_date": null,
       "description": null,
@@ -5047,7 +5422,7 @@
       "department": "Department of Motor Vehicles",
       "bid_type": "SOLICITATION",
       "close_date": "2026-08-12T23:59:00",
-      "due_in_days": 27,
+      "due_in_days": 26,
       "status": "Posted",
       "published_date": null,
       "description": null,
@@ -5068,7 +5443,7 @@
       "department": "Department of General Services",
       "bid_type": "SOLICITATION",
       "close_date": "2026-08-12T23:59:00",
-      "due_in_days": 27,
+      "due_in_days": 26,
       "status": "Posted",
       "published_date": null,
       "description": null,
@@ -6141,7 +6516,7 @@
       "department": "Department of Public Health",
       "bid_type": "SOLICITATION",
       "close_date": "2027-01-06T01:00:00",
-      "due_in_days": 173,
+      "due_in_days": 172,
       "status": "Posted",
       "published_date": null,
       "description": null,
