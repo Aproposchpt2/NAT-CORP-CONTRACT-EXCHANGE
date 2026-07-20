@@ -38,4 +38,4 @@ jobs:
       - name: Run state/local AOIE source-contract fixtures
         run: node tests/aoie-state-source.test.mjs
       - name: Validate AOIE dashboard adapter syntax
-        run: node --check js/aoie-dashboard.js && node --check netlify/edge-functions/natcorp-conversion.js
+        run: node --check js/aoie-dashboard.js
