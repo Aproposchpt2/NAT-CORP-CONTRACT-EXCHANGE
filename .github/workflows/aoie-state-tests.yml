@@ -5,15 +5,15 @@ on:
     branches:
       - agent/aoie-state-local-shadow
     paths:
-      - 'netlify/functions/_shared/aoie-state-local.mjs'
+      - 'netlify/functions/_shared/aoie-state-*.mjs'
       - 'netlify/functions/aoie-state-shadow.mjs'
-      - 'tests/aoie-state-local.test.mjs'
+      - 'tests/aoie-state-*.test.mjs'
       - '.github/workflows/aoie-state-tests.yml'
   pull_request:
     paths:
-      - 'netlify/functions/_shared/aoie-state-local.mjs'
+      - 'netlify/functions/_shared/aoie-state-*.mjs'
       - 'netlify/functions/aoie-state-shadow.mjs'
-      - 'tests/aoie-state-local.test.mjs'
+      - 'tests/aoie-state-*.test.mjs'
       - '.github/workflows/aoie-state-tests.yml'
   workflow_dispatch:
 
@@ -29,5 +29,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Run state/local AOIE fixture suite
+      - name: Run state/local AOIE matcher fixtures
         run: node tests/aoie-state-local.test.mjs
+      - name: Run state/local AOIE source-contract fixtures
+        run: node tests/aoie-state-source.test.mjs
