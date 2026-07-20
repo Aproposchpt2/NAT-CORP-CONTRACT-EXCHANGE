@@ -2,7 +2,7 @@ name: Ingest OBAS bulletin
 
 on:
   schedule:
-    - cron: '0 13 3 * *'   # ~6am Pacific, 3rd of each month (buffer for DGS posting delay)
+    - cron: '0 13 3 * *'   # ~6am Pacific, 3rd of each month
   workflow_dispatch:        # manual trigger
 
 permissions:
@@ -25,9 +25,10 @@ jobs:
           git add obas.json
           git commit -m "data: refresh OBAS bulletin" || echo "no changes to commit"
           git push
-      - name: Sync into Supabase raw table (state_contract_opportunities)
+      - name: Sync into Supabase and record PDAS acquisition health
         continue-on-error: true
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          PDAS_SOURCE_JOB_ID: CA-OBAS
         run: node scripts/sync-supabase.js
