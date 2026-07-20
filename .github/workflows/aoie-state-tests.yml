@@ -1,0 +1,33 @@
+name: AOIE State Local Tests
+
+on:
+  push:
+    branches:
+      - agent/aoie-state-local-shadow
+    paths:
+      - 'netlify/functions/_shared/aoie-state-local.mjs'
+      - 'netlify/functions/aoie-state-shadow.mjs'
+      - 'tests/aoie-state-local.test.mjs'
+      - '.github/workflows/aoie-state-tests.yml'
+  pull_request:
+    paths:
+      - 'netlify/functions/_shared/aoie-state-local.mjs'
+      - 'netlify/functions/aoie-state-shadow.mjs'
+      - 'tests/aoie-state-local.test.mjs'
+      - '.github/workflows/aoie-state-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Run state/local AOIE fixture suite
+        run: node tests/aoie-state-local.test.mjs
