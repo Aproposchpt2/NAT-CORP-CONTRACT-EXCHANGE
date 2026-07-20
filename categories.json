@@ -1,8 +1,8 @@
 {
   "source": "planetbids",
-  "generatedAt": "2026-07-19T14:28:30.157Z",
-  "count": 8608,
-  "portalsCaptured": 9,
+  "generatedAt": "2026-07-18T15:32:52.279Z",
+  "count": 8821,
+  "portalsCaptured": 10,
   "categories": [
     {
       "categoryId": "1011",
@@ -1825,6 +1825,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0001",
+      "categoryName": "ADA Curb Ramps",
+      "catType": "C"
+    },
+    {
       "categoryId": "65906",
       "categoryName": "ADAPTERS",
       "catType": "C"
@@ -2655,6 +2660,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "112990",
+      "categoryName": "All Other Animal Production",
+      "catType": "C"
+    },
+    {
       "categoryId": "811198",
       "categoryName": "All Other Automotive Repair and Maintenance",
       "catType": "C"
@@ -2695,6 +2705,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "111199",
+      "categoryName": "All Other Grain Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "446199",
       "categoryName": "All Other Health and Personal Care Stores",
       "catType": "C"
@@ -2730,6 +2745,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "212299",
+      "categoryName": "All Other Metal Ore Mining",
+      "catType": "C"
+    },
+    {
       "categoryId": "621999",
       "categoryName": "All Other Miscellaneous Ambulatory Health Care Services",
       "catType": "C"
@@ -2740,6 +2760,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "111998",
+      "categoryName": "All Other Miscellaneous Crop Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "335999",
       "categoryName": "All Other Miscellaneous Electrical Equipment and Component Manufacturing",
       "catType": "C"
@@ -2747,6 +2772,11 @@
     {
       "categoryId": "332999",
       "categoryName": "All Other Miscellaneous Fabricated Metal Product Manufacturing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311999",
+      "categoryName": "All Other Miscellaneous Food Manufacturing",
       "catType": "C"
     },
     {
@@ -2802,6 +2832,11 @@
     {
       "categoryId": "522298",
       "categoryName": "All Other Nondepository Credit Intermediation",
+      "catType": "C"
+    },
+    {
+      "categoryId": "212399",
+      "categoryName": "All Other Nonmetallic Mineral Mining",
       "catType": "C"
     },
     {
@@ -3150,6 +3185,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311611",
+      "categoryName": "Animal (except Poultry) Slaughtering",
+      "catType": "C"
+    },
+    {
       "categoryId": "33524",
       "categoryName": "ANIMAL AND MARINE",
       "catType": "C"
@@ -3265,6 +3305,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "212113",
+      "categoryName": "Anthracite Mining",
+      "catType": "C"
+    },
+    {
       "categoryId": "91811",
       "categoryName": "Anthropology Consulting ",
       "catType": "C"
@@ -3315,6 +3360,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "112910",
+      "categoryName": "Apiculture",
+      "catType": "C"
+    },
+    {
       "categoryId": "47505",
       "categoryName": "Apnea Equipment and Supplies, Sleep",
       "catType": "C"
@@ -3322,6 +3372,11 @@
     {
       "categoryId": "20004",
       "categoryName": "APPAREL FOR COLD WEATHER: HOODS, MITTENS, SCARVES,",
+      "catType": "C"
+    },
+    {
+      "categoryId": "111331",
+      "categoryName": "Apple Orchards",
       "catType": "C"
     },
     {
@@ -3595,6 +3650,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0009",
+      "categoryName": "Asbestos Abatement",
+      "catType": "C"
+    },
+    {
       "categoryId": "34505",
       "categoryName": "ASBESTOS ABATEMENT EQUIPMENT AND SUPPLIES",
       "catType": "C"
@@ -3687,6 +3747,16 @@
     {
       "categoryId": "75525",
       "categoryName": "Asphalt Heaters, Oil Fired",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0062",
+      "categoryName": "Asphalt Overlay",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0076",
+      "categoryName": "Asphalt Overlay _ Fog Sealing",
       "catType": "C"
     },
     {
@@ -4860,6 +4930,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "112111",
+      "categoryName": "Beef Cattle Ranching and Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "424810",
       "categoryName": "Beer and Ale Merchant Wholesalers",
       "catType": "C"
@@ -4877,6 +4952,11 @@
     {
       "categoryId": "52006",
       "categoryName": "Beeswax ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311313",
+      "categoryName": "Beet Sugar Manufacturing",
       "catType": "C"
     },
     {
@@ -4937,6 +5017,11 @@
     {
       "categoryId": "43508",
       "categoryName": "BENZALKONIUM CHLORIDE, USP (AQUEOUS SOLUTION)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "111334",
+      "categoryName": "Berry (except Strawberry) Farming",
       "catType": "C"
     },
     {
@@ -5157,6 +5242,16 @@
     {
       "categoryId": "54502",
       "categoryName": "BITS, DIES, REAMERS, TAPS, ETC. (FOR STATIONARY PO",
+      "catType": "C"
+    },
+    {
+      "categoryId": "212111",
+      "categoryName": "Bituminous Coal and Lignite Surface Mining",
+      "catType": "C"
+    },
+    {
+      "categoryId": "212112",
+      "categoryName": "Bituminous Coal Underground Mining",
       "catType": "C"
     },
     {
@@ -5990,6 +6085,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311230",
+      "categoryName": "Breakfast Cereal Manufacturing",
+      "catType": "C"
+    },
+    {
       "categoryId": "95626",
       "categoryName": "Breakwater Maintenance and Repair",
       "catType": "C"
@@ -6080,6 +6180,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0039",
+      "categoryName": "Bridges/Overpasses",
+      "catType": "C"
+    },
+    {
       "categoryId": "53030",
       "categoryName": "BRIEF CASES, BRIEF BAGS, AND PORTFOLIOS",
       "catType": "C"
@@ -6132,6 +6237,11 @@
     {
       "categoryId": "313210",
       "categoryName": "Broadwoven Fabric Mills",
+      "catType": "C"
+    },
+    {
+      "categoryId": "112320",
+      "categoryName": "Broilers and Other Meat Type Chicken Production",
       "catType": "C"
     },
     {
@@ -6280,6 +6390,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0034",
+      "categoryName": "Building / Metal / Fire Station",
+      "catType": "C"
+    },
+    {
       "categoryId": "95815",
       "categoryName": "Building And Facilities Management Services ",
       "catType": "C"
@@ -6380,6 +6495,16 @@
       "catType": "C"
     },
     {
+      "categoryId": "0016",
+      "categoryName": "Buildings & Grounds/Educational Facilities",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0010",
+      "categoryName": "Buildings and Grounds/Athletic/Sports Facilities",
+      "catType": "C"
+    },
+    {
       "categoryId": "93614",
       "categoryName": "Buildings and Structure Maintenance and Repair (Portable, Modular, Fabricated, Pre-Fabricated, etc.)",
       "catType": "C"
@@ -6390,6 +6515,16 @@
       "catType": "C"
     },
     {
+      "categoryId": "0050",
+      "categoryName": "Buildings Commercial and Private",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0011",
+      "categoryName": "Buildings Rehabilitation/Renovation",
+      "catType": "C"
+    },
+    {
       "categoryId": "15510",
       "categoryName": "Buildings, Large, Prefabricated (Over 500 Sq.Ft.)",
       "catType": "C"
@@ -6397,6 +6532,11 @@
     {
       "categoryId": "91819",
       "categoryName": "Buildings, Structures And Components Consulting",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0012",
+      "categoryName": "Buildings/Public",
       "catType": "C"
     },
     {
@@ -7010,6 +7150,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311312",
+      "categoryName": "Cane Sugar Refining",
+      "catType": "C"
+    },
+    {
       "categoryId": "47017",
       "categoryName": "Canes, Crutches, Gait Trainers, Walkers, etc. ",
       "catType": "C"
@@ -7610,6 +7755,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "112112",
+      "categoryName": "Cattle Feedlots",
+      "catType": "C"
+    },
+    {
       "categoryId": "04010",
       "categoryName": "Cattle, Beef (Breeding Stock) ",
       "catType": "C"
@@ -7930,6 +8080,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311513",
+      "categoryName": "Cheese Manufacturing",
+      "catType": "C"
+    },
+    {
       "categoryId": "18034",
       "categoryName": "CHELATING AND SEQUESTERING AGENTS (EXCEPT PHOSPHAT",
       "catType": "C"
@@ -8090,6 +8245,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "112310",
+      "categoryName": "Chicken Egg Production",
+      "catType": "C"
+    },
+    {
       "categoryId": "04021",
       "categoryName": "Chickens",
       "catType": "C"
@@ -8220,6 +8380,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311320",
+      "categoryName": "Chocolate and Confectionery Manufacturing from Cacao Beans",
+      "catType": "C"
+    },
+    {
       "categoryId": "49311",
       "categoryName": "CHROMATOGRAPHS, GAS",
       "catType": "C"
@@ -8280,6 +8445,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "111320",
+      "categoryName": "Citrus (except Orange) Groves",
+      "catType": "C"
+    },
+    {
       "categoryId": "94431",
       "categoryName": "Citrus Fruit Farming",
       "catType": "C"
@@ -8322,6 +8492,11 @@
     {
       "categoryId": "89013",
       "categoryName": "CLARIFIERS AND SETTLERS (SEPARATORS)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "212325",
+      "categoryName": "Clay and Ceramic and Refractory Minerals Mining",
       "catType": "C"
     },
     {
@@ -8842,6 +9017,11 @@
     {
       "categoryId": "96112",
       "categoryName": "Codification Of Government Codes (To Include Code Conversion And Code Maintenance Services) ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311920",
+      "categoryName": "Coffee and Tea Manufacturing",
       "catType": "C"
     },
     {
@@ -9780,6 +9960,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0068",
+      "categoryName": "Concrete Pavement Removal",
+      "catType": "C"
+    },
+    {
       "categoryId": "21025",
       "categoryName": "CONCRETE PILINGS",
       "catType": "C"
@@ -9792,6 +9977,11 @@
     {
       "categoryId": "91008",
       "categoryName": "Concrete Raising And Undersealing Services ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0067",
+      "categoryName": "Concrete Repair",
       "catType": "C"
     },
     {
@@ -9830,6 +10020,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0066",
+      "categoryName": "Concrete Walkway",
+      "catType": "C"
+    },
+    {
       "categoryId": "15015",
       "categoryName": "CONCRETE, POLYMER, ALL TYPES",
       "catType": "C"
@@ -9837,6 +10032,11 @@
     {
       "categoryId": "75030",
       "categoryName": "Concrete, Precast",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0002",
+      "categoryName": "Concrete/Formed/Flatwork/Foundation",
       "catType": "C"
     },
     {
@@ -9915,6 +10115,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311330",
+      "categoryName": "Confectionery Manufacturing from Purchased Chocolate",
+      "catType": "C"
+    },
+    {
       "categoryId": "424450",
       "categoryName": "Confectionery Merchant Wholesalers",
       "catType": "C"
@@ -9965,6 +10170,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0003",
+      "categoryName": "Construction",
+      "catType": "C"
+    },
+    {
       "categoryId": "91225",
       "categoryName": "Construction , Golf Course",
       "catType": "C"
@@ -10005,8 +10215,23 @@
       "catType": "C"
     },
     {
+      "categoryId": "0052",
+      "categoryName": "Construction Manager at Risk",
+      "catType": "C"
+    },
+    {
+      "categoryId": "212321",
+      "categoryName": "Construction Sand and Gravel Mining",
+      "catType": "C"
+    },
+    {
       "categoryId": "91223",
       "categoryName": "Construction Services (General-Not Streets)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0035",
+      "categoryName": "Construction Services, General",
       "catType": "C"
     },
     {
@@ -10625,6 +10850,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311821",
+      "categoryName": "Cookie and Cracker Manufacturing",
+      "catType": "C"
+    },
+    {
       "categoryId": "24024",
       "categoryName": "Cookware, Pots and Pans",
       "catType": "C"
@@ -10697,6 +10927,11 @@
     {
       "categoryId": "83025",
       "categoryName": "COPPER LINED TANKS",
+      "catType": "C"
+    },
+    {
+      "categoryId": "212234",
+      "categoryName": "Copper Ore and Nickel Ore Mining",
       "catType": "C"
     },
     {
@@ -10855,6 +11090,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "111150",
+      "categoryName": "Corn Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "37012",
       "categoryName": "Corn Machinery",
       "catType": "C"
@@ -10967,6 +11207,16 @@
     {
       "categoryId": "94436",
       "categoryName": "Cotton Farming",
+      "catType": "C"
+    },
+    {
+      "categoryId": "111920",
+      "categoryName": "Cotton Farming",
+      "catType": "C"
+    },
+    {
+      "categoryId": "115111",
+      "categoryName": "Cotton Ginning",
       "catType": "C"
     },
     {
@@ -11175,6 +11425,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0030",
+      "categoryName": "Crack Sealing Repair and/or Maintenance",
+      "catType": "C"
+    },
+    {
       "categoryId": "74545",
       "categoryName": "Cracked Fuel Oil",
       "catType": "C"
@@ -11275,6 +11530,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311512",
+      "categoryName": "Creamery Butter Manufacturing",
+      "catType": "C"
+    },
+    {
       "categoryId": "42513",
       "categoryName": "CREDENZA UNIT, METAL",
       "catType": "C"
@@ -11335,6 +11595,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "115113",
+      "categoryName": "Crop Harvesting, Primarily by Machine",
+      "catType": "C"
+    },
+    {
       "categoryId": "65936",
       "categoryName": "CROSSES, CROSSOVERS, CURVES",
       "catType": "C"
@@ -11382,6 +11647,16 @@
     {
       "categoryId": "76012",
       "categoryName": "Cruise Control Units, Low Speed, For Road Equipment ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "212313",
+      "categoryName": "Crushed and Broken Granite Mining and Quarrying",
+      "catType": "C"
+    },
+    {
+      "categoryId": "212312",
+      "categoryName": "Crushed and Broken Limestone Mining and Quarrying",
       "catType": "C"
     },
     {
@@ -11467,6 +11742,16 @@
     {
       "categoryId": "21029",
       "categoryName": "CULVERTS, CORRUGATED METAL",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0040",
+      "categoryName": "Culverts, Waterways, Stormwater Channels",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0019",
+      "categoryName": "Curbs",
       "catType": "C"
     },
     {
@@ -11647,6 +11932,11 @@
     {
       "categoryId": "76013",
       "categoryName": "CYLINDERS, HYDRAULIC",
+      "catType": "C"
+    },
+    {
+      "categoryId": "112120",
+      "categoryName": "Dairy Cattle and Milk Production",
       "catType": "C"
     },
     {
@@ -11932,6 +12222,11 @@
     {
       "categoryId": "91240",
       "categoryName": "Demolition Services, Construction services, general",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0013",
+      "categoryName": "Demolition/Building Removal/Hauling/Salvage",
       "catType": "C"
     },
     {
@@ -12297,6 +12592,11 @@
     {
       "categoryId": "96625",
       "categoryName": "DIGITAL PRINTING FROM AN INK JET PLOTTER",
+      "catType": "C"
+    },
+    {
+      "categoryId": "212311",
+      "categoryName": "Dimension Stone Mining and Quarrying",
       "catType": "C"
     },
     {
@@ -12950,6 +13250,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311423",
+      "categoryName": "Dried and Dehydrated Food Manufacturing",
+      "catType": "C"
+    },
+    {
       "categoryId": "76527",
       "categoryName": "DRILL STEEL AND ROCK BITS",
       "catType": "C"
@@ -13185,8 +13490,23 @@
       "catType": "C"
     },
     {
+      "categoryId": "311823",
+      "categoryName": "Dry Pasta Manufacturing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "111130",
+      "categoryName": "Dry Pea and Bean Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "48551",
       "categoryName": "Dry Powder Processing Machine (For the Production and Packaging of Powder Soap)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311514",
+      "categoryName": "Dry, Condensed, and Evaporated Dairy Product Manufacturing",
       "catType": "C"
     },
     {
@@ -13217,6 +13537,11 @@
     {
       "categoryId": "238310",
       "categoryName": "Drywall and Insulation Contractors",
+      "catType": "C"
+    },
+    {
+      "categoryId": "112130",
+      "categoryName": "Dual-Purpose Cattle Ranching and Farming",
       "catType": "C"
     },
     {
@@ -13655,6 +13980,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0041",
+      "categoryName": "Electrical and Controls",
+      "catType": "C"
+    },
+    {
       "categoryId": "423620",
       "categoryName": "Electrical and Electronic Appliance, Television, and Radio Set Merchant Wholesalers",
       "catType": "C"
@@ -13695,6 +14025,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0053",
+      "categoryName": "Electrical Equipment & Supplies",
+      "catType": "C"
+    },
+    {
       "categoryId": "28500",
       "categoryName": "Electrical Equipment And Supplies (Except Cable And Wire)",
       "catType": "C"
@@ -13707,6 +14042,11 @@
     {
       "categoryId": "28598",
       "categoryName": "ELECTRICAL EQUIPMENT AND SUPPLIES, JIT CONTRACTS",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0042",
+      "categoryName": "Electrical Installation/Construction",
       "catType": "C"
     },
     {
@@ -13950,6 +14290,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0043",
+      "categoryName": "Elevators, Escalators & Moving Walks",
+      "catType": "C"
+    },
+    {
       "categoryId": "29500",
       "categoryName": "Elevators, Escalators, And Moving Walks (Building Type)",
       "catType": "C"
@@ -14072,6 +14417,11 @@
     {
       "categoryId": "72517",
       "categoryName": "EMULATORS, TELECOMMUNICATION",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0077",
+      "categoryName": "Emulsion",
       "catType": "C"
     },
     {
@@ -14560,6 +14910,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0078",
+      "categoryName": "Erosion Control/Slope, Bank Stabilization",
+      "catType": "C"
+    },
+    {
       "categoryId": "91020",
       "categoryName": "Escalator And Moving Walkway, Installation, Maintenance And Repair ",
       "catType": "C"
@@ -14637,6 +14992,11 @@
     {
       "categoryId": "41030",
       "categoryName": "EXAMINING ROOM SUITES (NOT OPTICAL OR AUDITORY)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0069",
+      "categoryName": "Excavation",
       "catType": "C"
     },
     {
@@ -14950,8 +15310,18 @@
       "catType": "C"
     },
     {
+      "categoryId": "115115",
+      "categoryName": "Farm Labor Contractors and Crew Leaders",
+      "catType": "C"
+    },
+    {
       "categoryId": "333111",
       "categoryName": "Farm Machinery and Equipment Manufacturing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "115116",
+      "categoryName": "Farm Management Services",
       "catType": "C"
     },
     {
@@ -15027,6 +15397,11 @@
     {
       "categoryId": "32526",
       "categoryName": "Fat, Feed Grade ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311225",
+      "categoryName": "Fats and Oils Refining and Blending",
       "catType": "C"
     },
     {
@@ -15192,6 +15567,11 @@
     {
       "categoryId": "33032",
       "categoryName": "Fencing, Wrought Iron (Including Components) ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0014",
+      "categoryName": "Fencing/Guardrails/Handrails",
       "catType": "C"
     },
     {
@@ -15700,6 +16080,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0100",
+      "categoryName": "Financial Auditing Services",
+      "catType": "C"
+    },
+    {
       "categoryId": "94649",
       "categoryName": "Financial Services",
       "catType": "C"
@@ -15717,6 +16102,16 @@
     {
       "categoryId": "611610",
       "categoryName": "Fine Arts Schools",
+      "catType": "C"
+    },
+    {
+      "categoryId": "112511",
+      "categoryName": "Finfish Farming and Fish Hatcheries",
+      "catType": "C"
+    },
+    {
+      "categoryId": "114111",
+      "categoryName": "Finfish Fishing",
       "catType": "C"
     },
     {
@@ -15827,6 +16222,11 @@
     {
       "categoryId": "34032",
       "categoryName": "FIRE HOSE CARTS, DRYERS, RACKS, REELS AND ROLLERS,",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0044",
+      "categoryName": "Fire Hydrant",
       "catType": "C"
     },
     {
@@ -16045,6 +16445,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0056",
+      "categoryName": "Fittings and Valves",
+      "catType": "C"
+    },
+    {
       "categoryId": "89529",
       "categoryName": "FITTINGS FOR WELDING EQUIPMENT",
       "catType": "C"
@@ -16167,6 +16572,11 @@
     {
       "categoryId": "327211",
       "categoryName": "Flat Glass Manufacturing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311930",
+      "categoryName": "Flavoring Syrup and Concentrate Manufacturing",
       "catType": "C"
     },
     {
@@ -16300,6 +16710,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0017",
+      "categoryName": "Flooring/Carpeting",
+      "catType": "C"
+    },
+    {
       "categoryId": "55735",
       "categoryName": "Floors, Matting ",
       "catType": "C"
@@ -16320,8 +16735,23 @@
       "catType": "C"
     },
     {
+      "categoryId": "111422",
+      "categoryName": "Floriculture Production",
+      "catType": "C"
+    },
+    {
       "categoryId": "453110",
       "categoryName": "Florists",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311211",
+      "categoryName": "Flour Milling",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311822",
+      "categoryName": "Flour Mixes and Dough Manufacturing from Purchased Flour",
       "catType": "C"
     },
     {
@@ -16352,6 +16782,11 @@
     {
       "categoryId": "82065",
       "categoryName": "Flue Gas Desulfurization System Equipment ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311511",
+      "categoryName": "Fluid Milk Manufacturing",
       "catType": "C"
     },
     {
@@ -16670,6 +17105,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "113210",
+      "categoryName": "Forest Nurseries and Gathering of Forest Products",
+      "catType": "C"
+    },
+    {
       "categoryId": "94743",
       "categoryName": "Forest Nursery and Gathering Services ",
       "catType": "C"
@@ -16855,6 +17295,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311712",
+      "categoryName": "Fresh and Frozen Seafood Processing",
+      "catType": "C"
+    },
+    {
       "categoryId": "424480",
       "categoryName": "Fresh Fruit and Vegetable Merchant Wholesalers",
       "catType": "C"
@@ -16865,8 +17310,33 @@
       "catType": "C"
     },
     {
+      "categoryId": "311813",
+      "categoryName": "Frozen Cakes, Pies, and Other Pastries Manufacturing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311411",
+      "categoryName": "Frozen Fruit, Juice, and Vegetable Manufacturing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311412",
+      "categoryName": "Frozen Specialty Food Manufacturing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "111336",
+      "categoryName": "Fruit and Tree Nut Combination Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "94442",
       "categoryName": "Fruit and Tree Nut Farming (Not Citrus)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311421",
+      "categoryName": "Fruit and Vegetable Canning",
       "catType": "C"
     },
     {
@@ -17002,6 +17472,11 @@
     {
       "categoryId": "04048",
       "categoryName": "Fur Bearing Animals (Not Otherwise Classified)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "112930",
+      "categoryName": "Fur-Bearing Animal and Rabbit Production",
       "catType": "C"
     },
     {
@@ -17600,6 +18075,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0057",
+      "categoryName": "Generator Replacement",
+      "catType": "C"
+    },
+    {
       "categoryId": "05534",
       "categoryName": "GENERATORS, 110V (ATTACHED TO AND OPERATED BY AUTO",
       "catType": "C"
@@ -17910,6 +18390,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "112420",
+      "categoryName": "Goat Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "04050",
       "categoryName": "Goats ",
       "catType": "C"
@@ -17917,6 +18402,11 @@
     {
       "categoryId": "92512",
       "categoryName": "GOETECHNICAL-SOILS (SEE 907-42)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "212221",
+      "categoryName": "Gold Ore Mining",
       "catType": "C"
     },
     {
@@ -17962,6 +18452,11 @@
     {
       "categoryId": "67013",
       "categoryName": "GRAB BARS",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0032",
+      "categoryName": "Grade and Surface",
       "catType": "C"
     },
     {
@@ -18037,6 +18532,11 @@
     {
       "categoryId": "33542",
       "categoryName": "GRANULATED OR PELLETIZED COMMERCIAL",
+      "catType": "C"
+    },
+    {
+      "categoryId": "111332",
+      "categoryName": "Grape Vineyards",
       "catType": "C"
     },
     {
@@ -18250,6 +18750,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0070",
+      "categoryName": "Grubbing & Cleaning",
+      "catType": "C"
+    },
+    {
       "categoryId": "32536",
       "categoryName": "Guar Products ",
       "catType": "C"
@@ -18267,6 +18772,16 @@
     {
       "categoryId": "57028",
       "categoryName": "GUARD RAILS AND ACCESSORIES: BOLTS, POSTS, TERMINA",
+      "catType": "C"
+    },
+    {
+      "categoryId": "336414",
+      "categoryName": "Guided Missile and Space Vehicle Manufacturing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "336415",
+      "categoryName": "Guided Missile and Space Vehicle Propulsion Unit and Propulsion Unit Parts Manufacturing",
       "catType": "C"
     },
     {
@@ -18615,6 +19130,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "111940",
+      "categoryName": "Hay Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "02242",
       "categoryName": "Haying Equipment Parts",
       "catType": "C"
@@ -18910,6 +19430,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0015",
+      "categoryName": "Heating, Ventilation, Air Conditioning (HVAC)",
+      "catType": "C"
+    },
+    {
       "categoryId": "90644",
       "categoryName": "Heating; Ventilating; Air Conditioning - Architectural Services ",
       "catType": "C"
@@ -19070,6 +19595,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "112210",
+      "categoryName": "Hog and Pig Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "82545",
       "categoryName": "Hog Holders ",
       "catType": "C"
@@ -19207,6 +19737,11 @@
     {
       "categoryId": "04070",
       "categoryName": "Horses",
+      "catType": "C"
+    },
+    {
+      "categoryId": "112920",
+      "categoryName": "Horses and Other Equine Production",
       "catType": "C"
     },
     {
@@ -19510,6 +20045,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "114210",
+      "categoryName": "Hunting and Trapping",
+      "catType": "C"
+    },
+    {
       "categoryId": "94549",
       "categoryName": "Hunting and Trapping Services ",
       "catType": "C"
@@ -19652,6 +20192,11 @@
     {
       "categoryId": "75054",
       "categoryName": "Ice Control Aggregate (See Class 775 for Salt)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311520",
+      "categoryName": "Ice Cream and Frozen Dessert Manufacturing",
       "catType": "C"
     },
     {
@@ -19967,6 +20512,11 @@
     {
       "categoryId": "90650",
       "categoryName": "Industrial Processes; Quality Control ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "212322",
+      "categoryName": "Industrial Sand Mining",
       "catType": "C"
     },
     {
@@ -20535,6 +21085,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "212210",
+      "categoryName": "Iron Ore Mining",
+      "catType": "C"
+    },
+    {
       "categoryId": "57029",
       "categoryName": "IRON: ANGLES, BANDS, PLATE, SHEETS, ETC.",
       "catType": "C"
@@ -20777,6 +21332,11 @@
     {
       "categoryId": "86540",
       "categoryName": "JUTE TWINE",
+      "catType": "C"
+    },
+    {
+      "categoryId": "212324",
+      "categoryName": "Kaolin and Ball Clay Mining",
       "catType": "C"
     },
     {
@@ -21195,6 +21755,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0073",
+      "categoryName": "Landscaping",
+      "catType": "C"
+    },
+    {
       "categoryId": "98852",
       "categoryName": "Landscaping (Including Design, Fertilizing, Planting, Etc., But Not Grounds Maintenance Or Tree Trimming Services) ",
       "catType": "C"
@@ -21447,6 +22012,11 @@
     {
       "categoryId": "83040",
       "categoryName": "Lead Lined Tanks",
+      "catType": "C"
+    },
+    {
+      "categoryId": "212231",
+      "categoryName": "Lead Ore and Zinc Ore Mining",
       "catType": "C"
     },
     {
@@ -21802,6 +22372,11 @@
     {
       "categoryId": "12048",
       "categoryName": "Life Preservers ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0058",
+      "categoryName": "Lift Stations/Lift Station Equipment",
       "catType": "C"
     },
     {
@@ -22225,6 +22800,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "113310",
+      "categoryName": "Logging",
+      "catType": "C"
+    },
+    {
       "categoryId": "22034",
       "categoryName": "LOGGING DEVICES, ELECTRONIC (LONG-RANGE DATA COLLE",
       "catType": "C"
@@ -22630,6 +23210,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0051",
+      "categoryName": "Maintenance",
+      "catType": "C"
+    },
+    {
       "categoryId": "91365",
       "categoryName": "Maintenance and Repair, Antenna Tower and other Communication Equipment ",
       "catType": "C"
@@ -22775,6 +23360,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311213",
+      "categoryName": "Malt Manufacturing",
+      "catType": "C"
+    },
+    {
       "categoryId": "91875",
       "categoryName": "Management Consulting ",
       "catType": "C"
@@ -22787,6 +23377,11 @@
     {
       "categoryId": "91268",
       "categoryName": "MANAGEMENT, CONSTRUCTION",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0023",
+      "categoryName": "Manhole Rehabilitation",
       "catType": "C"
     },
     {
@@ -23190,6 +23785,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311941",
+      "categoryName": "Mayonnaise, Dressing, and Other Prepared Sauce Manufacturing",
+      "catType": "C"
+    },
+    {
       "categoryId": "24066",
       "categoryName": "Meal Servers, Insulated ",
       "catType": "C"
@@ -23250,6 +23850,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311612",
+      "categoryName": "Meat Processed from Carcasses",
+      "catType": "C"
+    },
+    {
       "categoryId": "07548",
       "categoryName": "MECHANIC'S WIRE",
       "catType": "C"
@@ -23267,6 +23872,11 @@
     {
       "categoryId": "81540",
       "categoryName": "MECHANICAL PUMP AND SHAFT SEALS",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0045",
+      "categoryName": "Mechanical Systems",
       "catType": "C"
     },
     {
@@ -24570,6 +25180,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "111411",
+      "categoryName": "Mushroom Production",
+      "catType": "C"
+    },
+    {
       "categoryId": "512230",
       "categoryName": "Music Publishers",
       "catType": "C"
@@ -24907,6 +25522,11 @@
     {
       "categoryId": "325222",
       "categoryName": "Noncellulosic Organic Fiber Manufacturing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311340",
+      "categoryName": "Nonchocolate Confectionery Manufacturing",
       "catType": "C"
     },
     {
@@ -25665,6 +26285,16 @@
       "catType": "C"
     },
     {
+      "categoryId": "111120",
+      "categoryName": "Oilseed (except Soybean) Farming",
+      "catType": "C"
+    },
+    {
+      "categoryId": "111191",
+      "categoryName": "Oilseed and Grain Combination Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "94457",
       "categoryName": "Oilseed and Grain Farming",
       "catType": "C"
@@ -25790,6 +26420,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "111310",
+      "categoryName": "Orange Groves",
+      "catType": "C"
+    },
+    {
       "categoryId": "06566",
       "categoryName": "Ordnance (Explosive) Disposal Bodies",
       "catType": "C"
@@ -25890,6 +26525,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "112519",
+      "categoryName": "Other Aquaculture",
+      "catType": "C"
+    },
+    {
       "categoryId": "811118",
       "categoryName": "Other Automotive Mechanical and Electrical Repair and Maintenance",
       "catType": "C"
@@ -25917,6 +26557,11 @@
     {
       "categoryId": "424690",
       "categoryName": "Other Chemical and Allied Products Merchant Wholesalers",
+      "catType": "C"
+    },
+    {
+      "categoryId": "212393",
+      "categoryName": "Other Chemical and Fertilizer Mineral Mining",
       "catType": "C"
     },
     {
@@ -25980,6 +26625,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "212319",
+      "categoryName": "Other Crushed and Broken Stone Mining and Quarrying",
+      "catType": "C"
+    },
+    {
       "categoryId": "522190",
       "categoryName": "Other Depository Credit Intermediation",
       "catType": "C"
@@ -26035,6 +26685,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "111419",
+      "categoryName": "Other Food Crops Grown Under Cover",
+      "catType": "C"
+    },
+    {
       "categoryId": "316219",
       "categoryName": "Other Footwear Manufacturing",
       "catType": "C"
@@ -26072,6 +26727,11 @@
     {
       "categoryId": "424490",
       "categoryName": "Other Grocery and Related Products Merchant Wholesalers",
+      "catType": "C"
+    },
+    {
+      "categoryId": "336419",
+      "categoryName": "Other Guided Missile and Space Vehicle Parts and Auxiliary Equipment Manufacturing",
       "catType": "C"
     },
     {
@@ -26125,6 +26785,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "114119",
+      "categoryName": "Other Marine Fishing",
+      "catType": "C"
+    },
+    {
       "categoryId": "334519",
       "categoryName": "Other Measuring and Controlling Device Manufacturing",
       "catType": "C"
@@ -26175,6 +26840,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "111339",
+      "categoryName": "Other Noncitrus Fruit Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "331528",
       "categoryName": "Other Nonferrous Foundries (except Die-Casting)",
       "catType": "C"
@@ -26182,6 +26852,11 @@
     {
       "categoryId": "481219",
       "categoryName": "Other Nonscheduled Air Transportation",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311223",
+      "categoryName": "Other Oilseed Processing",
       "catType": "C"
     },
     {
@@ -26202,6 +26877,11 @@
     {
       "categoryId": "812199",
       "categoryName": "Other Personal Care Services",
+      "catType": "C"
+    },
+    {
+      "categoryId": "112390",
+      "categoryName": "Other Poultry Production",
       "catType": "C"
     },
     {
@@ -26237,6 +26917,11 @@
     {
       "categoryId": "813990",
       "categoryName": "Other Similar Organizations (except Business, Professional, Labor, and Political Organizations)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311919",
+      "categoryName": "Other Snack Food Manufacturing",
       "catType": "C"
     },
     {
@@ -26292,6 +26977,11 @@
     {
       "categoryId": "485119",
       "categoryName": "Other Urban Transit Systems",
+      "catType": "C"
+    },
+    {
+      "categoryId": "111219",
+      "categoryName": "Other Vegetable (except Potato) and Melon Farming",
       "catType": "C"
     },
     {
@@ -26990,6 +27680,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0031",
+      "categoryName": "Parking Lots/Ramps",
+      "catType": "C"
+    },
+    {
       "categoryId": "95872",
       "categoryName": "Parking Management Services (Incl. Operations, Admissions, And Supervision)",
       "catType": "C"
@@ -27022,6 +27717,16 @@
     {
       "categoryId": "98865",
       "categoryName": "Parks Systems Technical Services ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0033",
+      "categoryName": "Parks, Recreation, Athletic & Aquatic Facilities",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0018",
+      "categoryName": "Parks, Recreation, Buildings & Facilities",
       "catType": "C"
     },
     {
@@ -27205,8 +27910,33 @@
       "catType": "C"
     },
     {
+      "categoryId": "0028",
+      "categoryName": "Pavement Preservation",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0059",
+      "categoryName": "Pavement Removal",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0020",
+      "categoryName": "Pavement Resurface and Rehabilitation",
+      "catType": "C"
+    },
+    {
       "categoryId": "84549",
       "categoryName": "Pavement Testing and Data Collection Equipment",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0036",
+      "categoryName": "Paving (Asphalt or Concrete)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0064",
+      "categoryName": "Paving (Highway, Road or Street)",
       "catType": "C"
     },
     {
@@ -27250,6 +27980,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "111992",
+      "categoryName": "Peanut Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "32560",
       "categoryName": "Peanut Products ",
       "catType": "C"
@@ -27257,6 +27992,11 @@
     {
       "categoryId": "59550",
       "categoryName": "Peat Moss ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0025",
+      "categoryName": "Pedestrian Improvements",
       "catType": "C"
     },
     {
@@ -27367,6 +28107,11 @@
     {
       "categoryId": "20666",
       "categoryName": "PERIPHERALS, MISCELLANEOUS: GRAPHIC DIGITIZERS, JO",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311991",
+      "categoryName": "Perishable Prepared Food Manufacturing",
       "catType": "C"
     },
     {
@@ -27597,6 +28342,11 @@
     {
       "categoryId": "71580",
       "categoryName": "Phonograph Records, Sound Tapes, etc. (Prepared)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "212392",
+      "categoryName": "Phosphate Rock Mining",
       "catType": "C"
     },
     {
@@ -27867,6 +28617,11 @@
     {
       "categoryId": "67049",
       "categoryName": "Pipe Hangers, Constant Support Type, for Power Plant Operations ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0004",
+      "categoryName": "Pipe Lining",
       "catType": "C"
     },
     {
@@ -28385,6 +29140,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0046",
+      "categoryName": "Plumbing",
+      "catType": "C"
+    },
+    {
       "categoryId": "423720",
       "categoryName": "Plumbing and Heating Equipment and Supplies (Hydronics) Merchant Wholesalers",
       "catType": "C"
@@ -28830,6 +29590,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "115114",
+      "categoryName": "Postharvest Crop Activities (except Cotton Ginning)",
+      "catType": "C"
+    },
+    {
       "categoryId": "02273",
       "categoryName": "POSTHOLE DIGGER (TRACTOR MOUNTED) PARTS",
       "catType": "C"
@@ -28885,7 +29650,17 @@
       "catType": "C"
     },
     {
+      "categoryId": "212391",
+      "categoryName": "Potash, Soda, and Borate Mineral Mining",
+      "catType": "C"
+    },
+    {
       "categoryId": "94464",
+      "categoryName": "Potato Farming",
+      "catType": "C"
+    },
+    {
+      "categoryId": "111211",
       "categoryName": "Potato Farming",
       "catType": "C"
     },
@@ -28910,8 +29685,18 @@
       "catType": "C"
     },
     {
+      "categoryId": "112340",
+      "categoryName": "Poultry Hatcheries",
+      "catType": "C"
+    },
+    {
       "categoryId": "96159",
       "categoryName": "Poultry Hatching and Processing Services",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311615",
+      "categoryName": "Poultry Processing",
       "catType": "C"
     },
     {
@@ -30030,6 +30815,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0054",
+      "categoryName": "Pumping Equipment & Accessories",
+      "catType": "C"
+    },
+    {
       "categoryId": "72000",
       "categoryName": "Pumping Equipment And Accessories",
       "catType": "C"
@@ -30162,6 +30952,11 @@
     {
       "categoryId": "44060",
       "categoryName": "Pyrex Glass ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0101",
+      "categoryName": "Qualified - Engineer of Record",
       "catType": "C"
     },
     {
@@ -31905,6 +32700,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311613",
+      "categoryName": "Rendering and Meat Byproduct Processing",
+      "catType": "C"
+    },
+    {
       "categoryId": "97400",
       "categoryName": "Rent/Lease Equip Svs: Copiers",
       "catType": "C"
@@ -32315,6 +33115,16 @@
       "catType": "C"
     },
     {
+      "categoryId": "111160",
+      "categoryName": "Rice Farming",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311212",
+      "categoryName": "Rice Milling",
+      "catType": "C"
+    },
+    {
       "categoryId": "32568",
       "categoryName": "Rice Products ",
       "catType": "C"
@@ -32437,6 +33247,16 @@
     {
       "categoryId": "98800",
       "categoryName": "Roadside, Grounds, Recreational And Park Area Services ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0027",
+      "categoryName": "Roadway Pavement Markings",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311911",
+      "categoryName": "Roasted Nuts and Peanut Butter Manufacturing",
       "catType": "C"
     },
     {
@@ -32602,6 +33422,11 @@
     {
       "categoryId": "03179",
       "categoryName": "ROOF VENTILATORS, WIND DRIVEN",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0047",
+      "categoryName": "Roofing",
       "catType": "C"
     },
     {
@@ -33105,6 +33930,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0005",
+      "categoryName": "Sanitary Sewer (Gravity)",
+      "catType": "C"
+    },
+    {
       "categoryId": "45070",
       "categoryName": "SASH AND WINDOW HARDWARE (FOR CASEMENT TYPE SEE CL",
       "catType": "C"
@@ -33142,6 +33972,11 @@
     {
       "categoryId": "332213",
       "categoryName": "Saw Blade and Handsaw Manufacturing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0071",
+      "categoryName": "Sawcutting/Sidewalk/Pavement",
       "catType": "C"
     },
     {
@@ -33575,8 +34410,18 @@
       "catType": "C"
     },
     {
+      "categoryId": "311711",
+      "categoryName": "Seafood Canning",
+      "catType": "C"
+    },
+    {
       "categoryId": "38568",
       "categoryName": "Seafood Wild and Farm Raised Fish and Shellfish",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0006",
+      "categoryName": "Seal Coating",
       "catType": "C"
     },
     {
@@ -33770,6 +34615,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0048",
+      "categoryName": "Seismic Upgrades",
+      "catType": "C"
+    },
+    {
       "categoryId": "334413",
       "categoryName": "Semiconductor and Related Device Manufacturing",
       "catType": "C"
@@ -33915,6 +34765,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0055",
+      "categoryName": "Sewer Force Main",
+      "catType": "C"
+    },
+    {
       "categoryId": "89064",
       "categoryName": "Sewer Inspection Equipment",
       "catType": "C"
@@ -33927,6 +34782,16 @@
     {
       "categoryId": "67061",
       "categoryName": "SEWER PIPE CLEANING MACHINES, POWER DRIVEN; AND PA",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0060",
+      "categoryName": "Sewer Pump Station",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0061",
+      "categoryName": "Sewer Re-Lining",
       "catType": "C"
     },
     {
@@ -34070,6 +34935,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "112410",
+      "categoryName": "Sheep Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "315111",
       "categoryName": "Sheer Hosiery Mills",
       "catType": "C"
@@ -34152,6 +35022,16 @@
     {
       "categoryId": "32572",
       "categoryName": "Shell, Ground ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "112512",
+      "categoryName": "Shellfish Farming",
+      "catType": "C"
+    },
+    {
+      "categoryId": "114112",
+      "categoryName": "Shellfish Fishing",
       "catType": "C"
     },
     {
@@ -34485,6 +35365,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0021",
+      "categoryName": "Sidewalks/Curbs/Gutters",
+      "catType": "C"
+    },
+    {
       "categoryId": "238170",
       "categoryName": "Siding Contractors",
       "catType": "C"
@@ -34800,6 +35685,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "212222",
+      "categoryName": "Silver Ore Mining",
+      "catType": "C"
+    },
+    {
       "categoryId": "65580",
       "categoryName": "Silver Recovery Devices ",
       "catType": "C"
@@ -34867,6 +35757,11 @@
     {
       "categoryId": "238910",
       "categoryName": "Site Preparation Contractors",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0049",
+      "categoryName": "Sitework/Excavating and Grading",
       "catType": "C"
     },
     {
@@ -35305,6 +36200,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "115112",
+      "categoryName": "Soil Preparation, Planting, and Cultivating",
+      "catType": "C"
+    },
+    {
       "categoryId": "48587",
       "categoryName": "SOIL RETARDANT (FOR CARPETS, RUGS, ETC.)",
       "catType": "C"
@@ -35515,6 +36415,16 @@
       "catType": "C"
     },
     {
+      "categoryId": "111110",
+      "categoryName": "Soybean Farming",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311222",
+      "categoryName": "Soybean Processing",
+      "catType": "C"
+    },
+    {
       "categoryId": "32576",
       "categoryName": "Soybean Products",
       "catType": "C"
@@ -35625,6 +36535,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311422",
+      "categoryName": "Specialty Canning",
+      "catType": "C"
+    },
+    {
       "categoryId": "04091",
       "categoryName": "Specialty Items for Shows and Entertainment (Perches, Hoods, Hoops, etc.) ",
       "catType": "C"
@@ -35687,6 +36602,11 @@
     {
       "categoryId": "333612",
       "categoryName": "Speed Changer, Industrial High-Speed Drive, and Gear Manufacturing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311942",
+      "categoryName": "Spice and Extract Manufacturing",
       "catType": "C"
     },
     {
@@ -36175,6 +37095,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0102",
+      "categoryName": "Statement of Qualifications",
+      "catType": "C"
+    },
+    {
       "categoryId": "424120",
       "categoryName": "Stationery and Office Supplies Merchant Wholesalers",
       "catType": "C"
@@ -36635,6 +37560,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0026",
+      "categoryName": "Storm Drain and Paving",
+      "catType": "C"
+    },
+    {
       "categoryId": "96873",
       "categoryName": "Storm Drain Cleaning, Repair, And Sludge Removal Services",
       "catType": "C"
@@ -36670,6 +37600,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "111333",
+      "categoryName": "Strawberry Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "96876",
       "categoryName": "Street Light Maintenance And Repair ",
       "catType": "C"
@@ -36687,6 +37622,31 @@
     {
       "categoryId": "96874",
       "categoryName": "Street Sweeping Services ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0029",
+      "categoryName": "Street/Road Asphalt Resurfacing and Milling",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0037",
+      "categoryName": "Street/Road Construction and Repair",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0072",
+      "categoryName": "Street/Road Pavement Marking",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0065",
+      "categoryName": "Street/Road Repairs",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0022",
+      "categoryName": "Street/Roadway Reconstruction",
       "catType": "C"
     },
     {
@@ -36840,6 +37800,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "111991",
+      "categoryName": "Sugar Beet Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "96170",
       "categoryName": "Sugar Refining Services",
       "catType": "C"
@@ -36847,6 +37812,16 @@
     {
       "categoryId": "94479",
       "categoryName": "Sugarcane Farming",
+      "catType": "C"
+    },
+    {
+      "categoryId": "111930",
+      "categoryName": "Sugarcane Farming",
+      "catType": "C"
+    },
+    {
+      "categoryId": "311311",
+      "categoryName": "Sugarcane Mills",
       "catType": "C"
     },
     {
@@ -36915,8 +37890,18 @@
       "catType": "C"
     },
     {
+      "categoryId": "213113",
+      "categoryName": "Support Activities for Coal Mining",
+      "catType": "C"
+    },
+    {
       "categoryId": "115310",
       "categoryName": "Support Activities for Forestry",
+      "catType": "C"
+    },
+    {
+      "categoryId": "213114",
+      "categoryName": "Support Activities for Metal Mining",
       "catType": "C"
     },
     {
@@ -38595,6 +39580,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "113110",
+      "categoryName": "Timber Tract Operations",
+      "catType": "C"
+    },
+    {
       "categoryId": "54092",
       "categoryName": "Timbers, Construction Type (Laminated, Treated and Untreated) ",
       "catType": "C"
@@ -38830,6 +39820,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "111910",
+      "categoryName": "Tobacco Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "96783",
       "categoryName": "Tobacco Manufacturing and Processing Services",
       "catType": "C"
@@ -39025,6 +40020,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311830",
+      "categoryName": "Tortilla Manufacturing",
+      "catType": "C"
+    },
+    {
       "categoryId": "334514",
       "categoryName": "Totalizing Fluid Meter and Counting Device Manufacturing",
       "catType": "C"
@@ -39210,6 +40210,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0074",
+      "categoryName": "Traffic Control Devices (Signals, Signing, etc.)",
+      "catType": "C"
+    },
+    {
       "categoryId": "93686",
       "categoryName": "Traffic Control Devices, Maintenance and Repair ",
       "catType": "C"
@@ -39227,6 +40232,16 @@
     {
       "categoryId": "96884",
       "categoryName": "Traffic Control Services (To Include Placement And Removal Of Control Devices) ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0075",
+      "categoryName": "Traffic Control Signal Systems",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0024",
+      "categoryName": "Traffic Control/Flagging",
       "catType": "C"
     },
     {
@@ -39920,6 +40935,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "111335",
+      "categoryName": "Tree Nut Farming",
+      "catType": "C"
+    },
+    {
       "categoryId": "79073",
       "categoryName": "Tree Seeds",
       "catType": "C"
@@ -39957,6 +40977,11 @@
     {
       "categoryId": "45080",
       "categoryName": "TRENCH BRACES AND COLUMN CLAMPS",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0007",
+      "categoryName": "Trenchless Utility Construction",
       "catType": "C"
     },
     {
@@ -40335,6 +41360,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "112330",
+      "categoryName": "Turkey Production",
+      "catType": "C"
+    },
+    {
       "categoryId": "04093",
       "categoryName": "Turkeys, Baby ",
       "catType": "C"
@@ -40655,6 +41685,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "212291",
+      "categoryName": "Uranium-Radium-Vanadium Ore Mining",
+      "catType": "C"
+    },
+    {
       "categoryId": "91898",
       "categoryName": "URBAN PLANNING CONSULTING",
       "catType": "C"
@@ -40722,6 +41757,11 @@
     {
       "categoryId": "91897",
       "categoryName": "Utilities: Gas, Water, Electric Consulting",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0063",
+      "categoryName": "Utility and Street Construction",
       "catType": "C"
     },
     {
@@ -41955,6 +42995,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0038",
+      "categoryName": "Water Supply, Groundwater, Sewage Treatment",
+      "catType": "C"
+    },
+    {
       "categoryId": "89000",
       "categoryName": "Water Supply, Groundwater, Sewage Treatment, And Related Equipment (Not For Air Conditioning, Steam Boiler, Or Laboratory Reagent Water) ",
       "catType": "C"
@@ -42010,6 +43055,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "0008",
+      "categoryName": "Water/Wastewater Infrastructure",
+      "catType": "C"
+    },
+    {
       "categoryId": "88594",
       "categoryName": "Water/Wastewater Treating Chemicals",
       "catType": "C"
@@ -42032,6 +43082,11 @@
     {
       "categoryId": "96894",
       "categoryName": "Waterproofing Systems And Repair",
+      "catType": "C"
+    },
+    {
+      "categoryId": "0079",
+      "categoryName": "Watershed Protection/Riprap",
       "catType": "C"
     },
     {
@@ -42305,6 +43360,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "311221",
+      "categoryName": "Wet Corn Milling",
+      "catType": "C"
+    },
+    {
       "categoryId": "92696",
       "categoryName": "WETLAND DELINEATIONS",
       "catType": "C"
@@ -42316,6 +43376,11 @@
     },
     {
       "categoryId": "94493",
+      "categoryName": "Wheat Farming",
+      "catType": "C"
+    },
+    {
+      "categoryId": "111140",
       "categoryName": "Wheat Farming",
       "catType": "C"
     },
