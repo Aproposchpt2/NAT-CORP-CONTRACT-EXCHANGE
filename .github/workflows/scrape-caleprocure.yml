@@ -8,6 +8,7 @@ on:
       - '.github/workflows/scrape-caleprocure.yml'
       - 'scripts/scrape-caleprocure.js'
       - 'scripts/sync-supabase.js'
+      - 'scripts/sync-supabase-grouped.js'
       - 'scripts/lib/caleprocure-normalize.js'
       - 'scripts/prepare-caleprocure-snapshot.js'
   schedule:
@@ -40,7 +41,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           PDAS_SOURCE_JOB_ID: CA-CALEPROCURE
-        run: node scripts/sync-supabase.js
+        run: node scripts/sync-supabase-grouped.js
       - run: npx playwright install --with-deps chromium
       - name: Acquire statewide Posted events and event packages
         run: node scripts/scrape-caleprocure.js --detail-limit=80 --package-limit=25 --refresh-hours=24
@@ -56,4 +57,4 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           PDAS_SOURCE_JOB_ID: CA-CALEPROCURE
-        run: node scripts/sync-supabase.js
+        run: node scripts/sync-supabase-grouped.js
