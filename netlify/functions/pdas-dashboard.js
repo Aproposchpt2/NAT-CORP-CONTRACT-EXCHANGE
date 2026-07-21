@@ -9,6 +9,7 @@ const CORS={
 const SB=(process.env.SUPABASE_URL||'').replace(/\/$/,'');
 const KEY=process.env.SUPABASE_SERVICE_ROLE_KEY||process.env.SUPABASE_SERVICE_KEY||'';
 const PAGE=1000;
+const CURRENT_STATUSES=new Set(['open','active','posted','upcoming','open_continuous']);
 
 function headers(extra){return Object.assign({apikey:KEY,authorization:'Bearer '+KEY,accept:'application/json'},extra||{});}
 async function page(path,query,from){
@@ -18,9 +19,10 @@ async function page(path,query,from){
   const data=await r.json();return Array.isArray(data)?data:[];
 }
 async function all(path,query){const out=[];for(let from=0;;from+=PAGE){const rows=await page(path,query,from);out.push(...rows);if(rows.length<PAGE)break;}return out;}
+function statusKey(status){return String(status||'unknown').toLowerCase().trim();}
 function countBy(rows,key){return rows.reduce((a,r)=>{const k=String(r[key]||'Unknown');a[k]=(a[k]||0)+1;return a;},{});}
 function sorted(obj){return Object.entries(obj).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name));}
-function isCurrent(status){return ['open','active','posted','upcoming','forecasted','open_continuous'].includes(String(status||'').toLowerCase());}
+function isCurrent(status){return CURRENT_STATUSES.has(statusKey(status));}
 
 exports.handler=async event=>{
   if(event.httpMethod==='OPTIONS')return{statusCode:204,headers:CORS,body:''};
@@ -35,9 +37,12 @@ exports.handler=async event=>{
     ]);
     const latest=opportunities.filter(r=>r.is_latest_version!==false&&!r.duplicate_of);
     const current=latest.filter(r=>isCurrent(r.status));
+    const historical=latest.filter(r=>!isCurrent(r.status));
     const states=sorted(countBy(latest,'state_code'));
     const sources=sorted(countBy(latest,'source_platform'));
     const statuses=sorted(countBy(latest,'status'));
+    const currentStatuses=sorted(countBy(current,'status'));
+    const historicalStatuses=sorted(countBy(historical,'status'));
     const organizations=sorted(countBy(latest,'issuing_organization')).slice(0,12);
     const publisherStates=sorted(countBy(publishers,'state_code'));
     const activeJobs=jobs.filter(j=>j.enabled!==false);
@@ -54,13 +59,15 @@ exports.handler=async event=>{
       summary:{
         total_opportunities:latest.length,
         current_opportunities:current.length,
+        historical_opportunities:historical.length,
         added_last_24h:added24h,
         publisher_count:publishers.length,
         active_job_count:activeJobs.length,
         healthy_job_count:healthyJobs.length,
         failed_job_count:failedJobs.length
       },
-      states,sources,statuses,organizations,publisher_states:publisherStates,
+      current_definition:['open','active','posted','upcoming','open_continuous'],
+      states,sources,statuses,current_statuses:currentStatuses,historical_statuses:historicalStatuses,organizations,publisher_states:publisherStates,
       jobs:jobs.slice(0,20),
       recent_runs:runs.slice(0,12),
       latest_run:latestRun,
