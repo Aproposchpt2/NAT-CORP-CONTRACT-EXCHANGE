@@ -30,6 +30,11 @@
   to = "/services.html"
   status = 200
 
+[[redirects]]
+  from = "/pdas-dashboard"
+  to = "/pdas-dashboard.html"
+  status = 200
+
 [[edge_functions]]
   path = "/"
   function = "calstategen-nav-login-cta"
