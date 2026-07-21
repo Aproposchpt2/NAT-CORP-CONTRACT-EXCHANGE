@@ -11,6 +11,7 @@ on:
       - 'scripts/sync-supabase-grouped.js'
       - 'scripts/lib/caleprocure-normalize.js'
       - 'scripts/prepare-caleprocure-snapshot.js'
+      - 'scripts/resolve-caleprocure-business-units.js'
       - 'tests/**'
   schedule:
     - cron: '17 */4 * * *' # every four hours, offset from the top of the hour
@@ -37,6 +38,8 @@ jobs:
       - run: npm test
       - name: Prepare checked-in verified snapshot
         run: node scripts/prepare-caleprocure-snapshot.js
+      - name: Resolve agency Business Units in verified snapshot
+        run: node scripts/resolve-caleprocure-business-units.js
       - name: Immediately synchronize verified snapshot into Supabase
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -46,6 +49,8 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Acquire statewide Posted events and event packages
         run: node scripts/scrape-caleprocure.js --detail-limit=80 --package-limit=25 --refresh-hours=24
+      - name: Resolve agency Business Units in refreshed snapshot
+        run: node scripts/resolve-caleprocure-business-units.js
       - name: Commit refreshed Cal eProcure source snapshot
         run: |
           git config user.name "pdas-acquisition-bot"
