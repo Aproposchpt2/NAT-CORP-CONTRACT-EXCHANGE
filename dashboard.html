@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CalGCC — California Government Contracts Center</title>
+<title>NCCE — National Corporate Contract Exchange</title>
 <meta name="robots" content="noindex"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -95,14 +95,14 @@ html,body{font-family:var(--body);background:linear-gradient(160deg,#0c2257,#070
 
 <div class="topbar">
   <div class="brand">
-    <span class="mark">CA</span>
+    <span class="mark">NC</span>
     <span>
-      <div class="bname">California Government Contracts Center</div>
-      <div class="bsub">CalGCC &middot; Apropos Group LLC</div>
+      <div class="bname">National Corporate Contract Exchange</div>
+      <div class="bsub">NCCE &middot; Apropos Group LLC</div>
     </span>
   </div>
   <div class="nav-right">
-    <span class="pill">Live California bid board</span>
+    <span class="pill">Live national bid board</span>
     <button class="update-btn" onclick="showIntake()">&#9998; Update My Services</button>
   </div>
 </div>
@@ -112,12 +112,12 @@ html,body{font-family:var(--body);background:linear-gradient(160deg,#0c2257,#070
     <div class="stat"><div class="n" id="sOpen">&#8212;</div><div class="l">Open solicitations</div></div>
     <div class="stat"><div class="n" id="sMatched">&#8212;</div><div class="l">Match your services</div></div>
     <div class="stat"><div class="n" id="sSoon">&#8212;</div><div class="l">Closing within 7 days</div></div>
-    <div class="stat"><div class="n">CA</div><div class="l">State &middot; County &middot; City &middot; District</div></div>
+    <div class="stat"><div class="n">Multi-State</div><div class="l">State &middot; County &middot; City &middot; District</div></div>
   </div>
 
   <div class="intake-banner" id="intakeBanner">
-    <div class="intake-title">What does your California business do?</div>
-    <div class="intake-sub">Enter your services or trades &mdash; CalGCC matches open government solicitations to your profile.</div>
+    <div class="intake-title">What does your business do?</div>
+    <div class="intake-sub">Enter your services or trades &mdash; NCCE matches open government solicitations to your profile.</div>
     <div class="intake-row">
       <input id="kwInput" type="text" placeholder="e.g. IT services, software, consulting, construction, landscaping&hellip;"/>
       <button onclick="saveKeywords()">Build My Dashboard</button>
@@ -128,7 +128,7 @@ html,body{font-family:var(--body);background:linear-gradient(160deg,#0c2257,#070
 
   <div class="board-head">
     <div>
-      <div class="board-eye">California public agency solicitations</div>
+      <div class="board-eye">Public agency solicitations</div>
       <div class="board-title">Open bids</div>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
@@ -139,7 +139,7 @@ html,body{font-family:var(--body);background:linear-gradient(160deg,#0c2257,#070
     </div>
   </div>
 
-  <div id="bids"><div class="empty">Loading California solicitations&hellip;</div></div>
+  <div id="bids"><div class="empty">Loading solicitations&hellip;</div></div>
 </div>
 
 <div id="ca-overlay" onclick="closeCaDrawer()"></div>
@@ -151,7 +151,7 @@ html,body{font-family:var(--body);background:linear-gradient(160deg,#0c2257,#070
   <div id="ca-drawer-body"></div>
 </div>
 
-<div class="foot">&copy; 2026 Apropos Group LLC &middot; California Government Contracts Center &middot; All rights reserved.</div>
+<div class="foot">&copy; 2026 Apropos Group LLC &middot; National Corporate Contract Exchange &middot; All rights reserved.</div>
 
 <script>
 'use strict';
@@ -237,7 +237,7 @@ function render() {
   var rows = visible();
   _BID_MAP = {};
   if (!rows.length) {
-    $('bids').innerHTML = '<div class="empty">'+(view==='matches'?'No open bids match your services today &mdash; new solicitations post daily.':'No California bids loaded. Please refresh.')+'</div>';
+    $('bids').innerHTML = '<div class="empty">'+(view==='matches'?'No open bids match your services today &mdash; new solicitations post daily.':'No bids loaded. Please refresh.')+'</div>';
     return;
   }
   $('bids').innerHTML = rows.map(function(row, i){
@@ -282,7 +282,7 @@ function loadBids() {
       render();
     })
     .catch(function(){
-      $('bids').innerHTML = '<div class="empty">Could not load California solicitations. Please refresh.</div>';
+      $('bids').innerHTML = '<div class="empty">Could not load solicitations. Please refresh.</div>';
     });
 }
 
@@ -323,11 +323,11 @@ function openCaDrawer(idx) {
   var urgClass = bid.due_in_days==null?'': bid.due_in_days<=3?'ca-urgency-high': bid.due_in_days<=7?'ca-urgency-med':'ca-urgency-ok';
   var typeClass = (bid.bid_type||'').indexOf('RFP')!==-1?'ca-type-rfp':(bid.bid_type||'').indexOf('RFQ')!==-1?'ca-type-rfq':'ca-type-bid';
 
-  $('ca-drawer-title').textContent = bid.agency || 'California Solicitation';
+  $('ca-drawer-title').textContent = bid.agency || 'Solicitation';
   $('ca-drawer-body').innerHTML =
     '<span class="ca-type-badge '+typeClass+'">'+esc(bid.bid_type||'SOLICITATION')+'</span>'
     +'<div class="ca-bid-heading">'+esc(bid.title)+'</div>'
-    +'<div class="ca-agency">'+esc(bid.agency||'California State Agency')+'</div>'
+    +'<div class="ca-agency">'+esc(bid.agency||'Public Agency')+'</div>'
     +(bid.due_in_days!=null?'<span class="ca-urgency '+urgClass+'">'+esc(dueText(bid.due_in_days))+'</span>':'')
     +'<div class="ca-meta-grid">'
     +'<div class="ca-meta-cell"><div class="ml">Solicitation #</div><div class="mv">'+esc(bid.solicitation_no||'&mdash;')+'</div></div>'

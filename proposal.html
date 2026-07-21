@@ -38,19 +38,19 @@ h1{font-family:var(--disp);font-size:clamp(1.6rem,3vw,2.2rem);color:#fff;margin-
 </head>
 <body>
 <div class="topbar">
-  <div class="brand"><span class="mark">CA</span><span class="bname">California Government Contracts Center</span></div>
+  <div class="brand"><span class="mark">NC</span><span class="bname">National Corporate Contract Exchange</span></div>
   <a class="back-btn" href="/dashboard.html">&#8592; Back to Dashboard</a>
 </div>
 
 <div class="container">
   <div class="bid-card">
-    <div class="bid-eyebrow">California Solicitation</div>
+    <div class="bid-eyebrow">Solicitation</div>
     <div class="bid-title" id="bidTitle">Loading&hellip;</div>
     <div class="bid-meta" id="bidMeta"></div>
   </div>
 
   <h1>Proposal Writer</h1>
-  <p class="sub">AI-assisted proposal draft tailored to this California government opportunity and your business profile. Review and customize before submitting.</p>
+  <p class="sub">AI-assisted proposal draft tailored to this government opportunity and your business profile. Review and customize before submitting.</p>
 
   <button class="generate-btn" id="generateBtn" onclick="generateProposal()">&#9998; Generate Proposal Draft</button>
   <div class="status" id="status"></div>
@@ -61,8 +61,8 @@ h1{font-family:var(--disp);font-size:clamp(1.6rem,3vw,2.2rem);color:#fff;margin-
 <script>
 'use strict';
 var params = new URLSearchParams(location.search);
-var BID_TITLE = params.get('title') || 'California Government Solicitation';
-var BID_AGENCY = params.get('agency') || 'California State Agency';
+var BID_TITLE = params.get('title') || 'Government Solicitation';
+var BID_AGENCY = params.get('agency') || 'Public Agency';
 var BID_SOL = params.get('sol') || '';
 var BID_TYPE = params.get('type') || 'Solicitation';
 var BUSINESS = params.get('business') || 'Apropos Group LLC';
@@ -77,7 +77,7 @@ function generateProposal() {
   var status = document.getElementById('status');
   var output = document.getElementById('proposalOutput');
   btn.disabled = true; btn.textContent = 'Generating…';
-  status.textContent = 'AI is drafting your California proposal — this takes about 15 seconds…';
+  status.textContent = 'AI is drafting your proposal — this takes about 15 seconds…';
 
   fetch('/.netlify/functions/proposal-writer-ca', {
     method: 'POST',
