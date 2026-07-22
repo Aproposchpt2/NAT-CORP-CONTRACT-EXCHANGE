@@ -36,8 +36,29 @@
   function add(text,type){var div=document.createElement('div');div.className='aois-agent-msg '+type;div.textContent=text;body.appendChild(div);body.scrollTop=body.scrollHeight;return div;}
   async function ask(text){text=String(text||'').trim();if(!text)return;add(text,'user');var waiting=add('AOIS is reviewing your context...','ai');textarea.value='';try{var res=await fetch('/api/aois-advisor',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({message:text,page:location.pathname,profile:readObject(['natcorp_profile','calgcc_profile']),opportunity:currentOpportunity()})});var data=await res.json();waiting.textContent=data.answer||data.error||'The advisor could not respond.';}catch(e){waiting.textContent='The AOIS Advisor is temporarily unavailable. Please try again.';}body.scrollTop=body.scrollHeight;}
 
+  function installAnalyzeFitBridge(){
+    if(!/dashboard/i.test(location.pathname)) return;
+    window.analyzeFit=function(){
+      var opportunity={};
+      try{if(typeof active!=='undefined'&&active) opportunity=active;}catch(e){}
+      if(!opportunity.title){
+        var drawer=document.getElementById('detail');
+        var heading=drawer&&drawer.querySelector('h2');
+        opportunity.title=heading?heading.textContent.trim():'Selected Contract Opportunity';
+      }
+      try{
+        localStorage.setItem('aois_selected_opportunity',JSON.stringify(opportunity));
+        localStorage.setItem('selectedOpportunity',JSON.stringify(opportunity));
+      }catch(e){}
+      var params=new URLSearchParams();
+      ['title','agency','sol','state','type','value','score','quality','readiness','why','desc'].forEach(function(key){if(opportunity[key]!=null&&opportunity[key]!=='')params.set(key,String(opportunity[key]));});
+      location.href='/analyze-fit-v2.html'+(params.toString()?'?'+params.toString():'');
+    };
+  }
+
   button.onclick=function(){panel.classList.toggle('on');if(panel.classList.contains('on'))textarea.focus();};
   panel.querySelector('.aois-agent-close').onclick=function(){panel.classList.remove('on');};
   panel.querySelector('.aois-agent-form').onsubmit=function(e){e.preventDefault();ask(textarea.value);};
   panel.querySelectorAll('.aois-agent-quick button').forEach(function(q){q.onclick=function(){ask(q.textContent);};});
+  installAnalyzeFitBridge();
 })();
