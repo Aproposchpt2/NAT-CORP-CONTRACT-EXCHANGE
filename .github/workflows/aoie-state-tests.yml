@@ -15,6 +15,8 @@ on:
       - 'tests/aoie-state-*.test.mjs'
       - 'tests/analyze-fit-premium.test.mjs'
       - 'tests/business-profile-agent.test.mjs'
+      - 'assets/business-dna-builder.css'
+      - 'assets/business-dna-builder-*.js'
       - 'welcome.html'
       - 'business-dna-builder-preview.html'
       - 'aois-dashboard-preview.html'
@@ -33,6 +35,8 @@ on:
       - 'tests/aoie-state-*.test.mjs'
       - 'tests/analyze-fit-premium.test.mjs'
       - 'tests/business-profile-agent.test.mjs'
+      - 'assets/business-dna-builder.css'
+      - 'assets/business-dna-builder-*.js'
       - 'welcome.html'
       - 'business-dna-builder-preview.html'
       - 'aois-dashboard-preview.html'
@@ -65,6 +69,12 @@ jobs:
         run: node tests/aoie-state-source.test.mjs
       - name: Run Business Profile Agent fixtures
         run: node tests/business-profile-agent.test.mjs
+      - name: Validate Business DNA browser scripts
+        run: |
+          node --check assets/business-dna-builder-1.js
+          node --check assets/business-dna-builder-2.js
+          node --check assets/business-dna-builder-3.js
+          node --check assets/business-dna-builder-4.js
       - name: Validate AOIE function syntax
         run: node --check netlify/functions/aoie-state-shadow.mjs
       - name: Validate Analyze Fit function syntax
