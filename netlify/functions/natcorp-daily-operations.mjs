@@ -1,8 +1,9 @@
-import { db, json, nowIso, runSnapshot, sameOrigin } from './_shared/natcorp-runtime.mjs';
+import { commandAuthorized, db, json, nowIso, runSnapshot, sameOrigin } from './_shared/natcorp-runtime.mjs';
 
 export default async (req) => {
   try {
     const url = new URL(req.url);
+    if (!commandAuthorized(req)) return json(401, { ok:false, error:'Command Center access key required.' });
     if (req.method === 'GET') {
       const requested = url.searchParams.get('run_id');
       let runId = requested;
