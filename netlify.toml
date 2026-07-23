@@ -14,44 +14,163 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self'; upgrade-insecure-requests"
 
-# AOIS R&D production routes
+[[headers]]
+  for = "/intake"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/business-intake"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/dashboard"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/analyze-fit"
+  [headers.values]
+    Cache-Control = "no-store"
+
+# Required journey: Start -> Intake -> Business Intake -> Dashboard.
 [[redirects]]
-  from = "/services.html"
-  to = "/business-dna-builder-preview.html?v=2"
+  from = "/start"
+  to = "/intake"
   status = 302
   force = true
 
 [[redirects]]
-  from = "/services"
-  to = "/business-dna-builder-preview.html?v=2"
+  from = "/welcome"
+  to = "/intake"
   status = 302
   force = true
+
+[[redirects]]
+  from = "/intake"
+  to = "/welcome.html"
+  status = 200
 
 [[redirects]]
   from = "/intake.html"
-  to = "/business-dna-builder-preview.html?v=2"
+  to = "/welcome.html"
+  status = 200
+
+[[redirects]]
+  from = "/business-intake"
+  to = "/business-dna-builder-preview.html"
+  status = 200
+
+[[redirects]]
+  from = "/business-intake.html"
+  to = "/business-dna-builder-preview.html"
+  status = 200
+
+# Legacy public routes restart at Intake and cannot bypass the journey.
+[[redirects]]
+  from = "/services"
+  to = "/intake"
   status = 302
   force = true
 
 [[redirects]]
-  from = "/dashboard.html"
-  to = "/aois-dashboard-preview.html?v=2"
+  from = "/services.html"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/onboarding"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/onboarding.html"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/board"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/board.html"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/support"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/support.html"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/aoie-lab"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/aoie-lab.html"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/index-livepreview.html"
+  to = "/"
   status = 302
   force = true
 
 [[redirects]]
   from = "/dashboard"
-  to = "/aois-dashboard-preview.html?v=2"
+  to = "/aois-dashboard-preview.html"
+  status = 200
+
+[[redirects]]
+  from = "/dashboard.html"
+  to = "/aois-dashboard-preview.html"
+  status = 200
+
+[[redirects]]
+  from = "/analyze-fit"
+  to = "/analyze-fit-v2.html"
+  status = 200
+
+[[redirects]]
+  from = "/analyze-fit.html"
+  to = "/analyze-fit-v2.html"
+  status = 200
+
+# Member login and OTP access are retired. Every visitor starts fresh.
+[[redirects]]
+  from = "/login"
+  to = "/intake"
   status = 302
   force = true
 
 [[redirects]]
-  from = "/analyze-fit.html"
-  to = "/analyze-fit-v2.html?v=2"
+  from = "/login.html"
+  to = "/intake"
   status = 302
   force = true
 
+# Internal operational surfaces remain separate from the public journey.
 [[redirects]]
   from = "/stage"
   to = "/stage.html"
@@ -61,35 +180,3 @@
   from = "/pdas-dashboard"
   to = "/pdas-dashboard.html"
   status = 200
-
-[[edge_functions]]
-  path = "/"
-  function = "calstategen-nav-login-cta"
-
-[[edge_functions]]
-  path = "/index.html"
-  function = "calstategen-nav-login-cta"
-
-[[edge_functions]]
-  path = "/business-dna-builder-preview.html"
-  function = "natcorp-conversion"
-
-[[edge_functions]]
-  path = "/aois-dashboard-preview.html"
-  function = "natcorp-conversion"
-
-[[edge_functions]]
-  path = "/analyze-fit-v2.html"
-  function = "natcorp-conversion"
-
-[[edge_functions]]
-  path = "/login.html"
-  function = "natcorp-conversion"
-
-[[edge_functions]]
-  path = "/welcome.html"
-  function = "natcorp-conversion"
-
-[[edge_functions]]
-  path = "/stage.html"
-  function = "natcorp-conversion"

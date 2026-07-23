@@ -1,25 +1,57 @@
-# CalStateGen
+# National Corporate Contract Exchange
 
-**Win California government contracts.** The California instance of StateGen — surfaces open
-**State of California, county, city, school district, and university** solicitations, matched to a
-business's work. **No SAM.gov required.** Sister site to [StateGen (Nevada)](https://stategen.aproposgroupllc.com).
+National Corporate Contract Exchange is an independent procurement-intelligence service operated by Apropos Group LLC.
 
-- **Domain (planned):** calstategen.aproposgroupllc.com
-- **Owner:** Apropos Group LLC
+## Public visitor journey
 
-## Status — PLACEHOLDER
-This is a branded "launching soon" landing so the Netlify project + domain can be set up now. The full
-product (bid board + keyword matching + straight-to-bid links) is built next, reusing the StateGen engine.
+The production UX has one required sequence:
 
-## Data plan (California)
-California's portals differ from Nevada's (Nevada = NGEM/Ionwave, a clean public feed). For CA:
-- **PlanetBids = primary source** — powers most CA cities/counties/districts; public bid portals (no login),
-  data served via JSON behind the SPA. Aggregate the major CA agencies (San Diego id 17950, LA, etc.).
-- **Cal eProcure** (state level) runs on PeopleSoft — brittle to scrape; later/optional.
-- **data.ca.gov** open data = awarded contracts/POs (analytics later, not current open bids).
+1. **Start** — public homepage
+2. **Intake** — visitor name, licensed business name, and email for the current visit
+3. **Business Intake** — supported service states, delivery roles, capabilities, employee range, and optional contract capacity
+4. **Dashboard** — live AOIE evaluation of current procurement candidates
 
-Live ingest = an adapter per the normalized opportunity shape (same as StateGen), wired once the
-PlanetBids endpoint is mapped.
+Every visitor follows this sequence, including returning visitors.
+
+## Access model
+
+- Free public access
+- No subscription or payment card required
+- No member login
+- No one-time password or OTP endpoint
+- No cookie-based account session
+- No `localStorage` or `sessionStorage` profile restoration in the production visitor flow
+- Refreshing, reopening, or directly visiting a later workflow step restarts Intake
+
+Intake data is transferred once through a URL fragment, read into page memory, and immediately removed from the visible address. Analyze Fit uses the same one-time handoff pattern from the live dashboard.
+
+## Live coverage
+
+Current live opportunity matching covers supported records from:
+
+- Arizona
+- California
+- Nevada
+
+Coverage varies by procurement publisher, source availability, publication method, and update schedule. The platform does not claim to include every public solicitation.
+
+## Production services
+
+- `netlify/functions/aoie-state-shadow.mjs` — live candidate retrieval and AOIE scoring
+- `netlify/functions/analyze-fit-state.mjs` — evidence-aware Executive Opportunity Assessment
+- Supabase — protected procurement data source
+- Netlify — static hosting, routing, headers, and serverless functions
+
+## Canonical routes
+
+- `/` — Start
+- `/intake` — Intake
+- `/business-intake` — Business Intake
+- `/dashboard` — live dashboard; requires a current one-time profile handoff
+- `/analyze-fit` — assessment; requires a current dashboard handoff
+
+Legacy login, OTP, onboarding, board, and service routes must not bypass Intake.
 
 ## Deploy
-GitHub → Netlify auto-deploy from `main`. Static publish (`.`); functions in `netlify/functions` (added with the live build).
+
+GitHub deploys to Netlify from `main`. The site is a static publish from `.` with functions in `netlify/functions`.
