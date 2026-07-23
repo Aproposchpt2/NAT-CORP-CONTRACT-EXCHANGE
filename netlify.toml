@@ -45,6 +45,12 @@
   force = true
 
 [[redirects]]
+  from = "/welcome"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
   from = "/intake"
   to = "/welcome.html"
   status = 200
@@ -64,7 +70,7 @@
   to = "/business-dna-builder-preview.html"
   status = 200
 
-# Legacy service URLs restart at Intake and cannot bypass the journey.
+# Legacy public routes restart at Intake and cannot bypass the journey.
 [[redirects]]
   from = "/services"
   to = "/intake"
@@ -74,6 +80,60 @@
 [[redirects]]
   from = "/services.html"
   to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/onboarding"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/onboarding.html"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/board"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/board.html"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/support"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/support.html"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/aoie-lab"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/aoie-lab.html"
+  to = "/intake"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/index-livepreview.html"
+  to = "/"
   status = 302
   force = true
 
@@ -110,6 +170,7 @@
   status = 302
   force = true
 
+# Internal operational surfaces remain separate from the public journey.
 [[redirects]]
   from = "/stage"
   to = "/stage.html"
