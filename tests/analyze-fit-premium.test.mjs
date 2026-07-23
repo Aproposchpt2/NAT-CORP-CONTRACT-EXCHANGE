@@ -68,6 +68,10 @@ assert.ok(!files.netlify.includes('to = "/pdas-dashboard.html"'),'The missing PD
 
 assert.ok(!files.aoieFunction.includes('session_token'),'AOIE must not accept legacy member sessions.');
 assert.ok(!files.aoieFunction.includes('state_alert_subscribers'),'AOIE must not restore subscriber profiles.');
+assert.ok(files.aoieFunction.includes('filterReleaseReadyOpportunities'),'AOIE must apply the actionable opportunity release gate.');
+assert.ok(files.aoieFunction.includes('release_official_source_filter_applied: true'),'AOIE must report its official-source release filter.');
+assert.ok(files.aoieFunction.includes('release_future_deadline_filter_applied: true'),'AOIE must report its future-deadline release filter.');
+assert.ok(files.aoieFunction.includes('release_qa_filter_applied: true'),'AOIE must report its QA release filter.');
 assert.ok(files.aoieFunction.includes('rateLimit'),'AOIE must have a platform rate limit.');
 assert.ok(files.analyzeFunction.includes('rateLimit'),'Analyze Fit must have a platform rate limit.');
 
