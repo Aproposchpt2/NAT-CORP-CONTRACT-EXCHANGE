@@ -65,12 +65,13 @@ export async function deliveryAgent() {
 }
 
 export async function reportingAgent({ runId, run }) {
+  const reportDayStart = `${new Date(run.started_at || run.created_at).toISOString().slice(0, 10)}T00:00:00.000Z`;
   const [jobs, feedback, evaluated, eligible, sessions] = await Promise.all([
     db('natcorp_agent_jobs','GET',`?run_id=eq.${runId}&select=*&order=created_at.asc`),
-    db('natcorp_customer_feedback','GET',`?submitted_at=gte.${encodeURIComponent(run.started_at || run.created_at)}&select=*&limit=10000`),
+    db('natcorp_customer_feedback','GET',`?submitted_at=gte.${encodeURIComponent(reportDayStart)}&select=*&limit=10000`),
     dbCount('state_contract_opportunities','?select=id&natcorp_release_evaluated_at=not.is.null'),
     dbCount('state_contract_opportunities','?select=id&natcorp_release_evaluated_at=not.is.null&natcorp_release_status=eq.eligible'),
-    dbCount('aoie_business_profiles',`?select=id&created_at=gte.${encodeURIComponent(run.started_at || run.created_at)}&visit_scoped=eq.true`),
+    dbCount('aoie_business_profiles',`?select=id&created_at=gte.${encodeURIComponent(reportDayStart)}&visit_scoped=eq.true`),
   ]);
   const brief = buildExecutiveBrief({ run, jobs, feedback, inventory: { evaluated, eligible, current_actionable: eligible, sessions } });
   const rows = await db('natcorp_daily_briefs','POST','?on_conflict=run_id',[{ run_id: runId, report_date: new Date().toISOString().slice(0,10), ...brief, generated_at: nowIso() }],'resolution=merge-duplicates,return=representation');
