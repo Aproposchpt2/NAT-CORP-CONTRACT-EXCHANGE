@@ -3,6 +3,8 @@ import {
   buildCandidateQuery,
   buildRegistryIndex,
   enrichOpportunity,
+  evaluateOpportunityRelease,
+  filterReleaseReadyOpportunities,
   isMissingCanonicalRelation,
   publicOpportunity,
 } from '../netlify/functions/_shared/aoie-state-local.mjs';
@@ -12,7 +14,7 @@ function test(name, fn) {
   catch (error) { console.error('FAIL', name); throw error; }
 }
 
-test('candidate retrieval query applies all approved filters', () => {
+test('candidate retrieval query applies all approved acquisition filters', () => {
   const { query, range } = buildCandidateQuery({ states: ['CA', 'NV'], nowIso: '2026-07-20T19:00:00.000Z', canonical: false });
   assert.equal(query.get('state_code'), 'in.(CA,NV)');
   assert.equal(query.get('is_latest_version'), 'eq.true');
@@ -46,6 +48,36 @@ test('opportunity URLs take precedence over registry fallback URLs', () => {
   const enriched = enrichOpportunity({ state_code: 'NV', issuing_organization: 'Clark County, Nevada', official_source_url: 'https://opportunity.example/123' }, index);
   assert.equal(enriched.official_source_url, 'https://opportunity.example/123');
   assert.equal(enriched.source_evidence.official_source_url_origin, 'opportunity.official_source_url');
+});
+
+test('release gate accepts only actionable, future, QA-approved opportunities', () => {
+  const now = Date.parse('2026-07-22T12:00:00Z');
+  const release = evaluateOpportunityRelease({
+    id: 'READY',
+    title: 'Network Services',
+    official_source_url: 'https://agency.example/opportunity/ready',
+    response_deadline: '2026-07-30T17:00:00Z',
+    qa_status: 'verified',
+  }, now);
+  assert.equal(release.release_ready, true);
+  assert.deepEqual(release.reasons, []);
+});
+
+test('release gate rejects missing source, missing deadline, expired deadline, and review-required records', () => {
+  const now = Date.parse('2026-07-22T12:00:00Z');
+  const rows = [
+    { id: 'NO-SOURCE', title: 'A', response_deadline: '2026-08-01T00:00:00Z', qa_status: 'verified' },
+    { id: 'NO-DEADLINE', title: 'B', official_source_url: 'https://agency.example/b', qa_status: 'verified' },
+    { id: 'EXPIRED', title: 'C', official_source_url: 'https://agency.example/c', response_deadline: '2026-07-01T00:00:00Z', qa_status: 'verified' },
+    { id: 'REVIEW', title: 'D', official_source_url: 'https://agency.example/d', response_deadline: '2026-08-01T00:00:00Z', qa_status: 'review_required' },
+    { id: 'READY', title: 'E', official_source_url: 'https://agency.example/e', response_deadline: '2026-08-01T00:00:00Z', qa_status: 'auto_ingested' },
+  ];
+  const filtered = filterReleaseReadyOpportunities(rows, now);
+  assert.deepEqual(filtered.accepted.map((row) => row.id), ['READY']);
+  assert.equal(filtered.rejected.length, 4);
+  assert.equal(filtered.rejection_summary.missing_or_invalid_official_source_url, 1);
+  assert.equal(filtered.rejection_summary.missing_or_expired_deadline, 2);
+  assert.equal(filtered.rejection_summary.qa_not_release_ready, 1);
 });
 
 test('public results preserve registry and classification evidence', () => {
