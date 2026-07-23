@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
 const files={
+  publicSite:fs.readFileSync('index.html','utf8'),
   intake:fs.readFileSync('welcome.html','utf8'),
   businessIntake:fs.readFileSync('business-dna-builder-preview.html','utf8'),
   dashboard:fs.readFileSync('aois-dashboard-preview.html','utf8'),
@@ -9,6 +10,7 @@ const files={
   netlify:fs.readFileSync('netlify.toml','utf8'),
   aoieFunction:fs.readFileSync('netlify/functions/aoie-state-shadow.mjs','utf8'),
   analyzeFunction:fs.readFileSync('netlify/functions/analyze-fit-state.mjs','utf8'),
+  businessAgent:fs.readFileSync('netlify/functions/business-profile-agent.mjs','utf8'),
 };
 
 function compileInlineScripts(name,html){
@@ -40,8 +42,18 @@ const reportSections=[
 ];
 for(const title of reportSections)assert.ok(files.analyzeFit.includes(title),`Missing Analyze Fit section: ${title}`);
 
+assert.ok(files.publicSite.includes('Opportunity Builds Business. Business Builds Community.'),'Protected public Hero messaging must remain present.');
+assert.ok(files.publicSite.includes('A Shared Commitment to Economic Opportunity.'),'Protected second-section messaging must remain present.');
+
 assert.ok(files.intake.includes('/business-intake#profile='),'Intake must hand off to Business Intake.');
+assert.ok(files.intake.includes('Hybrid advisor'),'Intake must support the approved hybrid advisor entry mode.');
+assert.ok(files.intake.includes('Legal business name'),'Intake must collect entity identity.');
+assert.ok(files.intake.includes('Business phone'),'Intake must collect entity contact information.');
 assert.ok(files.businessIntake.includes('/dashboard#profile='),'Business Intake must hand off to Dashboard.');
+assert.ok(files.businessIntake.includes('/api/business-profile-agent'),'Business Intake must use the document-analysis endpoint.');
+assert.ok(files.businessIntake.includes('Four-Level Capability Taxonomy'),'Business Intake must expose progressive capability discovery.');
+assert.ok(files.businessIntake.includes("service_states:['AZ','CA','NV']"),'Business Intake must hand all supported markets to the dashboard.');
+assert.ok(!/Where can you perform the work\?/i.test(files.businessIntake),'Business Intake must not ask the removed general work-location question.');
 assert.ok(files.dashboard.includes('/api/aoie-state-shadow'),'Dashboard must use the live AOIE endpoint.');
 assert.ok(files.dashboard.includes('/analyze-fit#assessment='),'Dashboard must hand the selected opportunity to Analyze Fit.');
 assert.ok(files.analyzeFit.includes('/api/analyze-fit-state'),'Analyze Fit must use the live assessment endpoint.');
@@ -78,6 +90,9 @@ assert.ok(files.aoieFunction.includes('release_extraction_confidence_filter_appl
 assert.ok(files.aoieFunction.includes('release_qa_filter_applied: true'),'AOIE must report its QA release filter.');
 assert.ok(files.aoieFunction.includes('rateLimit'),'AOIE must have a platform rate limit.');
 assert.ok(files.analyzeFunction.includes('rateLimit'),'Analyze Fit must have a platform rate limit.');
+assert.ok(files.businessAgent.includes("path: '/api/business-profile-agent'"),'Business Profile Agent must use the approved API path.');
+assert.ok(files.businessAgent.includes('rateLimit'),'Business Profile Agent must have a platform rate limit.');
+assert.ok(files.businessAgent.includes('persisted: false'),'Business Profile Agent must explicitly report non-persistence.');
 
 const retiredFunctions=[
   'netlify/functions/analyze-fit-ca.js',
@@ -94,4 +109,4 @@ const retiredFunctions=[
 ];
 for(const path of retiredFunctions)assert.equal(fs.existsSync(path),false,`${path} must remain retired.`);
 
-console.log('Fresh-visit dashboard and Analyze Fit regression suite complete.');
+console.log('Fresh-visit Premium Platinum journey regression suite complete.');
