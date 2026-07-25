@@ -37,7 +37,7 @@
     .journey{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:10px 0 18px}
     .step{min-height:54px;padding:10px;border:1px solid var(--line);border-radius:10px;color:var(--muted);font-size:.67rem;background:rgba(255,255,255,.025)}
     .step.active{border-color:rgba(214,180,106,.55);background:rgba(214,180,106,.08);color:#fff}
-    .layout{display:grid;grid-template-columns:minmax(0,1.42fr) minmax(300px,.58fr);gap:18px;align-items:start}
+    .layout{display:block}
     .panel{border-radius:22px;padding:26px}
     .panel h2{font-size:clamp(1.75rem,3vw,2.5rem)}
     .sub{color:var(--muted);margin:10px 0 22px;max-width:720px}
@@ -57,12 +57,7 @@
     .primary{background:linear-gradient(135deg,#f6f7f9,#d6b46a);color:#0d2149;box-shadow:0 14px 35px rgba(214,180,106,.18)}
     .ghost{border:1px solid var(--line);background:rgba(255,255,255,.05);color:#fff}
     .msg{min-height:24px;color:var(--danger);font-size:.83rem;margin-top:10px}
-    .aside-title{font:400 1.55rem Georgia,serif;margin:0 0 12px}.value-list{display:grid;gap:10px}
-    .value{padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.035)}
-    .value b{display:block;color:#fff}.value span{display:block;color:var(--muted);font-size:.77rem;margin-top:4px}
-    .privacy{margin-top:16px;padding:14px;border:1px solid rgba(125,228,177,.25);border-radius:12px;background:rgba(125,228,177,.06);color:#d9f7e8;font-size:.78rem}
-    .micro{font-size:.7rem;color:#8798b5;margin-top:14px}
-    @media(max-width:960px){.hero,.layout{grid-template-columns:1fr}.hero-proof{grid-template-columns:repeat(3,1fr)}.journey{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:960px){.hero{grid-template-columns:1fr}.hero-proof{grid-template-columns:repeat(3,1fr)}.journey{grid-template-columns:repeat(3,1fr)}}
     @media(max-width:680px){.form-grid,.modes,.hero-proof,.journey{grid-template-columns:1fr}.panel{padding:20px}.actions{align-items:stretch}.btn{width:100%}.fresh{display:none}}
   </style>
 </head>
@@ -130,18 +125,6 @@
           </div>
         </form>
       </section>
-
-      <aside class="panel glass" aria-label="Intake value summary">
-        <h2 class="aside-title">What AOIS will build</h2>
-        <div class="value-list">
-          <div class="value"><b>Business Snapshot</b><span>A concise executive understanding of the company.</span></div>
-          <div class="value"><b>Business DNA</b><span>Services, products, delivery methods, qualifications, evidence, and capacity.</span></div>
-          <div class="value"><b>Capability Review</b><span>Confirmed strengths, unresolved details, and recommendations.</span></div>
-          <div class="value"><b>Mission Control Dashboard</b><span>Live evidence-based opportunity matching across supported markets.</span></div>
-        </div>
-        <div class="privacy"><strong>Current-visit privacy.</strong> No account, login, OTP, cookie, local storage, or returning browser session is created. Uploaded material is processed only for this visit and is not written to browser storage.</div>
-        <p class="micro">AOIS recommendations require your confirmation. A selected label or extracted phrase is not treated as verified evidence until you approve it.</p>
-      </aside>
     </main>
   </div>
 
