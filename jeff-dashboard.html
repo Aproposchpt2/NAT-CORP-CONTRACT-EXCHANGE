@@ -10,7 +10,18 @@
 </head>
 <body>
 <header class="top"><div class="brand"><div class="mark">JM</div><div><h1>Jeff Dashboard</h1><small>PDAS Executive Mission Control</small></div></div><button class="refresh" onclick="loadData()">Refresh Live Data</button></header>
-<main class="shell"><div id="app" class="loading">Loading live PDAS metrics…</div></main>
+<main class="shell">
+<div id="gate" class="panel" style="max-width:420px;margin:80px auto;padding:28px;text-align:center">
+  <h2 style="font:500 20px Georgia,serif;margin:0 0 6px">Password required</h2>
+  <p class="muted" style="margin:0 0 18px;font-size:12px">This is an internal executive dashboard.</p>
+  <form id="gateForm" style="display:flex;gap:8px">
+    <input id="gatePassword" type="password" autocomplete="off" placeholder="Password" style="flex:1;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:#081936;color:#fff">
+    <button class="refresh" type="submit">Enter</button>
+  </form>
+  <p id="gateError" style="color:var(--red);font-size:12px;min-height:16px;margin:10px 0 0"></p>
+</div>
+<div id="app" class="loading" style="display:none">Loading live PDAS metrics…</div>
+</main>
 <script>
 const api='/.netlify/functions/jeff-dashboard';
 const esc=s=>String(s??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
@@ -39,7 +50,39 @@ ${bars('Top Issuing Organizations',d.organizations||[],'Organizations represente
 <section class="panel full"><h2>Acquisition Connector Health</h2><div class="tablewrap"><table><thead><tr><th>Job</th><th>Source</th><th>Status</th><th>Last Success</th><th>Inserted</th><th>Failures</th><th>Next Run</th></tr></thead><tbody>${jobs.map(j=>`<tr><td><strong>${esc(j.job_name||j.job_id)}</strong><br><span class="muted">${esc(j.job_id)}</span></td><td>${esc(j.source_platform||'—')}</td><td><span class="badge ${cls(j.job_status)}">${esc(j.job_status||'unknown')}</span></td><td>${dt(j.last_success_at)}</td><td>${n(j.last_records_inserted)}</td><td>${n(j.consecutive_failures)}</td><td>${dt(j.next_scheduled_at)}</td></tr>`).join('')||'<tr><td colspan="7">No acquisition jobs registered.</td></tr>'}</tbody></table></div></section>
 <section class="panel full"><h2>Recent Acquisition Runs</h2><div class="tablewrap"><table><thead><tr><th>Run</th><th>Job</th><th>Status</th><th>Started</th><th>Discovered</th><th>Inserted</th><th>Updated</th><th>Failed</th></tr></thead><tbody>${runs.map(r=>`<tr><td>${esc(r.ingestion_run_id||r.run_id)}</td><td>${esc(r.job_id)}</td><td><span class="badge ${cls(r.run_status)}">${esc(r.run_status)}</span></td><td>${dt(r.started_at)}</td><td>${n(r.records_discovered)}</td><td>${n(r.records_inserted)}</td><td>${n(r.records_updated)}</td><td>${n(r.records_failed)}</td></tr>`).join('')||'<tr><td colspan="8">No acquisition runs recorded.</td></tr>'}</tbody></table></div></section>
 </div>`}
-async function loadData(){document.getElementById('app').className='loading';document.getElementById('app').textContent='Loading live PDAS metrics…';try{const r=await fetch(api,{cache:'no-store'}),d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||`HTTP ${r.status}`);render(d)}catch(e){document.getElementById('app').className='error';document.getElementById('app').innerHTML='<strong>Dashboard unavailable.</strong><br>'+esc(e.message)}}
-loadData();
+async function loadData(){
+  const pw=sessionStorage.getItem('jeffDashboardPassword');
+  if(!pw){showGate();return}
+  document.getElementById('app').className='loading';document.getElementById('app').textContent='Loading live PDAS metrics…';
+  try{
+    const r=await fetch(api,{cache:'no-store',headers:{'x-dashboard-password':pw}});
+    if(r.status===401){sessionStorage.removeItem('jeffDashboardPassword');showGate('Incorrect password.');return}
+    const d=await r.json();
+    if(!r.ok||!d.ok)throw new Error(d.error||`HTTP ${r.status}`);
+    render(d);
+  }catch(e){document.getElementById('app').className='error';document.getElementById('app').innerHTML='<strong>Dashboard unavailable.</strong><br>'+esc(e.message)}
+}
+function showGate(err){
+  document.getElementById('app').style.display='none';
+  document.getElementById('gate').style.display='block';
+  document.getElementById('gateError').textContent=err||'';
+  document.getElementById('gatePassword').focus();
+}
+document.getElementById('gateForm').addEventListener('submit',(e)=>{
+  e.preventDefault();
+  const pw=document.getElementById('gatePassword').value;
+  if(!pw)return;
+  sessionStorage.setItem('jeffDashboardPassword',pw);
+  document.getElementById('gate').style.display='none';
+  document.getElementById('app').style.display='block';
+  loadData();
+});
+if(sessionStorage.getItem('jeffDashboardPassword')){
+  document.getElementById('gate').style.display='none';
+  document.getElementById('app').style.display='block';
+  loadData();
+}else{
+  showGate();
+}
 </script>
 </body></html>

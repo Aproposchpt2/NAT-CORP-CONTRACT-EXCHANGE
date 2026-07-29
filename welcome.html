@@ -189,6 +189,7 @@
         started_at: new Date().toISOString()
       };
 
+      localStorage.setItem('natcorpIntakeSubmitted', '1');
       location.assign('/business-intake#profile=' + encode(intake));
     });
   })();

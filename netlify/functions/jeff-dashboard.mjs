@@ -26,7 +26,11 @@ function eligible(r,now){
 }
 async function rows(table,select='*',pageSize=1000){let out=[];for(let from=0;;from+=pageSize){const url=`${BASE}/rest/v1/${table}?select=${encodeURIComponent(select)}&order=created_at.asc&offset=${from}&limit=${pageSize}`;const r=await fetch(url,{headers});if(!r.ok)throw new Error(`${table}: ${r.status} ${await r.text()}`);const page=await r.json();out.push(...page);if(page.length<pageSize)break;}return out;}
 const group=(items,key)=>Object.entries(items.reduce((m,x)=>{const k=text(x[key])||'Unknown';m[k]=(m[k]||0)+1;return m},{})).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count);
-export const handler=async()=>{try{
+export const handler=async(event)=>{try{
+  const required=process.env.JEFF_DASHBOARD_PASSWORD||'';
+  const supplied=(event.headers&&(event.headers['x-dashboard-password']||event.headers['X-Dashboard-Password']))||'';
+  if(!required)return{statusCode:500,headers:{'content-type':'application/json'},body:JSON.stringify({ok:false,error:'Dashboard password is not configured'})};
+  if(supplied!==required)return{statusCode:401,headers:{'content-type':'application/json'},body:JSON.stringify({ok:false,error:'Unauthorized'})};
   if(!BASE||!KEY)throw new Error('Supabase environment is not configured');
   const opportunities=await rows('state_contract_opportunities','pdas_record_id,state_code,status,title,description,response_deadline,official_source_url,source_url,issuing_organization,issuing_department,source_platform,contact_name,contact_email,contact_phone,document_urls,requirements,raw_source_payload,qa_status,created_at,updated_at');
   let publishers=[],jobs=[],runs=[];
