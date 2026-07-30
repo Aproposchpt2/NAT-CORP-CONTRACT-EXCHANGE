@@ -22,8 +22,14 @@ export function internalAuthorized(req) {
 }
 
 export function commandAuthorized(req) {
-  const expected = env('NATCORP_OPERATOR_ACCESS') || env('NATCORP_COMMAND_KEY');
-  return Boolean(expected && req.headers.get('x-natcorp-command-key') === expected);
+  const operatorExpected = env('NATCORP_OPERATOR_ACCESS') || env('NATCORP_COMMAND_KEY');
+  const executiveExpected = env('JEFF_DASHBOARD_PASSWORD');
+  const operatorSupplied = req.headers.get('x-natcorp-command-key') || '';
+  const executiveSupplied = req.headers.get('x-dashboard-password') || operatorSupplied;
+  return Boolean(
+    (operatorExpected && operatorSupplied === operatorExpected) ||
+    (executiveExpected && executiveSupplied === executiveExpected)
+  );
 }
 
 function dbConfig() {
