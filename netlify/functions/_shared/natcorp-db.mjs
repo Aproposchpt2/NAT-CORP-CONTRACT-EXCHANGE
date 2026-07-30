@@ -1,5 +1,6 @@
 import { idempotencyKey } from './natcorp-core.mjs';
 
+// VAR-AUTH-001: production runtime redeploy marker after Executive password secret synchronization.
 export const env = (name) => globalThis.Netlify?.env?.get(name) || process.env[name] || '';
 export const nowIso = () => new Date().toISOString();
 export const json = (status, body) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
