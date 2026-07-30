@@ -1,26 +1,10 @@
 import { db, env, json, rpc, commandAuthorized, sameOrigin } from './_shared/natcorp-db.mjs';
+import { aproposLogoAttachment, assertActionableOpportunity, buildExternalOutreach } from './lib/apropos-brand.mjs';
 
-const PUBLIC_BASE = () => (env('NATCORP_PUBLIC_BASE_URL') || 'https://natcorp.aproposgroupllc.com').replace(/\/$/, '');
 const VERIFY_URL = 'https://aproposgroupllc.com/verify';
 const clip = (v, n = 5000) => String(v ?? '').slice(0, n);
 const arr = (v) => Array.isArray(v) ? v : [];
 const safe = (v) => String(v ?? '').trim();
-
-function encode64url(input) {
-  const bytes = typeof input === 'string' ? new TextEncoder().encode(input) : input;
-  let binary = '';
-  for (const b of bytes) binary += String.fromCharCode(b);
-  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
-}
-
-async function signPublicToken(payload) {
-  const secret = env('BC_VERIFY_SECRET') || env('NATCORP_INTERNAL_TOKEN_PRODUCTION') || env('NATCORP_INTERNAL_TOKEN');
-  if (!secret) throw new Error('Public continuation signing secret is not configured.');
-  const body = encode64url(JSON.stringify(payload));
-  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
-  const sig = new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(body)));
-  return `${body}.${encode64url(sig)}`;
-}
 
 function extractResponseText(data) {
   if (typeof data?.output_text === 'string') return data.output_text;
@@ -184,17 +168,28 @@ async function enrichContact(candidateId) {
 async function generateOutreach(candidateId) {
   const candidate = await loadCandidate(candidateId);
   const opportunity = await loadOpportunity(candidate.opportunity_id);
+  assertActionableOpportunity(opportunity);
   const dna = await loadDna(candidate.opportunity_id);
-  const token = await signPublicToken({ v: 1, opportunity_id: opportunity.id, candidate_id: candidate.candidate_id, command_id: candidate.command_id, exp: Date.now() + 7 * 86400000 });
-  const reviewUrl = `${PUBLIC_BASE()}/opportunity-review.html?token=${encodeURIComponent(token)}`;
-  const declineUrl = `${reviewUrl}&decision=not_interested`;
-  const title = opportunity.title || 'Public Contract Opportunity';
-  const deadline = opportunity.response_deadline ? new Date(opportunity.response_deadline).toLocaleString('en-US', { timeZone: 'America/Los_Angeles', dateStyle: 'medium', timeStyle: 'short' }) + ' PT' : 'See official solicitation';
-  const fit = arr(candidate.contract_fit_notes).slice(0, 2).join(' ');
-  const subject = `Open contract opportunity identified for ${candidate.business_name}`;
-  const body = `Hello${candidate.contact_name ? ` ${candidate.contact_name}` : ''},\n\nAPROPOS GROUP LLC identified an open public-sector contract that appears aligned with ${candidate.business_name}'s published capabilities.\n\nOpportunity: ${title}\nIssuing Organization: ${opportunity.issuing_organization || opportunity.issuing_department || 'See official source'}\nResponse Deadline: ${deadline}\nWhy your business was identified: ${fit || 'Your published services and experience align with the work described in the contract.'}\n\nNAT-CORP is an APROPOS procurement-intelligence service that analyzes open State and State-entity opportunities and identifies businesses that appear capable of performing the work. APROPOS is not the issuing government agency and does not guarantee an award.\n\nBefore providing business information, you can verify APROPOS GROUP LLC here:\n${VERIFY_URL}\n\nIf you would like to evaluate this opportunity, continue here:\n${reviewUrl}\n\nIf this opportunity is not of interest, use this link and we will remove it from your active opportunity record:\n${declineUrl}\n\nYou may also reply directly to this email.\n\nJeff Mitchell\nFounder, APROPOS GROUP LLC\nProcurement Intelligence & Technology Solutions\n${VERIFY_URL}`;
-  const rows = await db('natcorp_outreach_events', 'POST', '', [{ opportunity_id: opportunity.id, command_id: candidate.command_id, candidate_id: candidate.candidate_id, business_name: candidate.business_name, contact_name: candidate.contact_name || null, contact_email: candidate.contact_email || null, subject, body_text: body, status: 'draft', provider_payload: { review_url: reviewUrl, decline_url: declineUrl, verify_url: VERIFY_URL, contract_dna_id: dna?.id || null } }], 'return=representation');
-  return { outreach: rows?.[0], review_url: reviewUrl, decline_url: declineUrl };
+  const email = buildExternalOutreach({ candidate, opportunity, verifyUrl: VERIFY_URL });
+  const rows = await db('natcorp_outreach_events', 'POST', '', [{
+    opportunity_id: opportunity.id,
+    command_id: candidate.command_id,
+    candidate_id: candidate.candidate_id,
+    business_name: candidate.business_name,
+    contact_name: candidate.contact_name || null,
+    contact_email: candidate.contact_email || null,
+    subject: email.subject,
+    body_text: email.bodyText,
+    status: 'draft',
+    provider_payload: {
+      verify_url: VERIFY_URL,
+      contract_dna_id: dna?.id || null,
+      email_html: email.bodyHtml,
+      external_response_method: 'reply_email',
+      internal_review_url_transmitted: false,
+    }
+  }], 'return=representation');
+  return { outreach: rows?.[0] };
 }
 
 function resendFrom() {
@@ -209,11 +204,27 @@ async function sendOutreach(outreachId) {
   const o = rows?.[0];
   if (!o) throw new Error('Outreach event not found.');
   if (!o.contact_email) throw new Error('VAR: Selected business does not yet have a verified public contact email.');
+  const opportunity = await loadOpportunity(o.opportunity_id);
+  assertActionableOpportunity(opportunity);
+  const html = safe(o.provider_payload?.email_html);
+  if (!html) throw new Error('VAR: Branded HTML outreach payload is missing; send is blocked.');
+  if (/opportunity-review|natcorp\.aproposgroupllc\.com\/(?:opportunity-fulfillment|opportunity-review)/i.test(`${o.body_text}\n${html}`)) {
+    throw new Error('VAR: Internal NAT-CORP route detected in external outreach; send is blocked.');
+  }
   const key = env('RESEND_API_KEY');
   if (!key) throw new Error('VAR: RESEND_API_KEY is not configured.');
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: resendFrom(), to: [o.contact_email], subject: o.subject, text: o.body_text, reply_to: env('NATCORP_INBOUND_EMAIL') || 'jmitchell@aproposgroupllc.com', tags: [{ name: 'service', value: 'natcorp-otf' }, { name: 'outreach_id', value: o.outreach_id.replaceAll('-', '').slice(0, 32) }] }),
+    body: JSON.stringify({
+      from: resendFrom(),
+      to: [o.contact_email],
+      subject: o.subject,
+      text: o.body_text,
+      html,
+      attachments: [aproposLogoAttachment()],
+      reply_to: env('NATCORP_INBOUND_EMAIL') || 'jmitchell@aproposgroupllc.com',
+      tags: [{ name: 'service', value: 'natcorp-otf' }, { name: 'outreach_id', value: o.outreach_id.replaceAll('-', '').slice(0, 32) }]
+    }),
     signal: AbortSignal.timeout(30000),
   });
   const data = await response.json().catch(() => ({}));
@@ -261,7 +272,7 @@ export default async function handler(req) {
       try { return json(200, { ok: true, ...(await context(id)) }); } catch (e) { return json(500, { ok: false, error: e.message }); }
     }
     try {
-      const rows = await db('state_contract_opportunities', 'GET', '?status=eq.open&select=id,pdas_record_id,title,issuing_organization,issuing_department,state_code,response_deadline,procurement_type,natcorp_contract_dna_status,official_source_url,source_url&order=response_deadline.asc.nullslast&limit=60');
+      const rows = await db('state_contract_opportunities', 'GET', '?status=eq.open&response_deadline=gt.now()&select=id,pdas_record_id,title,issuing_organization,issuing_department,state_code,response_deadline,procurement_type,natcorp_contract_dna_status,official_source_url,source_url&order=response_deadline.asc.nullslast&limit=60');
       return json(200, { ok: true, opportunities: rows || [] });
     } catch (e) { return json(500, { ok: false, error: e.message }); }
   }
