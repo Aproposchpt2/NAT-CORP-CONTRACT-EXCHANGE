@@ -1,0 +1,256 @@
+# NAT-CORP Opportunity-to-Fulfillment Current Configuration Baseline
+
+**Document ID:** NATCORP-OTF-CURRENT-CONFIGURATION-2026-07-30  
+**Status:** R&D SAFEKEEPING BASELINE  
+**Repository:** `Aproposchpt2/NAT-CORP-CONTRACT-EXCHANGE`  
+**Production branch:** `main`  
+**Production URL:** `https://natcorp.aproposgroupllc.com/opportunity-fulfillment`  
+**Netlify site:** `national-corp-contract-exchange`  
+**Netlify site ID:** `35650334-7d30-459f-8369-8f5bbc7350ec`  
+**Supabase project:** `judislfknmhofcgzyozc`
+
+## 1. Purpose
+
+This document captures the current NAT-CORP Opportunity-to-Fulfillment configuration after live R&D testing and remediation. It is intended as a safe restoration reference and must not contain secrets, passwords, private API keys, service-role credentials, or exposed continuation tokens.
+
+## 2. Locked Operating Model
+
+The OTF workflow is an internal APROPOS operating workflow.
+
+- `/opportunity-fulfillment` is an internal operator workspace.
+- `/opportunity-review` is not an approved public-facing continuation path.
+- External businesses do not receive unrestricted access to the NAT-CORP execution engine.
+- External trust verification uses `https://aproposgroupllc.com/verify`.
+- Browser clients never receive Supabase service-role credentials, AI provider keys, or backend operational secrets.
+- Operator execution follows: **SYSTEM RECOMMENDS → OPERATOR AUTHORIZES → SYSTEM EXECUTES**.
+
+## 3. Current Operator Workflow
+
+1. Select Contract
+2. Build Contract DNA
+3. Search Contractor Repository
+4. Create Business Search
+5. Execute Business Discovery
+6. Enrich Selected Contact
+7. Generate Outreach
+8. Send Outreach
+
+The guided UI enables only the next executable step. Completed steps are visually marked complete. Step 8 requires explicit browser confirmation before the backend send action is invoked.
+
+## 4. Contract Lifecycle Controls
+
+Authoritative opportunity inventory is `public.state_contract_opportunities`.
+
+A production PostgreSQL lifecycle processor automatically moves aged opportunities out of the active pool:
+
+- `status = 'closed'`
+- `lifecycle_status = 'EXPIRED'`
+- `closed_at` populated if absent
+- `updated_at` refreshed
+
+Production function:
+
+`public.natcorp_expire_aged_contracts()`
+
+Schedule:
+
+`*/15 * * * *`
+
+Cron job name:
+
+`natcorp-expire-aged-contracts`
+
+The application also filters the operator opportunity list to future `response_deadline` values. Step 7 and Step 8 perform an additional actionability check so stale browser state cannot authorize outreach after a deadline passes.
+
+## 5. Contract DNA / Step 4 Preflight
+
+Business Discovery creation is fail-closed on authoritative Contract DNA readiness.
+
+The production database wrapper `public.natcorp_create_business_discovery_command(uuid)` performs an automatic Contract DNA preflight:
+
+1. Reload opportunity from PostgreSQL.
+2. Confirm opportunity status is `open`.
+3. Confirm response deadline exists and is in the future.
+4. Load existing Contract DNA profile.
+5. If DNA is missing, stale, `not_started`, or not nomination-ready, invoke `public.natcorp_build_contract_dna(array[p_opportunity_id])`.
+6. Reload authoritative opportunity and DNA state.
+7. Proceed only when `natcorp_contract_dna_status = 'complete'` and DNA `nomination_ready = true`.
+8. Otherwise fail closed with a VAR-style exception.
+
+This prevents Step 4 from depending solely on stale browser state.
+
+## 6. Business Discovery Configuration
+
+Business Discovery is controlled by Contract DNA only.
+
+Rules:
+
+- No preselected business.
+- Contract DNA is the search specification.
+- Target five legitimate businesses when possible.
+- Multiple real businesses must be returned before selection.
+- Official business and authoritative public evidence are preferred.
+- Contact information is optional during initial discovery.
+- Unsupported qualifications, capacity, licensing, or performance remain Unavailable/Unverified.
+- Directories are not accepted as candidate businesses.
+- Strongest supported candidate is selected after ranking.
+
+Current normalized backend acceptance allows up to eight candidate records, while the discovery instruction targets five businesses when possible.
+
+**Known R&D finding:** candidate ranking is functioning, but displayed numeric discovery scores have been observed as `0`. This remains a separate remediation target and must not be mistaken for a validated scoring result.
+
+## 7. Outreach Generation Configuration
+
+Step 7 creates a draft only. It does not transmit an email.
+
+Current outbound draft rules:
+
+- Contract must still be open.
+- Response deadline must exist and remain in the future.
+- Greeting uses a verified name when available.
+- Placeholder names such as `Unavailable`, `Unknown`, `N/A`, or equivalent fall back to `Hello,`.
+- No `/opportunity-review` continuation URL is generated for external use.
+- No signed external continuation token is generated by the current Step 7 flow.
+- No internal NAT-CORP execution route may be included in external outreach.
+- APROPOS verification URL is `https://aproposgroupllc.com/verify`.
+- Interested businesses are instructed to reply directly to the email.
+- Businesses not interested are instructed to reply and state that they are not interested.
+- Plain-text companion body is retained.
+- Responsive HTML email is generated.
+- APROPOS GROUP LLC logo is embedded as a CID inline email attachment rather than relying on a public image host.
+
+Current branding helper:
+
+`netlify/functions/lib/apropos-brand.mjs`
+
+Current execution function:
+
+`netlify/functions/opportunity-fulfillment.mjs`
+
+## 8. Send-Time Safety Controls
+
+Step 8 performs fresh validation immediately before provider transmission.
+
+Send is blocked when:
+
+- outreach record is missing,
+- recipient email is missing,
+- opportunity is no longer open,
+- response deadline is missing,
+- response deadline has passed,
+- branded HTML payload is missing,
+- an internal NAT-CORP route is detected in text or HTML,
+- Resend configuration is unavailable.
+
+The external payload includes:
+
+- branded HTML,
+- plain-text fallback,
+- CID APROPOS logo attachment,
+- reply-to address from server configuration,
+- provider tags for NAT-CORP OTF and outreach ID.
+
+No email should be considered sent until the provider returns success and the outreach event is updated to `sent` with provider message evidence.
+
+## 9. Live-Test Validated Outreach Format
+
+The current live-tested draft successfully demonstrated:
+
+- clean `Hello,` fallback,
+- correct selected business,
+- correct business email,
+- current opportunity title,
+- issuing organization,
+- future response deadline,
+- capability-fit rationale,
+- NAT-CORP/APROPOS disclosure,
+- APROPOS verification URL,
+- direct-reply interest path,
+- direct-reply not-interested path,
+- no internal `/opportunity-review` URL,
+- no exposed continuation token.
+
+The live test reached the Step 8 explicit confirmation dialog. At the time of this baseline, that dialog is the expected final operator authorization boundary.
+
+## 10. Important Production Remediations
+
+### PR #37
+**Purpose:** Contract DNA nomination readiness and UI gating.
+
+Corrected blank-description fallback, prevented missing procurement contact from blocking nomination, gated downstream steps on DNA status `complete`, and improved expired/non-actionable client handling.
+
+### PR #39
+**Purpose:** Live outreach VAR remediation.
+
+Production merge commit:
+
+`fa4cbe616bb1228639b572fd2bd6a672c6305e40`
+
+Implemented:
+
+- Step 7/8 deadline safety,
+- removal of externalized internal engine routes,
+- direct-reply response method,
+- safe greeting fallback,
+- branded HTML,
+- embedded APROPOS logo,
+- send-time internal-route fail-closed scan.
+
+Validated Netlify production deploy:
+
+`6a6bdef8d000320008b7891a`
+
+### PR #40
+**Purpose:** Repository safekeeping of the Contract DNA automatic preflight migration.
+
+Production repository merge commit:
+
+`e6679b4668d9ba30ee65b80a61b52673174823eb`
+
+Migration source:
+
+`supabase/migrations/20260730234157_natcorp_business_discovery_command_dna_preflight.sql`
+
+## 11. Security Boundary
+
+Never place the following in this document or any client-delivered payload:
+
+- Executive Command Center password
+- NAT-CORP operator credential
+- Supabase service-role key
+- OpenAI API key
+- Anthropic API key
+- Resend API key
+- Stripe secret key
+- webhook signing secrets
+- internal signing secrets
+- exposed continuation tokens
+
+## 12. Restoration / Regression Checklist
+
+After any future restoration or major remediation, verify in this order:
+
+1. Production operator can authenticate.
+2. Only actionable future contracts appear in the selector.
+3. Contract selection loads authoritative context.
+4. Contract DNA can reach `complete` when source evidence is usable.
+5. Step 4 automatically preflights/rebuilds DNA if the authoritative state is `not_started` or stale.
+6. Repository-first search executes before external Business Discovery.
+7. Business Discovery returns multiple evidence-backed candidates and targets five when possible.
+8. Selected contact enrichment never fabricates an email.
+9. Step 7 draft contains no internal NAT-CORP continuation route or token.
+10. `Hello Unavailable` cannot occur.
+11. Verification URL is APROPOS corporate verification only.
+12. Step 8 requires explicit operator confirmation.
+13. Step 8 revalidates contract actionability.
+14. Send-time route scan fails closed on any internal NAT-CORP URL.
+15. Provider success evidence is persisted before workflow is treated as sent.
+16. Candidate discovery score display is reviewed separately until the current zero-score issue is resolved.
+
+## 13. R&D Governance Note
+
+This configuration is the result of live R&D testing. The governing method remains:
+
+**BUILD → TEST → OBSERVE → DISCOVER → IMPROVE → RETEST → ACCEPT**
+
+A live-test failure is treated as evidence for system improvement, not as permission to bypass fail-closed controls.
