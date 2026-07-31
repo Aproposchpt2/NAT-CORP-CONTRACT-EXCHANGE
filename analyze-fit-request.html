@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Confirm Business Information | NAT-CORP Analyze Fit</title>
+<style>
+:root{--navy:#071a3e;--blue:#103478;--paper:#f4f7fb;--ink:#24344c;--muted:#66758a;--line:#d8e1ed;--gold:#d5b15a;--green:#176c45;--red:#932e2e}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 Arial,sans-serif}.top{background:linear-gradient(135deg,#071a3e,#103478);color:#fff;padding:28px 20px}.wrap{width:min(980px,calc(100% - 28px));margin:auto}.eyebrow{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:#d6e1f4}.top h1{font:500 clamp(2rem,5vw,3.5rem)/1.05 Georgia,serif;margin:.5rem 0}.top p{max-width:760px;color:#d8e4f5}.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;margin:22px auto;box-shadow:0 18px 50px rgba(12,35,75,.08)}.context{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}.context div{background:#f6f8fc;border:1px solid var(--line);border-radius:10px;padding:14px}.context small{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}.context strong{display:block;margin-top:4px}.notice{border-left:4px solid var(--gold);background:#fff9e9;padding:14px;margin:0 0 20px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{margin-bottom:14px}.field.full{grid-column:1/-1}label{display:block;font-size:.82rem;font-weight:800;margin-bottom:6px}input,textarea{width:100%;padding:12px;border:1px solid #cbd7e6;border-radius:9px;font:inherit;color:var(--ink);background:#fff}textarea{min-height:110px;resize:vertical}.read{background:#f7f9fc}.fine{font-size:.82rem;color:var(--muted)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.btn{border:0;border-radius:9px;padding:13px 17px;font-weight:800;cursor:pointer}.primary{background:var(--blue);color:#fff}.ghost{background:#edf2f8;color:var(--blue)}.btn:disabled{opacity:.5}.status{display:none;margin-top:16px;padding:13px;border-radius:9px}.status.on{display:block}.status.good{background:#e9f7ef;color:var(--green)}.status.bad{background:#fff0f0;color:var(--red)}.loading{text-align:center;padding:50px}.hidden{display:none!important}@media(max-width:700px){.grid,.context{grid-template-columns:1fr}.field.full{grid-column:auto}.panel{padding:18px}.top{padding:24px 14px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><div class="eyebrow">NAT-CORP · Contract-Specific Analyze Fit</div><h1>Confirm your business information.</h1><p>This form is precompleted from the opportunity introduction. Review what NAT-CORP already knows, correct anything that is inaccurate, and add only missing information before the Analyze Fit report is created.</p></div></header>
+<main class="wrap">
+<section class="panel" id="loading"><div class="loading"><strong>Loading business and contract context…</strong></div></section>
+<section class="panel hidden" id="formPanel">
+<div class="context"><div><small>Business</small><strong id="ctxBusiness">—</strong></div><div><small>Selected Contract</small><strong id="ctxOpportunity">—</strong></div></div>
+<div class="notice"><strong>The contract is already selected.</strong> Analyze Fit will compare this business against this specific opportunity. It will not search for or recommend a different opportunity.</div>
+<form id="fitForm">
+<div class="grid">
+<div class="field"><label for="businessName">Business name *</label><input id="businessName" required></div>
+<div class="field"><label for="contactName">Your name</label><input id="contactName"></div>
+<div class="field"><label for="contactEmail">Contact email *</label><input id="contactEmail" type="email" required></div>
+<div class="field"><label for="contactPhone">Phone</label><input id="contactPhone"></div>
+<div class="field"><label for="website">Business website</label><input id="website" type="url"></div>
+<div class="field"><label for="location">Business location</label><input id="location" class="read" readonly></div>
+<div class="field full"><label for="capabilities">Capability evidence</label><textarea id="capabilities" placeholder="One capability per line"></textarea><div class="fine">Keep only capabilities your business can actually perform.</div></div>
+<div class="field full"><label for="qualifications">Qualifications / contract-relevant evidence</label><textarea id="qualifications" placeholder="One item per line"></textarea></div>
+<div class="field full"><label for="pastPerformance">Relevant past performance</label><textarea id="pastPerformance" placeholder="One experience or project per line"></textarea></div>
+<div class="field full"><label for="fitNotes">Why NAT-CORP identified this business</label><textarea id="fitNotes" class="read" readonly></textarea></div>
+<div class="field full"><label for="notes">Additional information</label><textarea id="notes" placeholder="Add only information that could affect this specific contract fit analysis."></textarea></div>
+</div>
+<h2 style="font-family:Georgia,serif;color:var(--blue);margin-top:28px">Selected contract</h2>
+<div class="grid">
+<div class="field full"><label>Opportunity</label><input id="contractTitle" class="read" readonly></div>
+<div class="field"><label>Issuing organization</label><input id="agency" class="read" readonly></div>
+<div class="field"><label>Response deadline</label><input id="deadline" class="read" readonly></div>
+</div>
+<div class="actions"><button class="btn primary" id="createReport" type="submit">Confirm & Create Analyze Fit Report</button><a class="btn ghost" href="/opportunity-services">Back to Opportunity Services</a></div>
+<div class="status" id="status" role="status"></div>
+</form>
+</section>
+</main>
+<script>
+'use strict';
+const $=id=>document.getElementById(id),qs=new URLSearchParams(location.search),requestId=qs.get('request')||'',token=qs.get('token')||'';
+let context=null;
+const lines=v=>(Array.isArray(v)?v:[]).filter(Boolean).join('\n');
+const split=v=>String(v||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);
+function showStatus(message,good=false){const el=$('status');el.textContent=message;el.className='status on '+(good?'good':'bad')}
+async function api(url,opts={}){const r=await fetch(url,{cache:'no-store',...opts,headers:{...(opts.body?{'Content-Type':'application/json'}:{}),...(opts.headers||{})}});const data=await r.json().catch(()=>({}));if(!r.ok||!data.ok)throw new Error(data.error||`HTTP ${r.status}`);return data}
+function fill(data){context=data;const b=data.business||{},o=data.opportunity||{};$('ctxBusiness').textContent=b.business_name||'Business';$('ctxOpportunity').textContent=o.title||'Selected contract';$('businessName').value=b.business_name||'';$('contactName').value=b.contact_name||'';$('contactEmail').value=b.contact_email||'';$('contactPhone').value=b.contact_phone||'';$('website').value=b.website||'';$('location').value=[b.city,b.state].filter(Boolean).join(', ');$('capabilities').value=lines(b.capabilities);$('qualifications').value=lines(b.qualification_evidence);$('pastPerformance').value=lines(b.past_performance);$('fitNotes').value=lines(b.contract_fit_notes);$('notes').value=b.notes||'';$('contractTitle').value=o.title||'';$('agency').value=o.issuing_organization||o.issuing_department||'';$('deadline').value=o.response_deadline?new Date(o.response_deadline).toLocaleString():'Unavailable';$('loading').classList.add('hidden');$('formPanel').classList.remove('hidden')}
+async function load(){if(!requestId||!token){$('loading').innerHTML='<div class="loading"><strong>Analyze Fit link is incomplete.</strong></div>';return}try{fill(await api(`/api/analyze-fit-service?request=${encodeURIComponent(requestId)}&token=${encodeURIComponent(token)}`))}catch(e){$('loading').innerHTML=`<div class="loading"><strong>Analyze Fit could not be loaded.</strong><p>${e.message}</p></div>`}}
+$('fitForm').addEventListener('submit',async e=>{e.preventDefault();const btn=$('createReport');btn.disabled=true;showStatus('Creating Business DNA and the contract-specific Analyze Fit report…',true);const b=context?.business||{};const profile={business_name:$('businessName').value,contact_name:$('contactName').value,contact_email:$('contactEmail').value,contact_phone:$('contactPhone').value,website:$('website').value,city:b.city||'',state:b.state||context?.opportunity?.state_code||'',service_states:b.service_states||[],capabilities:split($('capabilities').value),qualification_evidence:split($('qualifications').value),past_performance:split($('pastPerformance').value),contract_fit_notes:split($('fitNotes').value),notes:$('notes').value};try{const data=await api('/api/analyze-fit-service',{method:'POST',body:JSON.stringify({action:'submit_and_analyze',request_id:requestId,token,profile})});const target=`${data.result.next_url}&token=${encodeURIComponent(token)}`;showStatus('Analyze Fit report created. Opening the report…',true);setTimeout(()=>location.href=target,500)}catch(err){showStatus(err.message,false);btn.disabled=false}});
+load();
+</script>
+</body>
+</html>
