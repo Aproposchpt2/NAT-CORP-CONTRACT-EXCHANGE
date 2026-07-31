@@ -2,9 +2,11 @@ import { db, env, json, rpc, commandAuthorized, sameOrigin } from './_shared/nat
 import { aproposLogoAttachment, assertActionableOpportunity } from './lib/apropos-brand.mjs';
 import { buildFounderOutreach } from './lib/otf-founder-outreach.mjs';
 
+const OPPORTUNITY_SERVICES_URL = 'https://natcorp.aproposgroupllc.com/opportunity-services';
 const clip = (v, n = 5000) => String(v ?? '').slice(0, n);
 const arr = (v) => Array.isArray(v) ? v : [];
 const safe = (v) => String(v ?? '').trim();
+const htmlEsc = (v) => safe(v).replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 
 function extractResponseText(data) {
   if (typeof data?.output_text === 'string') return data.output_text;
@@ -185,7 +187,7 @@ async function generateOutreach(candidateId) {
       contract_dna_id: dna?.id || null,
       email_html: email.bodyHtml,
       external_response_method: 'reply_email',
-      opportunity_services_url: 'https://natcorp.aproposgroupllc.com/opportunity-services',
+      opportunity_services_url: OPPORTUNITY_SERVICES_URL,
       internal_review_url_transmitted: false,
     }
   }], 'return=representation');
@@ -236,6 +238,39 @@ async function sendOutreach(outreachId) {
   return updated?.[0];
 }
 
+async function sendInterestedFollowup(o) {
+  const prior = o?.provider_payload?.interested_followup;
+  if (prior?.status === 'sent') return prior;
+  if (!safe(o?.contact_email)) throw new Error('VAR: Interested response recorded, but no delivery email is available for the Opportunity Services handoff.');
+  const key = env('RESEND_API_KEY');
+  if (!key) throw new Error('VAR: Interested response recorded, but RESEND_API_KEY is unavailable for the Opportunity Services handoff.');
+  const opportunity = await loadOpportunity(o.opportunity_id);
+  const title = opportunity?.title || 'your government contract opportunity';
+  const business = o.business_name || 'your business';
+  const text = `Hello,\n\nThank you for letting APROPOS know that ${business} is interested in evaluating the contract opportunity: ${title}.\n\nYour next step is to open the NAT-CORP Opportunity Services page:\n${OPPORTUNITY_SERVICES_URL}\n\nFrom there you can continue with Analyze Fit, Contract Proposal Development, Contractor Repository enrollment, and voluntary feedback.\n\nJeff Mitchell\nFounder, APROPOS GROUP LLC\nNAT-CORP Procurement Intelligence`;
+  const html = `<!doctype html><html><body style="margin:0;background:#f3f5f8;font-family:Arial,Helvetica,sans-serif;color:#14213d"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f3f5f8;padding:24px 12px"><tr><td align="center"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;background:#ffffff;border:1px solid #d9e0ea;border-radius:14px;overflow:hidden"><tr><td align="center" style="padding:28px 24px 14px"><img src="cid:apropos-group-logo" width="210" alt="APROPOS GROUP LLC" style="display:block;max-width:210px;width:100%;height:auto;border:0"></td></tr><tr><td style="padding:0 30px 30px;font-size:16px;line-height:1.55"><p>Hello,</p><p>Thank you for letting APROPOS know that <strong>${htmlEsc(business)}</strong> is interested in evaluating the contract opportunity:</p><p><strong>${htmlEsc(title)}</strong></p><p>Your next step is to continue through the NAT-CORP Opportunity Services page.</p><p><a href="${OPPORTUNITY_SERVICES_URL}" style="display:inline-block;background:#0d2a57;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:700">Continue to Opportunity Services</a></p><p>There you can continue with Analyze Fit, Contract Proposal Development, Contractor Repository enrollment, and voluntary feedback.</p><p style="margin-top:28px">Jeff Mitchell<br>Founder, APROPOS GROUP LLC<br>NAT-CORP Procurement Intelligence</p></td></tr></table></td></tr></table></body></html>`;
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: resendFrom(),
+      to: [o.contact_email],
+      subject: `Next step for ${business}: Opportunity Services`,
+      text,
+      html,
+      attachments: [aproposLogoAttachment()],
+      reply_to: env('NATCORP_INBOUND_EMAIL') || 'jmitchell@aproposgroupllc.com',
+      tags: [{ name: 'service', value: 'natcorp-interest' }, { name: 'outreach_id', value: o.outreach_id.replaceAll('-', '').slice(0, 32) }]
+    }),
+    signal: AbortSignal.timeout(30000),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(`VAR: Interested response recorded, but Opportunity Services follow-up failed (${response.status}): ${data.message || 'unknown error'}`);
+  const followup = { status: 'sent', provider_message_id: data.id || null, sent_at: new Date().toISOString(), opportunity_services_url: OPPORTUNITY_SERVICES_URL };
+  await db('natcorp_outreach_events', 'PATCH', `?outreach_id=eq.${encodeURIComponent(o.outreach_id)}`, { provider_payload: { ...o.provider_payload, interested_followup: followup }, updated_at: new Date().toISOString() }, 'return=minimal');
+  return followup;
+}
+
 async function recordResponse({ outreach_id, response_class, response_text }) {
   const rows = await db('natcorp_outreach_events', 'GET', `?outreach_id=eq.${encodeURIComponent(outreach_id)}&select=*`);
   const o = rows?.[0];
@@ -248,7 +283,11 @@ async function recordResponse({ outreach_id, response_class, response_text }) {
     const disposition = await rpc('natcorp_disposition_candidate', { p_candidate_id: o.candidate_id, p_disposition: cls, p_response_text: safe(response_text) || null, p_source: 'outreach' });
     return { response_class: cls, disposition };
   }
-  if (cls === 'INTERESTED' && o.candidate_id) await db('natcorp_business_discovery_candidates', 'PATCH', `?candidate_id=eq.${encodeURIComponent(o.candidate_id)}`, { verification_status: 'interested', updated_at: new Date().toISOString() }, 'return=minimal');
+  if (cls === 'INTERESTED' && o.candidate_id) {
+    await db('natcorp_business_discovery_candidates', 'PATCH', `?candidate_id=eq.${encodeURIComponent(o.candidate_id)}`, { verification_status: 'interested', updated_at: new Date().toISOString() }, 'return=minimal');
+    const followup = await sendInterestedFollowup(o);
+    return { response_class: cls, followup, opportunity_services_url: OPPORTUNITY_SERVICES_URL };
+  }
   return { response_class: cls };
 }
 
