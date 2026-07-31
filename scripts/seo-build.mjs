@@ -75,3 +75,4 @@ if (process.env.GA4_MEASUREMENT_ID && !html.includes('www.googletagmanager.com/g
 
 fs.writeFileSync(file, html);
 console.log('NAT-CORP SEO Phase 1 build transformations applied.');
+await import('./seo-validate.mjs');
