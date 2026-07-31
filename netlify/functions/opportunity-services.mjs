@@ -4,7 +4,7 @@ import { db, json, sameOrigin } from './_shared/natcorp-db.mjs';
 const safe = (v, n = 2000) => String(v ?? '').trim().slice(0, n);
 const allowedServices = new Set(['ANALYZE_FIT','PROPOSAL_DEVELOPMENT','CONTRACTOR_REPOSITORY_SUBSCRIPTION']);
 const sha256 = (v) => createHash('sha256').update(String(v)).digest('hex');
-const normalizeName = (v) => safe(v, 240).toLowerCase().replace(/[’']/g, '').replace(/\bs\b$/,'').replace(/[^a-z0-9]+/g, ' ').trim();
+const normalizeName = (v) => safe(v, 240).toLowerCase().replace(/[’']s\b/g, '').replace(/[’']/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
 
 function validEmail(v) {
   const s = safe(v, 320);
