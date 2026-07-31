@@ -89,3 +89,5 @@ export default async function handler(req) {
     return json(400, { ok: false, error: safe(error?.message, 700) || 'Request could not be completed.' });
   }
 }
+
+export const config = { path: '/api/opportunity-services' };
