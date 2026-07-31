@@ -1,7 +1,7 @@
 import { db, env, json, rpc, commandAuthorized, sameOrigin } from './_shared/natcorp-db.mjs';
-import { aproposLogoAttachment, assertActionableOpportunity, buildExternalOutreach } from './lib/apropos-brand.mjs';
+import { aproposLogoAttachment, assertActionableOpportunity } from './lib/apropos-brand.mjs';
+import { buildFounderOutreach } from './lib/otf-founder-outreach.mjs';
 
-const VERIFY_URL = 'https://aproposgroupllc.com/verify';
 const clip = (v, n = 5000) => String(v ?? '').slice(0, n);
 const arr = (v) => Array.isArray(v) ? v : [];
 const safe = (v) => String(v ?? '').trim();
@@ -170,7 +170,7 @@ async function generateOutreach(candidateId) {
   const opportunity = await loadOpportunity(candidate.opportunity_id);
   assertActionableOpportunity(opportunity);
   const dna = await loadDna(candidate.opportunity_id);
-  const email = buildExternalOutreach({ candidate, opportunity, verifyUrl: VERIFY_URL });
+  const email = buildFounderOutreach({ candidate, opportunity });
   const rows = await db('natcorp_outreach_events', 'POST', '', [{
     opportunity_id: opportunity.id,
     command_id: candidate.command_id,
@@ -182,10 +182,10 @@ async function generateOutreach(candidateId) {
     body_text: email.bodyText,
     status: 'draft',
     provider_payload: {
-      verify_url: VERIFY_URL,
       contract_dna_id: dna?.id || null,
       email_html: email.bodyHtml,
       external_response_method: 'reply_email',
+      opportunity_services_url: 'https://natcorp.aproposgroupllc.com/opportunity-services',
       internal_review_url_transmitted: false,
     }
   }], 'return=representation');
