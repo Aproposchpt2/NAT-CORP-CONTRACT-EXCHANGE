@@ -58,6 +58,16 @@
     Cache-Control = "no-store"
 
 [[headers]]
+  for = "/analyze-fit-request"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/analyze-fit-report"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
   for = "/jeff-dashboard"
   [headers.values]
     Cache-Control = "no-store"
@@ -234,6 +244,18 @@
 [[redirects]]
   from = "/analyze-fit"
   to = "/analyze-fit-v2.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/analyze-fit-request"
+  to = "/analyze-fit-request.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/analyze-fit-report"
+  to = "/analyze-fit-report.html"
   status = 200
   force = true
 
