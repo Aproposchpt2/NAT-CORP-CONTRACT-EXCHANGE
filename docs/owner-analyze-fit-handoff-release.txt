@@ -1,0 +1,3 @@
+Owner Analyze Fit Handoff Release
+
+When an operator records an Interested response, NAT-CORP creates a scoped Analyze Fit service request, stores the contractor/contract/outreach context server-side, and emails the APROPOS owner a client-safe continuation URL to forward to the contractor.

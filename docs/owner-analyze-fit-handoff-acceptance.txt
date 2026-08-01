@@ -1,0 +1,6 @@
+Acceptance criteria:
+1. Recording INTERESTED creates or reuses a contract-specific Analyze Fit service request.
+2. The request metadata links contractor candidate, contract opportunity, and outreach event.
+3. The owner receives an email containing the client-safe Analyze Fit URL.
+4. The URL opens /analyze-fit-request with a scoped request ID and expiring opaque token.
+5. Raw contractor and contract data are resolved server-side and are not embedded directly in the URL.
