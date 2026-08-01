@@ -56,8 +56,8 @@ const inject = `
     if (isOtfActionUrl(input)) {
       const body = parseJsonBody(init);
       const response = await originalFetch(input, init);
-      if (body?.action === 'record_response' && String(body?.response_class || '').toUpperCase() === 'INTERESTED' && response.ok) {
-        const handoffResponse = await originalFetch('/api/owner-analyze-fit-handoff', {
+      if (body?.action === 'send_outreach' && response.ok) {
+        const handoffResponse = await originalFetch('/api/owner-analyze-fit-prep', {
           method: 'POST',
           cache: 'no-store',
           headers: { 'content-type': 'application/json', ...(init?.headers || {}) },
@@ -67,7 +67,7 @@ const inject = `
         if (!handoffResponse.ok || !handoffData.ok) {
           return new Response(JSON.stringify({
             ok: false,
-            error: handoffData.error || 'Interested response was recorded, but the owner Analyze Fit email could not be created.',
+            error: handoffData.error || 'Contractor outreach was sent, but the owner Analyze Fit preparation email could not be created.',
           }), { status: 500, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
         }
       }
