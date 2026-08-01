@@ -1,0 +1,1 @@
+Acceptance: GET /opportunity-fulfillment must never return a blank Netlify 500 when the static operator page exists. On wrapper failure, redirect to /opportunity-fulfillment.html.
