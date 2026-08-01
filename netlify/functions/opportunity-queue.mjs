@@ -6,6 +6,11 @@ const boolParam = (url, name, fallback) => {
   if (raw === null) return fallback;
   return ['1','true','yes','on'].includes(String(raw).toLowerCase());
 };
+const intParam = (url, name, fallback, min, max) => {
+  const raw = Number(url.searchParams.get(name));
+  if (!Number.isFinite(raw)) return fallback;
+  return Math.max(min, Math.min(max, Math.trunc(raw)));
+};
 const shuffle = (rows) => {
   const a = [...rows];
   for (let i = a.length - 1; i > 0; i--) {
@@ -26,9 +31,11 @@ export default async function handler(req) {
     const excludeProcessed = boolParam(url, 'exclude_processed', mode === 'unprocessed');
     const excludeEnrichment = boolParam(url, 'exclude_enrichment', true);
     const excludeOutreach = boolParam(url, 'exclude_outreach', true);
+    const pageSize = intParam(url, 'page_size', 60, 1, 60);
+    const page = intParam(url, 'page', 1, 1, 1000);
 
     const [opportunities, commands, outreach] = await Promise.all([
-      db('state_contract_opportunities', 'GET', '?status=eq.open&response_deadline=gt.now()&select=id,pdas_record_id,title,issuing_organization,issuing_department,state_code,response_deadline,procurement_type,natcorp_contract_dna_status,official_source_url,source_url,created_at,updated_at&order=response_deadline.asc.nullslast&limit=500'),
+      db('state_contract_opportunities', 'GET', '?status=eq.open&response_deadline=gt.now()&select=id,pdas_record_id,title,issuing_organization,issuing_department,state_code,response_deadline,procurement_type,natcorp_contract_dna_status,official_source_url,source_url,created_at,updated_at&order=response_deadline.asc.nullslast&limit=5000'),
       db('natcorp_business_discovery_commands', 'GET', '?select=opportunity_id&limit=5000'),
       db('natcorp_outreach_events', 'GET', '?select=opportunity_id,status&limit=5000'),
     ]);
@@ -57,7 +64,12 @@ export default async function handler(req) {
       rows.sort((a, b) => new Date(a.response_deadline || 0) - new Date(b.response_deadline || 0));
     }
 
-    rows = rows.slice(0, 60);
+    const total = rows.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    const effectivePage = Math.min(page, totalPages);
+    const offset = (effectivePage - 1) * pageSize;
+    const pagedRows = rows.slice(offset, offset + pageSize);
+
     return json(200, {
       ok: true,
       queue: {
@@ -66,9 +78,17 @@ export default async function handler(req) {
         exclude_processed: excludeProcessed,
         exclude_enrichment: excludeEnrichment,
         exclude_outreach: excludeOutreach,
-        returned: rows.length,
+        returned: pagedRows.length,
+        total,
+        page: effectivePage,
+        page_size: pageSize,
+        total_pages: totalPages,
+        range_start: total ? offset + 1 : 0,
+        range_end: total ? offset + pagedRows.length : 0,
+        has_previous: effectivePage > 1,
+        has_next: effectivePage < totalPages,
       },
-      opportunities: rows,
+      opportunities: pagedRows,
     });
   } catch (e) {
     console.error('[opportunity-queue]', e);

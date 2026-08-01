@@ -1,0 +1,1 @@
+VAR note: Pagination operates on the filtered authoritative queue. Random mode reshuffles before each batch request and is therefore exploratory rather than stable ordering. Deadline and newest modes provide stable page progression.
