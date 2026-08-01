@@ -7,7 +7,13 @@ const inject = `
   let queuePage = 1;
   let queueMeta = null;
   const originalFetch = window.fetch.bind(window);
-  const isQueueUrl = (input) => String(typeof input === 'string' ? input : input?.url || '').includes('/api/opportunity-queue');
+  const inputUrl = (input) => String(typeof input === 'string' ? input : input?.url || '');
+  const isQueueUrl = (input) => inputUrl(input).includes('/api/opportunity-queue');
+  const isOtfActionUrl = (input) => inputUrl(input).includes('/api/opportunity-fulfillment');
+  const parseJsonBody = (init) => {
+    if (!init?.body || typeof init.body !== 'string') return null;
+    try { return JSON.parse(init.body); } catch { return null; }
+  };
   const updatePager = () => {
     const prev = document.getElementById('queuePrev60');
     const next = document.getElementById('queueNext60');
@@ -21,30 +27,54 @@ const inject = `
   };
 
   window.fetch = async (input, init) => {
-    if (!isQueueUrl(input)) return originalFetch(input, init);
-    const raw = typeof input === 'string' ? input : input.url;
-    const url = new URL(raw, location.origin);
-    url.searchParams.set('page', String(queuePage));
-    url.searchParams.set('page_size', '60');
-    let lastError;
-    for (let attempt = 1; attempt <= 2; attempt++) {
-      try {
-        const response = await originalFetch(url.toString(), init);
-        const clone = response.clone();
-        clone.json().then((data) => {
-          if (data?.queue) {
-            queueMeta = data.queue;
-            queuePage = Number(data.queue.page || queuePage);
-            setTimeout(updatePager, 0);
-          }
-        }).catch(() => {});
-        return response;
-      } catch (error) {
-        lastError = error;
-        if (attempt < 2) await new Promise((resolve) => setTimeout(resolve, 700));
+    if (isQueueUrl(input)) {
+      const raw = typeof input === 'string' ? input : input.url;
+      const url = new URL(raw, location.origin);
+      url.searchParams.set('page', String(queuePage));
+      url.searchParams.set('page_size', '60');
+      let lastError;
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        try {
+          const response = await originalFetch(url.toString(), init);
+          const clone = response.clone();
+          clone.json().then((data) => {
+            if (data?.queue) {
+              queueMeta = data.queue;
+              queuePage = Number(data.queue.page || queuePage);
+              setTimeout(updatePager, 0);
+            }
+          }).catch(() => {});
+          return response;
+        } catch (error) {
+          lastError = error;
+          if (attempt < 2) await new Promise((resolve) => setTimeout(resolve, 700));
+        }
       }
+      throw lastError;
     }
-    throw lastError;
+
+    if (isOtfActionUrl(input)) {
+      const body = parseJsonBody(init);
+      const response = await originalFetch(input, init);
+      if (body?.action === 'record_response' && String(body?.response_class || '').toUpperCase() === 'INTERESTED' && response.ok) {
+        const handoffResponse = await originalFetch('/api/owner-analyze-fit-handoff', {
+          method: 'POST',
+          cache: 'no-store',
+          headers: { 'content-type': 'application/json', ...(init?.headers || {}) },
+          body: JSON.stringify({ outreach_id: body.outreach_id }),
+        });
+        const handoffData = await handoffResponse.json().catch(() => ({}));
+        if (!handoffResponse.ok || !handoffData.ok) {
+          return new Response(JSON.stringify({
+            ok: false,
+            error: handoffData.error || 'Interested response was recorded, but the owner Analyze Fit email could not be created.',
+          }), { status: 500, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
+        }
+      }
+      return response;
+    }
+
+    return originalFetch(input, init);
   };
 
   const install = () => {
