@@ -1,0 +1,1 @@
+Emergency recovery: the clean /opportunity-fulfillment route must fail open to the static operator interface if the wrapper function cannot load its source page. This prevents a wrapper-runtime fault from taking the internal OTF console offline.
