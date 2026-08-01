@@ -1,0 +1,6 @@
+Acceptance criteria:
+1. Queue returns no more than 60 records.
+2. Next 60 advances to the next server-side batch.
+3. Previous 60 returns to the prior batch.
+4. Filters reset pagination to batch 1.
+5. Queue metadata displays the visible range and total filtered count.
