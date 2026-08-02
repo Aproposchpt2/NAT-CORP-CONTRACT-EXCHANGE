@@ -26,14 +26,18 @@ export default async function handler(req) {
     const pageSize = intParam(url, 'page_size', 30, 1, 30);
     const page = intParam(url, 'page', 1, 1, 1000);
 
+    // Retrieve the canonical table set without PostgREST status/deadline predicates.
+    // Production validation showed those URL predicates collapsing the result to one row.
+    // Eligibility is applied deterministically below.
     const opportunities = await db(
       'state_contract_opportunities',
       'GET',
-      '?status=eq.open&response_deadline=gt.now()&select=id,pdas_record_id,title,issuing_organization,issuing_department,state_code,response_deadline,procurement_type,natcorp_contract_dna_status,official_source_url,source_url,created_at,updated_at&order=response_deadline.asc.nullslast&limit=5000'
+      '?select=id,pdas_record_id,title,issuing_organization,issuing_department,state_code,status,response_deadline,procurement_type,natcorp_contract_dna_status,official_source_url,source_url,created_at,updated_at&order=response_deadline.asc.nullslast&limit=1000'
     );
 
     const now = Date.now();
     let rows = (opportunities || []).filter((o) => {
+      if (String(o?.status || '').trim().toLowerCase() !== 'open') return false;
       if (!o?.response_deadline || new Date(o.response_deadline).getTime() <= now) return false;
       if (state !== 'ALL' && String(o.state_code || '').toUpperCase() !== state) return false;
       return true;
