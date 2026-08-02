@@ -72,6 +72,25 @@
   [headers.values]
     Cache-Control = "no-store"
 
+# Opportunity-to-Fulfillment authoritative operator route.
+# The v2 operator is the deployment shell; it loads the complete
+# Step 1-8 workflow from opportunity-fulfillment.html and adds
+# the controlled 30-record inventory pagination.
+[[headers]]
+  for = "/opportunity-fulfillment"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate, max-age=0"
+
+[[headers]]
+  for = "/opportunity-fulfillment-operator-v2.html"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate, max-age=0"
+
+[[headers]]
+  for = "/opportunity-fulfillment.html"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate, max-age=0"
+
 # Required journey: Start -> Intake -> Business Intake -> Dashboard.
 [[redirects]]
   from = "/start"
@@ -275,4 +294,10 @@
   from = "/login.html"
   to = "/intake"
   status = 302
+  force = true
+
+[[redirects]]
+  from = "/opportunity-fulfillment"
+  to = "/opportunity-fulfillment-operator-v2.html"
+  status = 200
   force = true
