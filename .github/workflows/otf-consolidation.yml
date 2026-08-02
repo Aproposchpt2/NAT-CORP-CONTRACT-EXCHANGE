@@ -1,0 +1,65 @@
+name: OTF consolidation
+
+on:
+  push:
+    paths:
+      - '.github/workflows/otf-consolidation.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  consolidate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Consolidate route and archive wrappers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('netlify.toml')
+          s=p.read_text()
+          s=s.replace('to = "/opportunity-fulfillment-operator-v2.html"','to = "/opportunity-fulfillment.html"')
+          p.write_text(s)
+          r=Path('_redirects')
+          rs=r.read_text()
+          rs=rs.replace('/opportunity-fulfillment /opportunity-fulfillment-operator-v2.html 200!','/opportunity-fulfillment /opportunity-fulfillment.html 200!')
+          r.write_text(rs)
+          PY
+          mkdir -p archive/otf-recovery
+          git mv opportunity-fulfillment-operator.html archive/otf-recovery/opportunity-fulfillment-operator.html
+          git mv opportunity-fulfillment-operator-v2.html archive/otf-recovery/opportunity-fulfillment-operator-v2.html
+      - name: Add regression test
+        run: |
+          cat > tests/otf-owner-command-center.test.mjs <<'EOF'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const html=fs.readFileSync('opportunity-fulfillment.html','utf8');
+          const toml=fs.readFileSync('netlify.toml','utf8');
+          const redirects=fs.readFileSync('_redirects','utf8');
+          for(const label of ['1 · Select Contract','2 · Build Contract DNA','3 · Search Contractor Repository','4 · Create Business Search','5 · Execute Business Discovery','6 · Enrich Selected Contact','7 · Generate Outreach','8 · Send Outreach']) assert.ok(html.includes(label),`missing ${label}`);
+          assert.ok(html.includes("page_size:'30'"),'30-record queue missing');
+          assert.ok(html.includes('Previous 30'),'Previous 30 missing');
+          assert.ok(html.includes('Select Next 30'),'Next 30 missing');
+          assert.ok(html.includes("queueToken"),'stale request protection missing');
+          assert.ok(html.includes('/api/owner-analyze-fit-prep'),'owner handoff missing');
+          assert.ok(html.includes('/api/otf-record-interest'),'interest recorder missing');
+          assert.ok(toml.includes('to = "/opportunity-fulfillment.html"'),'netlify.toml route is not authoritative main page');
+          assert.ok(!toml.includes('to = "/opportunity-fulfillment-operator-v2.html"'),'v2 wrapper still active in netlify.toml');
+          assert.ok(redirects.includes('/opportunity-fulfillment /opportunity-fulfillment.html 200!'),'_redirects route is not main page');
+          assert.ok(!redirects.includes('operator-v2'),'v2 wrapper still active in _redirects');
+          assert.ok(fs.existsSync('archive/otf-recovery/opportunity-fulfillment-operator.html'));
+          assert.ok(fs.existsSync('archive/otf-recovery/opportunity-fulfillment-operator-v2.html'));
+          console.log('OTF owner command center regression: PASS');
+          EOF
+          node tests/otf-owner-command-center.test.mjs
+      - name: Commit consolidation
+        run: |
+          git config user.name 'APROPOS Engineering Automation'
+          git config user.email 'engineering@aproposgroupllc.com'
+          git add netlify.toml _redirects archive tests/otf-owner-command-center.test.mjs
+          git rm .github/workflows/otf-consolidation.yml
+          git commit -m 'Finalize OTF single-page command center and regression gate'
+          git push
