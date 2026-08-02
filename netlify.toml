@@ -298,6 +298,6 @@
 
 [[redirects]]
   from = "/opportunity-fulfillment"
-  to = "/opportunity-fulfillment-operator-v2.html"
+  to = "/opportunity-fulfillment.html"
   status = 200
   force = true
