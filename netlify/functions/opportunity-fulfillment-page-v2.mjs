@@ -50,7 +50,7 @@ const injected = `
     prev.disabled = !queueMeta?.has_previous;
     next.disabled = !queueMeta?.has_next;
     label.textContent = queueMeta
-      ? `Showing ${queueMeta.range_start || 0}–${queueMeta.range_end || 0} of ${queueMeta.total || 0} · Batch ${queueMeta.page || 1} of ${queueMeta.total_pages || 1}`
+      ? 'Showing ' + (queueMeta.range_start || 0) + '–' + (queueMeta.range_end || 0) + ' of ' + (queueMeta.total || 0) + ' · Batch ' + (queueMeta.page || 1) + ' of ' + (queueMeta.total_pages || 1)
       : 'Batch 1';
     if (meta && queueMeta) meta.textContent = label.textContent;
   }
@@ -126,7 +126,7 @@ export default async function handler(req) {
       return new Response('Opportunity-to-Fulfillment interface unavailable.', { status: 502 });
     }
     let html = await response.text();
-    html = html.replace('</head>', `${injected}</head>`);
+    html = html.replace('</head>', injected + '</head>');
     return new Response(html, {
       status: 200,
       headers: {
