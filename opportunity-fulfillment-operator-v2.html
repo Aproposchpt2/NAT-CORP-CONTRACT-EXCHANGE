@@ -36,7 +36,13 @@
    async function recordInterested(){const out=latestOutreach();if(!out)return;const response_text=prompt('Optional response note:','')||'';busy=true;render();try{const d=await request('/api/otf-record-interest',{method:'POST',body:JSON.stringify({outreach_id:out.outreach_id,response_text})});await loadContext(currentOpportunityId(),true);busy=false;render();setControl(d.handoff_prepared?'Interest recorded. Secure Analyze Fit link is ready for owner forwarding.':'Interest recorded. Prepare the owner Analyze Fit link before forwarding anything.')}catch(e){busy=false;render();showVar(e.message)}}
    function install(){removeQueueMode();const meta=document.getElementById('queueMeta');if(meta&&!document.getElementById('otfBatchNav')){const nav=document.createElement('div');nav.id='otfBatchNav';nav.className='otf-batch-nav';nav.innerHTML='<button id="otfPreviousBatch" type="button" disabled>Previous Batch</button><button id="otfNextBatch" type="button" class="primary" disabled>Choose Next Batch</button><span id="otfBatchLabel" class="otf-batch-label">Batch 1</span>';meta.insertAdjacentElement('afterend',nav);$('otfPreviousBatch').onclick=async()=>{if(!queueMeta?.has_previous)return;queuePage=Math.max(1,queuePage-1);await loadFullInventory();window.scrollTo({top:0,behavior:'smooth'})};$('otfNextBatch').onclick=async()=>{if(!queueMeta?.has_next)return;queuePage+=1;await loadFullInventory();window.scrollTo({top:0,behavior:'smooth'})}}
     $('reloadQueue').onclick=()=>{queuePage=1;loadFullInventory()};if($('queueState'))$('queueState').onchange=()=>{if(authenticated){queuePage=1;loadFullInventory()}};
-    const originalConnect=connect;connect=async function(){await originalConnect();if(authenticated){queuePage=1;await loadFullInventory()}};
+    const originalConnect=connect;
+    connect=async function(){
+      const legacyLoadQueue=loadQueue;
+      loadQueue=async()=>{};
+      try{await originalConnect()}finally{loadQueue=legacyLoadQueue}
+      if(authenticated){queuePage=1;await loadFullInventory()}
+    };
     $('send').onclick=async()=>{if(!confirm('Send this opportunity introduction email now?'))return;const result=await action('send_outreach',{outreach_id:latestOutreach()?.outreach_id});if(!result)return;try{await prepareOwnerHandoff();setControl('Outreach sent and owner Analyze Fit handoff prepared.')}catch(e){showVar('Outreach was sent, but owner Analyze Fit preparation failed: '+e.message)}};
     window.record=async response_class=>{if(response_class==='INTERESTED')return recordInterested();const o=latestOutreach();if(!o)return;const response_text=prompt('Optional response note:','')||'';await action('record_response',{outreach_id:o.outreach_id,response_class,response_text})};
     if(authenticated)loadFullInventory()
