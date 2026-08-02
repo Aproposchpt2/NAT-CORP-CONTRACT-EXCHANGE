@@ -16,11 +16,14 @@
   const response=await fetch('/opportunity-fulfillment.html',{cache:'no-store',headers:{accept:'text/html'}});
   if(!response.ok)throw new Error('Static operator interface returned HTTP '+response.status+'.');
   let html=await response.text();
+
+  // Prevent the embedded legacy page from auto-starting its filtered queue request
+  // before the authoritative 30-record inventory controller is installed.
+  html=html.replace('if(inheritedKey)connect();','if(inheritedKey)window.__otfDeferredConnect=true;');
+
   const presentation=`<style id="otfInventoryPresentation">
   .queue-check{display:none!important}
   #queueMode{display:none!important}
-  .hero{grid-template-columns:1fr!important}.hero>div.panel:nth-child(2){display:none!important}
-  #taskStatus,#workflow{display:none!important}.grid{grid-template-columns:1fr!important}.grid>.stack:nth-child(2){display:none!important}
   .otf-batch-nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0 12px}
   .otf-batch-nav button{border:1px solid #d8e0eb;border-radius:8px;padding:10px 13px;background:#eef2f7;color:#24354e;font-weight:800;cursor:pointer}
   .otf-batch-nav button.primary{background:#0f2a6a;color:#fff;border-color:#0f2a6a}.otf-batch-nav button:disabled{opacity:.45;cursor:not-allowed}
@@ -28,13 +31,13 @@
   @media(max-width:650px){.otf-batch-nav button{width:100%}.otf-batch-label{width:100%;text-align:center}}
   </style>
   <script id="otfInventoryController">(()=>{
-   let queuePage=1,queueMeta=null;
+   let queuePage=1,queueMeta=null,queueRequestToken=0;
    function removeQueueMode(){const mode=document.getElementById('queueMode');if(!mode)return;const holder=mode.closest('label')||mode.parentElement;if(holder)holder.style.display='none';else mode.style.display='none'}
    function updateBatchControls(){const prev=document.getElementById('otfPreviousBatch'),next=document.getElementById('otfNextBatch'),label=document.getElementById('otfBatchLabel'),meta=document.getElementById('queueMeta');if(!prev||!next||!label)return;prev.disabled=!queueMeta?.has_previous;next.disabled=!queueMeta?.has_next;label.textContent=queueMeta?'Showing '+(queueMeta.range_start||0)+'–'+(queueMeta.range_end||0)+' of '+(queueMeta.total||0)+' · Batch '+(queueMeta.page||1)+' of '+(queueMeta.total_pages||1):'Batch 1';if(meta&&queueMeta)meta.textContent=label.textContent}
-   async function loadFullInventory(){if(!authenticated)return;const state=$('queueState')?.value||'ALL';const q=new URLSearchParams({state,page:String(queuePage),page_size:'30'});$('reloadQueue').disabled=true;$('opps').disabled=true;clearVar();try{const d=await request(queueApi+'?'+q.toString());queueMeta=d.queue||null;queuePage=Number(queueMeta?.page||queuePage);opps=d.opportunities||[];$('opps').innerHTML='<option value="">Select a contract from the full inventory…</option>'+opps.map(o=>'<option value="'+o.id+'">'+esc(o.state_code)+' · '+esc(String(o.status||'unknown').toUpperCase())+' · '+esc(o.title)+'</option>').join('');$('opps').disabled=false;ctx=null;render();showReadyState();updateBatchControls();setControl((queueMeta?.range_start||0)+'–'+(queueMeta?.range_end||0)+' of '+(queueMeta?.total||0)+' total contracts loaded. Choose one, then click 1 · Select Contract.')}catch(e){showVar(e.message);$('queueMeta').textContent='Inventory load failed.'}finally{$('reloadQueue').disabled=false}}
+   async function loadFullInventory(){if(!authenticated)return;const token=++queueRequestToken;const state=$('queueState')?.value||'ALL';const q=new URLSearchParams({state,page:String(queuePage),page_size:'30'});$('reloadQueue').disabled=true;$('opps').disabled=true;clearVar();try{const d=await request(queueApi+'?'+q.toString());if(token!==queueRequestToken)return;queueMeta=d.queue||null;queuePage=Number(queueMeta?.page||queuePage);opps=d.opportunities||[];$('opps').innerHTML='<option value="">Select a contract from this 30-record batch…</option>'+opps.map(o=>'<option value="'+o.id+'">'+esc(o.state_code||'—')+' · '+esc(String(o.status||'unknown').toUpperCase())+' · '+esc(o.title)+'</option>').join('');$('opps').disabled=opps.length===0;ctx=null;render();showReadyState();updateBatchControls();setControl((queueMeta?.range_start||0)+'–'+(queueMeta?.range_end||0)+' of '+(queueMeta?.total||0)+' total contracts loaded. Choose one, then click 1 · Select Contract.')}catch(e){if(token!==queueRequestToken)return;showVar(e.message);$('queueMeta').textContent='Inventory load failed.'}finally{if(token===queueRequestToken)$('reloadQueue').disabled=false}}
    async function prepareOwnerHandoff(){const out=latestOutreach();if(!out?.outreach_id)throw new Error('Sent outreach record is unavailable for owner Analyze Fit preparation.');return request('/api/owner-analyze-fit-prep',{method:'POST',body:JSON.stringify({outreach_id:out.outreach_id})})}
    async function recordInterested(){const out=latestOutreach();if(!out)return;const response_text=prompt('Optional response note:','')||'';busy=true;render();try{const d=await request('/api/otf-record-interest',{method:'POST',body:JSON.stringify({outreach_id:out.outreach_id,response_text})});await loadContext(currentOpportunityId(),true);busy=false;render();setControl(d.handoff_prepared?'Interest recorded. Secure Analyze Fit link is ready for owner forwarding.':'Interest recorded. Prepare the owner Analyze Fit link before forwarding anything.')}catch(e){busy=false;render();showVar(e.message)}}
-   function install(){removeQueueMode();const meta=document.getElementById('queueMeta');if(meta&&!document.getElementById('otfBatchNav')){const nav=document.createElement('div');nav.id='otfBatchNav';nav.className='otf-batch-nav';nav.innerHTML='<button id="otfPreviousBatch" type="button" disabled>Previous Batch</button><button id="otfNextBatch" type="button" class="primary" disabled>Choose Next Batch</button><span id="otfBatchLabel" class="otf-batch-label">Batch 1</span>';meta.insertAdjacentElement('afterend',nav);$('otfPreviousBatch').onclick=async()=>{if(!queueMeta?.has_previous)return;queuePage=Math.max(1,queuePage-1);await loadFullInventory();window.scrollTo({top:0,behavior:'smooth'})};$('otfNextBatch').onclick=async()=>{if(!queueMeta?.has_next)return;queuePage+=1;await loadFullInventory();window.scrollTo({top:0,behavior:'smooth'})}}
+   function install(){removeQueueMode();const meta=document.getElementById('queueMeta');if(meta&&!document.getElementById('otfBatchNav')){const nav=document.createElement('div');nav.id='otfBatchNav';nav.className='otf-batch-nav';nav.innerHTML='<button id="otfPreviousBatch" type="button" disabled>Previous 30</button><button id="otfNextBatch" type="button" class="primary" disabled>Select Next 30</button><span id="otfBatchLabel" class="otf-batch-label">Batch 1</span>';meta.insertAdjacentElement('afterend',nav);$('otfPreviousBatch').onclick=async()=>{if(!queueMeta?.has_previous)return;queuePage=Math.max(1,queuePage-1);await loadFullInventory();window.scrollTo({top:0,behavior:'smooth'})};$('otfNextBatch').onclick=async()=>{if(!queueMeta?.has_next)return;queuePage+=1;await loadFullInventory();window.scrollTo({top:0,behavior:'smooth'})}}
     $('reloadQueue').onclick=()=>{queuePage=1;loadFullInventory()};if($('queueState'))$('queueState').onchange=()=>{if(authenticated){queuePage=1;loadFullInventory()}};
     const originalConnect=connect;
     connect=async function(){
@@ -45,7 +48,7 @@
     };
     $('send').onclick=async()=>{if(!confirm('Send this opportunity introduction email now?'))return;const result=await action('send_outreach',{outreach_id:latestOutreach()?.outreach_id});if(!result)return;try{await prepareOwnerHandoff();setControl('Outreach sent and owner Analyze Fit handoff prepared.')}catch(e){showVar('Outreach was sent, but owner Analyze Fit preparation failed: '+e.message)}};
     window.record=async response_class=>{if(response_class==='INTERESTED')return recordInterested();const o=latestOutreach();if(!o)return;const response_text=prompt('Optional response note:','')||'';await action('record_response',{outreach_id:o.outreach_id,response_class,response_text})};
-    if(authenticated)loadFullInventory()
+    if(window.__otfDeferredConnect){window.__otfDeferredConnect=false;connect()}else if(authenticated){loadFullInventory()}
    }
    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install()
   })();<\/script>`;
