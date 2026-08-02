@@ -1,0 +1,9 @@
+OTF Step 1 UI recovery deployment trigger.
+
+Scope:
+- all open, unexpired contracts
+- 30-record pagination
+- Previous Batch / Choose Next Batch controls
+- exclusion filters removed from operator experience
+- duplicate monitor elements hidden
+- progressive next-step CTA retained
