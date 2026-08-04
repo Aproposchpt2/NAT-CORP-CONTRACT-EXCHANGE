@@ -2,27 +2,9 @@
   "source": "planetbids",
   "state": "CA",
   "scanMode": "live",
-  "generatedAt": "2026-08-03T15:50:41.402Z",
-  "count": 79,
+  "generatedAt": "2026-08-04T15:30:53.430Z",
+  "count": 80,
   "bids": [
-    {
-      "id": "143895",
-      "title": "Crowdstrike Endpoint Detection and Response Anti-Virus Software-as-a-Service (Saas)",
-      "solicitation_no": "10090539-27-S",
-      "agency": "City of San Diego",
-      "bid_type": "Bidding",
-      "close_date": "2026-08-03 15:00:00.000",
-      "due_in_days": 0,
-      "category_ids": [
-        "20500",
-        "20800",
-        "20900",
-        "91829",
-        "92000"
-      ],
-      "url": "https://vendors.planetbids.com/portal/17950/bo/bo-search",
-      "state": "CA"
-    },
     {
       "id": "143792",
       "title": "RFP for One Fresno Youth Jobs Corps Program Worksites",
@@ -30,7 +12,7 @@
       "agency": "City of Fresno",
       "bid_type": "Bidding",
       "close_date": "2026-08-04 15:00:00.000",
-      "due_in_days": 1,
+      "due_in_days": 0,
       "category_ids": [
         "11111",
         "48500",
@@ -62,7 +44,7 @@
       "agency": "City of Fresno",
       "bid_type": "Bidding",
       "close_date": "2026-08-04 15:00:00.000",
-      "due_in_days": 1,
+      "due_in_days": 0,
       "category_ids": [
         "11111",
         "90646",
@@ -82,7 +64,7 @@
       "agency": "Port of Long Beach",
       "bid_type": "Bidding",
       "close_date": "2026-08-04 15:00:00.000",
-      "due_in_days": 1,
+      "due_in_days": 0,
       "category_ids": [
         "91812",
         "91837",
@@ -101,7 +83,7 @@
       "agency": "Metropolitan Water District of Southern California",
       "bid_type": "Bidding",
       "close_date": "2026-08-04 14:00:00.000",
-      "due_in_days": 1,
+      "due_in_days": 0,
       "category_ids": [
         "03111",
         "20424",
@@ -174,7 +156,7 @@
       "agency": "City of Reno",
       "bid_type": "Bidding",
       "close_date": "2026-08-04 14:00:00.000",
-      "due_in_days": 1,
+      "due_in_days": 0,
       "category_ids": [
         "0002",
         "0003",
@@ -211,7 +193,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-04 16:08:00.000",
-      "due_in_days": 2,
+      "due_in_days": 1,
       "category_ids": [
         "20500",
         "20800",
@@ -229,7 +211,7 @@
       "agency": "City of Sacramento",
       "bid_type": "Bidding",
       "close_date": "2026-08-05 14:00:00.000",
-      "due_in_days": 2,
+      "due_in_days": 1,
       "category_ids": [
         "33055",
         "59575",
@@ -247,7 +229,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-06 14:00:00.000",
-      "due_in_days": 3,
+      "due_in_days": 2,
       "category_ids": [
         "91200",
         "91300",
@@ -263,7 +245,7 @@
       "agency": "City of San Bernardino",
       "bid_type": "Bidding",
       "close_date": "2026-08-06 15:00:00.000",
-      "due_in_days": 3,
+      "due_in_days": 2,
       "category_ids": [
         "541310",
         "541320",
@@ -282,7 +264,7 @@
       "agency": "Inland Empire Utilities Agency",
       "bid_type": "Bidding",
       "close_date": "2026-08-06 14:00:00.000",
-      "due_in_days": 3,
+      "due_in_days": 2,
       "category_ids": [
         "42581",
         "90921",
@@ -299,7 +281,7 @@
       "agency": "Inland Empire Utilities Agency",
       "bid_type": "Bidding",
       "close_date": "2026-08-06 15:00:00.000",
-      "due_in_days": 3,
+      "due_in_days": 2,
       "category_ids": [
         "28537",
         "90668",
@@ -316,7 +298,7 @@
       "agency": "City of Fresno",
       "bid_type": "Bidding",
       "close_date": "2026-08-07 15:00:00.000",
-      "due_in_days": 4,
+      "due_in_days": 3,
       "category_ids": [
         "20500",
         "20800",
@@ -337,7 +319,7 @@
       "agency": "City of Fresno",
       "bid_type": "Bidding",
       "close_date": "2026-08-07 17:00:00.000",
-      "due_in_days": 5,
+      "due_in_days": 4,
       "category_ids": [
         "11111",
         "90672",
@@ -360,7 +342,7 @@
       "agency": "Port of Long Beach",
       "bid_type": "Bidding",
       "close_date": "2026-08-07 16:00:00.000",
-      "due_in_days": 5,
+      "due_in_days": 4,
       "category_ids": [
         "12036",
         "28514",
@@ -390,7 +372,7 @@
       "agency": "City of Sacramento",
       "bid_type": "Bidding",
       "close_date": "2026-08-10 11:00:00.000",
-      "due_in_days": 7,
+      "due_in_days": 6,
       "category_ids": [
         "95896"
       ],
@@ -404,7 +386,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-11 14:00:00.000",
-      "due_in_days": 8,
+      "due_in_days": 7,
       "category_ids": [
         "237310",
         "238210",
@@ -425,7 +407,7 @@
       "agency": "City of Fresno",
       "bid_type": "Bidding",
       "close_date": "2026-08-11 15:00:00.000",
-      "due_in_days": 8,
+      "due_in_days": 7,
       "category_ids": [
         "11111",
         "55080",
@@ -446,7 +428,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-12 14:00:00.000",
-      "due_in_days": 9,
+      "due_in_days": 8,
       "category_ids": [
         "237110",
         "237310",
@@ -470,7 +452,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-12 15:00:00.000",
-      "due_in_days": 9,
+      "due_in_days": 8,
       "category_ids": [
         "69000",
         "69100",
@@ -489,7 +471,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-12 15:00:00.000",
-      "due_in_days": 9,
+      "due_in_days": 8,
       "category_ids": [
         "238210",
         "28500",
@@ -507,7 +489,7 @@
       "agency": "City of Sacramento",
       "bid_type": "Bidding",
       "close_date": "2026-08-12 14:00:00.000",
-      "due_in_days": 9,
+      "due_in_days": 8,
       "category_ids": [
         "89065",
         "89087",
@@ -524,7 +506,7 @@
       "agency": "City of Sacramento",
       "bid_type": "Bidding",
       "close_date": "2026-08-12 14:00:00.000",
-      "due_in_days": 9,
+      "due_in_days": 8,
       "category_ids": [
         "91036",
         "91223"
@@ -539,7 +521,7 @@
       "agency": "City of Sacramento",
       "bid_type": "Bidding",
       "close_date": "2026-08-12 14:00:00.000",
-      "due_in_days": 9,
+      "due_in_days": 8,
       "category_ids": [
         "28569",
         "55088",
@@ -557,7 +539,7 @@
       "agency": "Port of Long Beach",
       "bid_type": "Bidding",
       "close_date": "2026-08-11 16:00:00.000",
-      "due_in_days": 9,
+      "due_in_days": 8,
       "category_ids": [
         "72064",
         "89066",
@@ -596,7 +578,7 @@
       "agency": "Metropolitan Water District of Southern California",
       "bid_type": "Bidding",
       "close_date": "2026-08-12 11:00:00.000",
-      "due_in_days": 9,
+      "due_in_days": 8,
       "category_ids": [
         "22015",
         "22016",
@@ -618,7 +600,7 @@
       "agency": "Metropolitan Water District of Southern California",
       "bid_type": "Bidding",
       "close_date": "2026-08-12 14:00:00.000",
-      "due_in_days": 9,
+      "due_in_days": 8,
       "category_ids": [
         "06047",
         "34505",
@@ -639,7 +621,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-13 14:00:00.000",
-      "due_in_days": 10,
+      "due_in_days": 9,
       "category_ids": [
         "237110",
         "237310",
@@ -664,7 +646,7 @@
       "agency": "City of Sacramento",
       "bid_type": "Bidding",
       "close_date": "2026-08-13 14:00:00.000",
-      "due_in_days": 10,
+      "due_in_days": 9,
       "category_ids": [
         "33055",
         "59575",
@@ -682,7 +664,7 @@
       "agency": "City of Sacramento",
       "bid_type": "Bidding",
       "close_date": "2026-08-13 14:00:00.000",
-      "due_in_days": 10,
+      "due_in_days": 9,
       "category_ids": [
         "20880",
         "92045"
@@ -697,7 +679,7 @@
       "agency": "City of San Bernardino",
       "bid_type": "Bidding",
       "close_date": "2026-08-13 15:00:00.000",
-      "due_in_days": 10,
+      "due_in_days": 9,
       "category_ids": [
         "211112",
         "221119",
@@ -728,7 +710,7 @@
       "agency": "City of Reno",
       "bid_type": "Bidding",
       "close_date": "2026-08-13 10:00:00.000",
-      "due_in_days": 10,
+      "due_in_days": 9,
       "category_ids": [
         "0002",
         "0036",
@@ -746,7 +728,7 @@
       "agency": "City of Reno",
       "bid_type": "Bidding",
       "close_date": "2026-08-13 10:00:00.000",
-      "due_in_days": 10,
+      "due_in_days": 9,
       "category_ids": [
         "0041",
         "0043",
@@ -762,7 +744,7 @@
       "agency": "City of Reno",
       "bid_type": "Bidding",
       "close_date": "2026-08-13 14:00:00.000",
-      "due_in_days": 10,
+      "due_in_days": 9,
       "category_ids": [
         "0011",
         "238320"
@@ -777,7 +759,7 @@
       "agency": "City of Reno",
       "bid_type": "Bidding",
       "close_date": "2026-08-13 14:00:00.000",
-      "due_in_days": 10,
+      "due_in_days": 9,
       "category_ids": [
         "0002",
         "0013",
@@ -798,7 +780,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-14 15:00:00.000",
-      "due_in_days": 11,
+      "due_in_days": 10,
       "category_ids": [
         "237110",
         "56221",
@@ -817,7 +799,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-17 14:00:00.000",
-      "due_in_days": 14,
+      "due_in_days": 13,
       "category_ids": [
         "20400",
         "20500",
@@ -836,7 +818,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-17 14:00:00.000",
-      "due_in_days": 14,
+      "due_in_days": 13,
       "category_ids": [
         "91800",
         "91806",
@@ -847,13 +829,27 @@
       "state": "CA"
     },
     {
+      "id": "144489",
+      "title": "On-Call Non-Emergency Demolition Services",
+      "solicitation_no": "Q27211311001",
+      "agency": "City of Sacramento",
+      "bid_type": "Bidding",
+      "close_date": "2026-08-17 14:00:00.000",
+      "due_in_days": 13,
+      "category_ids": [
+        "91240"
+      ],
+      "url": "https://vendors.planetbids.com/portal/15300/bo/bo-search",
+      "state": "CA"
+    },
+    {
       "id": "144459",
       "title": "Bulk Poly (diallydimethylammonium Chloride) PolyDADMAC Polymer",
       "solicitation_no": "RFB-DV-476087",
       "agency": "Metropolitan Water District of Southern California",
       "bid_type": "Bidding",
       "close_date": "2026-08-17 11:00:00.000",
-      "due_in_days": 14,
+      "due_in_days": 13,
       "category_ids": [
         "88500",
         "88566",
@@ -869,7 +865,7 @@
       "agency": "Metropolitan Water District of Southern California",
       "bid_type": "Bidding",
       "close_date": "2026-08-17 11:00:00.000",
-      "due_in_days": 14,
+      "due_in_days": 13,
       "category_ids": [
         "03146",
         "17532",
@@ -887,7 +883,7 @@
       "agency": "City of Fresno",
       "bid_type": "Bidding",
       "close_date": "2026-08-18 14:00:00.000",
-      "due_in_days": 15,
+      "due_in_days": 14,
       "category_ids": [
         "11111",
         "69000",
@@ -930,7 +926,7 @@
       "agency": "City of Fresno",
       "bid_type": "Bidding",
       "close_date": "2026-08-18 15:00:00.000",
-      "due_in_days": 15,
+      "due_in_days": 14,
       "category_ids": [
         "11111",
         "34016",
@@ -956,7 +952,7 @@
       "agency": "City of Fresno",
       "bid_type": "Bidding",
       "close_date": "2026-08-18 15:00:00.000",
-      "due_in_days": 15,
+      "due_in_days": 14,
       "category_ids": [
         "11111",
         "55600",
@@ -993,7 +989,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-18 17:55:00.000",
-      "due_in_days": 16,
+      "due_in_days": 15,
       "category_ids": [
         "91016",
         "91804",
@@ -1009,7 +1005,7 @@
       "agency": "Inland Empire Utilities Agency",
       "bid_type": "Bidding",
       "close_date": "2026-08-19 14:00:00.000",
-      "due_in_days": 16,
+      "due_in_days": 15,
       "category_ids": [
         "90625",
         "91842",
@@ -1027,7 +1023,7 @@
       "agency": "Inland Empire Utilities Agency",
       "bid_type": "Bidding",
       "close_date": "2026-08-19 14:00:00.000",
-      "due_in_days": 16,
+      "due_in_days": 15,
       "category_ids": [
         "90625",
         "91842",
@@ -1045,7 +1041,7 @@
       "agency": "City of Sacramento",
       "bid_type": "Bidding",
       "close_date": "2026-08-20 15:00:00.000",
-      "due_in_days": 17,
+      "due_in_days": 16,
       "category_ids": [
         "57895",
         "91076"
@@ -1060,7 +1056,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-24 15:00:00.000",
-      "due_in_days": 21,
+      "due_in_days": 20,
       "category_ids": [
         "18000",
         "19000",
@@ -1076,7 +1072,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-25 14:00:00.000",
-      "due_in_days": 22,
+      "due_in_days": 21,
       "category_ids": [
         "91806",
         "95872",
@@ -1092,7 +1088,7 @@
       "agency": "City of Sacramento",
       "bid_type": "Bidding",
       "close_date": "2026-08-24 16:37:00.000",
-      "due_in_days": 22,
+      "due_in_days": 21,
       "category_ids": [
         "20880",
         "92045"
@@ -1107,7 +1103,7 @@
       "agency": "Metropolitan Water District of Southern California",
       "bid_type": "Bidding",
       "close_date": "2026-08-25 14:00:00.000",
-      "due_in_days": 22,
+      "due_in_days": 21,
       "category_ids": [
         "10030",
         "15015",
@@ -1144,7 +1140,7 @@
       "agency": "Inland Empire Utilities Agency",
       "bid_type": "Bidding",
       "close_date": "2026-08-25 14:00:00.000",
-      "due_in_days": 22,
+      "due_in_days": 21,
       "category_ids": [
         "111111",
         "90625",
@@ -1163,7 +1159,7 @@
       "agency": "Inland Empire Utilities Agency",
       "bid_type": "Bidding",
       "close_date": "2026-08-25 15:00:00.000",
-      "due_in_days": 22,
+      "due_in_days": 21,
       "category_ids": [
         "91843",
         "91846",
@@ -1180,7 +1176,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-26 16:00:00.000",
-      "due_in_days": 24,
+      "due_in_days": 23,
       "category_ids": [
         "541330",
         "90775",
@@ -1200,7 +1196,7 @@
       "agency": "City of Sacramento",
       "bid_type": "Bidding",
       "close_date": "2026-08-27 15:00:00.000",
-      "due_in_days": 24,
+      "due_in_days": 23,
       "category_ids": [
         "92536"
       ],
@@ -1214,7 +1210,7 @@
       "agency": "Metropolitan Water District of Southern California",
       "bid_type": "Bidding",
       "close_date": "2026-08-27 11:00:00.000",
-      "due_in_days": 24,
+      "due_in_days": 23,
       "category_ids": [
         "18000",
         "18004",
@@ -1243,7 +1239,7 @@
       "agency": "City of Reno",
       "bid_type": "Bidding",
       "close_date": "2026-08-27 14:00:00.000",
-      "due_in_days": 24,
+      "due_in_days": 23,
       "category_ids": [
         "0002",
         "0003",
@@ -1269,7 +1265,7 @@
       "agency": "City of San Bernardino",
       "bid_type": "Bidding",
       "close_date": "2026-08-28 15:00:00.000",
-      "due_in_days": 25,
+      "due_in_days": 24,
       "category_ids": [
         "237120",
         "238210",
@@ -1286,7 +1282,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-31 14:00:00.000",
-      "due_in_days": 28,
+      "due_in_days": 27,
       "category_ids": [
         "92000"
       ],
@@ -1300,7 +1296,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2026-08-31 14:00:00.000",
-      "due_in_days": 28,
+      "due_in_days": 27,
       "category_ids": [
         "238210",
         "29000",
@@ -1319,7 +1315,7 @@
       "agency": "City of Fresno",
       "bid_type": "Bidding",
       "close_date": "2026-08-31 13:00:00.000",
-      "due_in_days": 28,
+      "due_in_days": 27,
       "category_ids": [
         "11111",
         "90664",
@@ -1352,7 +1348,7 @@
       "agency": "Port of Long Beach",
       "bid_type": "Bidding",
       "close_date": "2026-09-01 14:00:00.000",
-      "due_in_days": 29,
+      "due_in_days": 28,
       "category_ids": [
         "12036",
         "28576",
@@ -1439,26 +1435,26 @@
       "state": "CA"
     },
     {
-      "id": "143419",
-      "title": "Otay WTP Raw Water PS Switchboard Replacement - Advertisement Notice Only (NO BIDS)",
-      "solicitation_no": "K-27-2482-DBB-3",
-      "agency": "City of San Diego",
-      "bid_type": "Canceled",
-      "close_date": "2026-09-02 14:00:00.000",
-      "due_in_days": 30,
+      "id": "144697",
+      "title": "IRC Hardware supplies items and Related Materials",
+      "solicitation_no": "RFB-PR-478342",
+      "agency": "Metropolitan Water District of Southern California",
+      "bid_type": "Bidding",
+      "close_date": "2026-09-01 10:00:00.000",
+      "due_in_days": 28,
       "category_ids": [
-        "236220",
-        "237310",
-        "238210",
-        "238910",
-        "238990",
-        "524126",
-        "541330",
-        "91200",
-        "91300",
-        "91400"
+        "00521",
+        "00542",
+        "07501",
+        "28581",
+        "44500",
+        "44530",
+        "44580",
+        "44598",
+        "45000",
+        "92950"
       ],
-      "url": "https://vendors.planetbids.com/portal/17950/bo/bo-search",
+      "url": "https://vendors.planetbids.com/portal/16151/bo/bo-search",
       "state": "CA"
     },
     {
@@ -1468,7 +1464,7 @@
       "agency": "City of Sacramento",
       "bid_type": "Bidding",
       "close_date": "2026-09-02 14:00:00.000",
-      "due_in_days": 30,
+      "due_in_days": 29,
       "category_ids": [
         "06066",
         "07103",
@@ -1487,7 +1483,7 @@
       "agency": "City of National City",
       "bid_type": "Bidding",
       "close_date": "2026-09-03 17:00:00.000",
-      "due_in_days": 32,
+      "due_in_days": 31,
       "category_ids": [
         "91800",
         "91806",
@@ -1508,7 +1504,7 @@
       "agency": "City of Reno",
       "bid_type": "Bidding",
       "close_date": "2026-09-04 17:00:00.000",
-      "due_in_days": 33,
+      "due_in_days": 32,
       "category_ids": [
         "0012",
         "0016",
@@ -1531,7 +1527,7 @@
       "agency": "Metropolitan Water District of Southern California",
       "bid_type": "Bidding",
       "close_date": "2026-09-11 11:00:00.000",
-      "due_in_days": 39,
+      "due_in_days": 38,
       "category_ids": [
         "72500",
         "72546",
@@ -1549,7 +1545,7 @@
       "agency": "Inland Empire Utilities Agency",
       "bid_type": "Bidding",
       "close_date": "2026-09-14 14:00:00.000",
-      "due_in_days": 42,
+      "due_in_days": 41,
       "category_ids": [
         "111111",
         "90625",
@@ -1578,7 +1574,7 @@
       "agency": "Port of Long Beach",
       "bid_type": "Bidding",
       "close_date": "2026-09-15 14:00:00.000",
-      "due_in_days": 43,
+      "due_in_days": 42,
       "category_ids": [
         "15580",
         "57048",
@@ -1623,7 +1619,7 @@
       "agency": "City of Fresno",
       "bid_type": "Bidding",
       "close_date": "2026-10-01 15:00:00.000",
-      "due_in_days": 59,
+      "due_in_days": 58,
       "category_ids": [
         "11111",
         "91869",
@@ -1645,7 +1641,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2027-06-09 14:00:00.000",
-      "due_in_days": 310,
+      "due_in_days": 309,
       "category_ids": [
         "91806",
         "95872",
@@ -1655,13 +1651,47 @@
       "state": "CA"
     },
     {
+      "id": "144676",
+      "title": "NOTICE ONLY: Fiscal Year 2027 Project Opportunities with the Department of Public Utilities",
+      "solicitation_no": "080326AB",
+      "agency": "City of Fresno",
+      "bid_type": "Bidding",
+      "close_date": "2027-07-01 17:00:00.000",
+      "due_in_days": 332,
+      "category_ids": [
+        "11111",
+        "88500",
+        "89000",
+        "90638",
+        "90692",
+        "90694",
+        "90900",
+        "90922",
+        "91017",
+        "91060",
+        "91063",
+        "91200",
+        "91800",
+        "91812",
+        "91897",
+        "95826",
+        "95876",
+        "96185",
+        "96223",
+        "96895",
+        "96896"
+      ],
+      "url": "https://vendors.planetbids.com/portal/14769/bo/bo-search",
+      "state": "CA"
+    },
+    {
       "id": "79912",
       "title": "\"Continuous\" Special Financing District Consultant and/or Financial and Economic Consultant",
       "solicitation_no": "10089743-21-W",
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2028-02-28 14:00:00.000",
-      "due_in_days": 574,
+      "due_in_days": 573,
       "category_ids": [
         "522320",
         "91837",
@@ -1680,7 +1710,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2028-03-31 14:00:00.000",
-      "due_in_days": 606,
+      "due_in_days": 605,
       "category_ids": [
         "522320",
         "91837",
@@ -1699,7 +1729,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2028-04-17 14:00:00.000",
-      "due_in_days": 623,
+      "due_in_days": 622,
       "category_ids": [
         "522320",
         "91837",
@@ -1718,7 +1748,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2028-05-31 14:00:00.000",
-      "due_in_days": 667,
+      "due_in_days": 666,
       "category_ids": [
         "522110",
         "522320",
@@ -1737,7 +1767,7 @@
       "agency": "City of Sacramento",
       "bid_type": "Bidding",
       "close_date": "2028-06-30 17:00:00.000",
-      "due_in_days": 698,
+      "due_in_days": 697,
       "category_ids": [
         "96890"
       ],
@@ -1751,7 +1781,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2031-01-05 14:00:00.000",
-      "due_in_days": 1616,
+      "due_in_days": 1615,
       "category_ids": [
         "91874",
         "96149"
@@ -1766,7 +1796,7 @@
       "agency": "City of San Diego",
       "bid_type": "Bidding",
       "close_date": "2032-10-01 15:00:00.000",
-      "due_in_days": 2251,
+      "due_in_days": 2250,
       "category_ids": [
         "96164"
       ],
