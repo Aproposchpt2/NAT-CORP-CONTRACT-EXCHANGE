@@ -42,7 +42,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p review-artifacts
-          cat > /tmp/capture.js <<'NODE'
+          cat > capture-review.js <<'NODE'
           const { chromium, devices } = require('playwright');
 
           (async () => {
@@ -76,7 +76,7 @@ jobs:
             process.exit(1);
           });
           NODE
-          node /tmp/capture.js
+          node capture-review.js
 
       - name: Run public link tests
         shell: bash
@@ -110,7 +110,7 @@ jobs:
       - name: Validate metadata and structured data
         shell: bash
         run: |
-          cat > /tmp/validate.js <<'NODE'
+          cat > validate-review.js <<'NODE'
           const fs = require('fs');
 
           const expected = {
@@ -162,7 +162,7 @@ jobs:
             process.exit(1);
           });
           NODE
-          node /tmp/validate.js
+          node validate-review.js
 
       - name: Upload review package
         if: always()
