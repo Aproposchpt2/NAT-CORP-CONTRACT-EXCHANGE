@@ -10,11 +10,32 @@ export const dateText=v=>{if(!v)return'Not provided';const d=new Date(v);return 
 export const statusColor=v=>/gap|no.go|do.not|critical|high|ineligible|failed/i.test(v)?'9C2F35':/conditional|partial|verify|medium|unknown|unverified/i.test(v)?'9A6500':'176C45';
 const recommendation=v=>{const r=safe(v).toUpperCase().replace(/[ -]+/g,'_');if(['PURSUE','GO','BID'].includes(r))return'PURSUE';if(['CONDITIONAL','PURSUE_WITH_CONDITIONS'].includes(r))return'CONDITIONAL';if(['DO_NOT_PURSUE','NO_GO','NO_BID'].includes(r))return'DO_NOT_PURSUE';return''};
 
+const unavailable=v=>/^(?:unavailable|unknown|not available|not identified|none|n\/?a|unverified|)$/i.test(safe(v));
+const scalarText=v=>{if(v==null)return'';if(['string','number','boolean'].includes(typeof v))return safe(v);if(Array.isArray(v))return v.map(scalarText).filter(Boolean).join('; ');if(typeof v==='object')return Object.entries(v).map(([k,val])=>`${title(k)}: ${scalarText(val)}`).filter(x=>!x.endsWith(': ')).join('; ');return safe(v)};
+const hasSubstance=items=>arr(items).some(item=>{if(typeof item==='string')return!unavailable(item);if(!item||typeof item!=='object')return false;return Object.values(item).some(v=>typeof v==='string'?!unavailable(v):Array.isArray(v)?v.length>0:Boolean(v))});
+const uniqueStrings=items=>[...new Set(arr(items).map(scalarText).map(safe).filter(x=>x&&!unavailable(x)))];
+
 export function normalizeAnalyzeFitAnalysis(input={}){
-  const a={...(input||{})};
-  const score=clamp(a.score??a.fit_score,0,100);
-  const rec=recommendation(a.recommendation)||(score>=75?'PURSUE':score>=45?'CONDITIONAL':'DO_NOT_PURSUE');
-  return {...a,score,recommendation:rec,proposal_readiness:a.proposal_readiness||(rec==='PURSUE'?'READY — confirm all solicitation requirements before submission.':rec==='CONDITIONAL'?'CONDITIONALLY READY — close every stated decision condition before proposal development.':'NOT READY — resolve disqualifying issues before committing pursuit resources.')};
+  const a=typeof structuredClone==='function'?structuredClone(input||{}):JSON.parse(JSON.stringify(input||{}));
+  let score=clamp(a.score??a.fit_score,0,100);
+  let rec=recommendation(a.recommendation)||(score>=75?'PURSUE':score>=45?'CONDITIONAL':'DO_NOT_PURSUE');
+  const capability=arr(a.capability_alignment),statuses=capability.map(x=>safe(x?.status).toUpperCase()),hasGap=statuses.includes('GAP'),hasPartial=statuses.some(x=>['PARTIAL','UNVERIFIED'].includes(x)),highRisk=arr(a.risks).some(x=>safe(x?.level).toUpperCase()==='HIGH'),capacityMissing=!hasSubstance(a.capacity_delivery_review),licensingMissing=!hasSubstance(a.licensing_qualification_review),pastMissing=!hasSubstance(a.past_performance_review),contractUnknowns=uniqueStrings(a.unavailable_contract_details),businessUnknowns=uniqueStrings(a.unavailable_business_details),materialUnknowns=contractUnknowns.length+businessUnknowns.length,guardrails=[];
+  if(hasGap){score=Math.min(score,highRisk?44:59);rec=highRisk?'DO_NOT_PURSUE':'CONDITIONAL';guardrails.push('One or more contract requirements are recorded as capability gaps.')}else if(hasPartial){score=Math.min(score,74);if(rec==='PURSUE')rec='CONDITIONAL';guardrails.push('One or more capability requirements remain partial or unverified.')}
+  if(highRisk){score=Math.min(score,59);if(rec==='PURSUE')rec='CONDITIONAL';guardrails.push('The risk register contains at least one high-risk finding.')}
+  if(capacityMissing){score=Math.min(score,84);if(rec==='PURSUE')rec='CONDITIONAL';guardrails.push('Staffing, capacity, scheduling, or delivery evidence has not been verified.')}
+  if(licensingMissing){score=Math.min(score,84);if(rec==='PURSUE')rec='CONDITIONAL';guardrails.push('Licensing or qualification evidence has not been fully verified.')}
+  if(pastMissing){score=Math.min(score,88);if(rec==='PURSUE'&&score<85)rec='CONDITIONAL';guardrails.push('Contract-relevant past-performance evidence is limited or unavailable.')}
+  if(materialUnknowns){score=Math.min(score,materialUnknowns>=3?79:89);if(rec==='PURSUE'&&score<85)rec='CONDITIONAL';guardrails.push('Material contract or business details remain unavailable and require verification.')}
+  score=Math.min(score,95);
+  const conditions=uniqueStrings(a.decision_conditions),actions=uniqueStrings(a.action_plan);
+  if(capacityMissing){conditions.push('Verify staffing, workload, schedule, subcontracting, and delivery capacity before committing to pursue.');actions.push('Complete a delivery-capacity review against the solicitation schedule and anticipated workload.')}
+  if(licensingMissing){conditions.push('Verify every required professional license, registration, certification, and responsible-person requirement.');actions.push('Create a solicitation compliance matrix for licenses, certifications, forms, and mandatory attachments.')}
+  if(materialUnknowns){conditions.push('Resolve all material unavailable contract and business details against the official solicitation and current business records.');actions.push('Review the complete official solicitation, amendments, attachments, and submission instructions.')}
+  if(!actions.length)actions.push('Confirm the official solicitation, amendments, deadline, and submission method before proposal development begins.');
+  let executive=safe(a.executive_summary),rationale=safe(a.rationale);
+  if(rec!=='PURSUE'||guardrails.length){executive=executive.replace(/meets all critical requirements/ig,'shows strong alignment with several identified requirements').replace(/aligns perfectly/ig,'shows strong alignment').replace(/fully meets/ig,'appears to align with').replace(/shows strong alignment with several identified requirements and shows strong alignment with/ig,'shows strong alignment with several identified requirements and appears relevant to');const note=`Final pursuit approval remains subject to verification of: ${guardrails.join(' ')}`;if(!rationale.toLowerCase().includes('final pursuit approval'))rationale=[rationale,note].filter(Boolean).join(' ')}
+  const proposalReadiness=rec==='DO_NOT_PURSUE'?'NOT READY — resolve disqualifying gaps before proposal development.':rec==='CONDITIONAL'?'CONDITIONALLY READY — complete the listed decision conditions before proposal development.':'READY — proceed only after confirming the official solicitation and current business evidence.';
+  return {...a,score,recommendation:rec,executive_summary:executive,rationale,decision_conditions:[...new Set(conditions)],action_plan:[...new Set(actions)],proposal_readiness:proposalReadiness,evidence_guardrails:[...new Set(guardrails)]};
 }
 
 function normalizeState(payload){
