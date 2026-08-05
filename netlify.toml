@@ -43,6 +43,11 @@
     Cache-Control = "no-store"
 
 [[headers]]
+  for = "/member-login"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
   for = "/aois-dashboard-preview.html"
   [headers.values]
     Cache-Control = "no-store"
@@ -286,14 +291,20 @@
 
 [[redirects]]
   from = "/login"
-  to = "/intake"
-  status = 302
+  to = "/member-login.html"
+  status = 200
   force = true
 
 [[redirects]]
   from = "/login.html"
-  to = "/intake"
-  status = 302
+  to = "/member-login.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/member-login"
+  to = "/member-login.html"
+  status = 200
   force = true
 
 [[redirects]]
