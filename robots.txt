@@ -1,4 +1,15 @@
 User-agent: *
 Allow: /
+Disallow: /intake
+Disallow: /welcome.html
+Disallow: /business-intake
+Disallow: /business-dna-builder-preview.html
+Disallow: /dashboard
+Disallow: /aois-dashboard-preview.html
+Disallow: /analyze-fit
+Disallow: /analyze-fit-v2.html
+Disallow: /jeff-dashboard
+Disallow: /jeff-dashboard.html
+Disallow: /.netlify/
 
 Sitemap: https://natcorp.aproposgroupllc.com/sitemap.xml
