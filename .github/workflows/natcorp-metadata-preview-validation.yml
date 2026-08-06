@@ -1,0 +1,164 @@
+name: NAT-CORP Metadata Preview Validation
+
+on:
+  push:
+    branches:
+      - fix-natcorp-production-metadata-v1
+    paths:
+      - .github/workflows/natcorp-metadata-preview-validation.yml
+
+permissions:
+  contents: read
+
+jobs:
+  validate-preview:
+    runs-on: ubuntu-latest
+    env:
+      PREVIEW_URL: https://deploy-preview-57--national-corp-contract-exchange.netlify.app
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for deploy preview
+        shell: bash
+        run: |
+          for attempt in $(seq 1 36); do
+            if curl --fail --silent --show-error --location --max-time 30 "$PREVIEW_URL/" | grep -q "State and Local Government Contract Matching | NAT-CORP"; then
+              echo "Preview ready"
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1
+      - name: Install validation dependencies
+        run: |
+          npm install --no-save playwright@1.54.2
+          npx playwright install --with-deps chromium
+          python -m pip install --disable-pip-version-check pillow
+      - name: Capture desktop and mobile and validate page
+        shell: bash
+        run: |
+          mkdir -p validation-artifacts
+          cat > validate-preview.cjs <<'NODE'
+          const fs = require('fs');
+          const { chromium, devices } = require('playwright');
+
+          const expected = {
+            title: 'State and Local Government Contract Matching | NAT-CORP',
+            description: 'Licensed contractors receive personalized state and local government contract matches, intelligent rankings, guided onboarding, Analyze Fit support, and a 14-day free trial.',
+            canonical: 'https://natcorp.aproposgroupllc.com/',
+            robots: 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1',
+            image: 'https://natcorp.aproposgroupllc.com/og-natcorp.jpg',
+            stripe: 'https://buy.stripe.com/dRm8wOcw2d8X3cT7aU7EQ1f'
+          };
+
+          async function inspect(page, label) {
+            await page.goto(process.env.PREVIEW_URL, { waitUntil: 'networkidle', timeout: 90000 });
+            const data = await page.evaluate(() => {
+              const meta = (selector) => document.querySelector(selector)?.getAttribute('content') || null;
+              const canonicalNodes = [...document.querySelectorAll('link[rel="canonical"]')];
+              const scripts = [...document.querySelectorAll('script[type="application/ld+json"]')].map(x => x.textContent);
+              const links = [...document.querySelectorAll('a')].map(a => ({ text: a.textContent.trim(), href: a.href }));
+              return {
+                title: document.title,
+                description: meta('meta[name="description"]'),
+                robots: meta('meta[name="robots"]'),
+                canonicalCount: canonicalNodes.length,
+                canonical: canonicalNodes[0]?.href || null,
+                ogTitle: meta('meta[property="og:title"]'),
+                ogDescription: meta('meta[property="og:description"]'),
+                ogUrl: meta('meta[property="og:url"]'),
+                ogImage: meta('meta[property="og:image"]'),
+                ogImageAlt: meta('meta[property="og:image:alt"]'),
+                twitterCard: meta('meta[name="twitter:card"]'),
+                twitterTitle: meta('meta[name="twitter:title"]'),
+                twitterDescription: meta('meta[name="twitter:description"]'),
+                twitterImage: meta('meta[name="twitter:image"]'),
+                h1Count: document.querySelectorAll('h1').length,
+                text: document.body.innerText,
+                links,
+                jsonLd: scripts,
+                viewportWidth: window.innerWidth,
+                scrollWidth: document.documentElement.scrollWidth
+              };
+            });
+
+            if (data.title !== expected.title) throw new Error(`${label}: title mismatch`);
+            if (data.description !== expected.description) throw new Error(`${label}: description mismatch`);
+            if (data.robots !== expected.robots) throw new Error(`${label}: robots mismatch`);
+            if (data.canonicalCount !== 1 || data.canonical !== expected.canonical) throw new Error(`${label}: canonical mismatch`);
+            if (data.h1Count !== 1) throw new Error(`${label}: H1 count ${data.h1Count}`);
+            if (data.ogTitle !== expected.title || data.ogUrl !== expected.canonical || data.ogImage !== expected.image) throw new Error(`${label}: Open Graph mismatch`);
+            if (data.twitterCard !== 'summary_large_image' || data.twitterTitle !== expected.title || data.twitterImage !== expected.image) throw new Error(`${label}: Twitter metadata mismatch`);
+            if (data.scrollWidth > data.viewportWidth + 1) throw new Error(`${label}: horizontal overflow ${data.scrollWidth}/${data.viewportWidth}`);
+
+            const trialLinks = data.links.filter(x => x.text.includes('START YOUR 14-DAY FREE TRIAL'));
+            const memberLinks = data.links.filter(x => x.text.includes('MEMBER LOGIN'));
+            if (!trialLinks.length || trialLinks.some(x => x.href !== expected.stripe)) throw new Error(`${label}: trial CTA mismatch`);
+            if (!memberLinks.length || memberLinks.some(x => new URL(x.href).pathname !== '/member-login')) throw new Error(`${label}: member-login CTA mismatch`);
+
+            const requiredText = [
+              'Start your 14-day free trial. Continue for $119 per month.',
+              'Additional Analyze Fit Report: $15 one-time',
+              'Concierge Contract Service pricing will be announced after final service scope and operating-cost validation.',
+              'NAT-CORP currently supports six states, with nationwide expansion underway.',
+              'all licensed contractors'
+            ];
+            for (const text of requiredText) if (!data.text.includes(text)) throw new Error(`${label}: missing visible copy: ${text}`);
+            const prohibited = [/Free Contract Discovery/i,/Build a free business-matched dashboard/i,/No subscription required/i,/Contract discovery is free/i,/Free opportunity matching/i,/\$19\.99/i,/all 50 states/i];
+            for (const pattern of prohibited) if (pattern.test(data.text) || pattern.test(data.title) || pattern.test(data.description || '')) throw new Error(`${label}: prohibited copy ${pattern}`);
+            if (/Concierge Contract Service.{0,100}\$[0-9]/is.test(data.text)) throw new Error(`${label}: Concierge price published`);
+
+            const parsed = data.jsonLd.map(JSON.parse);
+            const graphDoc = parsed.find(x => Array.isArray(x['@graph']));
+            if (!graphDoc) throw new Error(`${label}: JSON-LD graph missing`);
+            const graph = graphDoc['@graph'];
+            const types = new Set(graph.map(x => x['@type']));
+            for (const type of ['Organization','WebSite','Service']) if (!types.has(type)) throw new Error(`${label}: ${type} missing`);
+            const service = graph.find(x => x['@type'] === 'Service');
+            const offer = service?.offers;
+            if (!offer || offer['@type'] !== 'Offer' || offer.name !== 'NAT-CORP Monthly Membership' || offer.price !== '119.00' || offer.priceCurrency !== 'USD' || offer.availability !== 'https://schema.org/InStock' || !offer.description.includes('14-day free trial')) throw new Error(`${label}: Offer invalid`);
+            return { ...data, text: undefined, links: data.links.filter(x => x.text.includes('TRIAL') || x.text.includes('MEMBER LOGIN')), jsonLdParsed: parsed };
+          }
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const desktopContext = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
+            const desktopPage = await desktopContext.newPage();
+            const desktop = await inspect(desktopPage, 'desktop');
+            await desktopPage.screenshot({ path: 'validation-artifacts/desktop-hero.png' });
+            await desktopPage.screenshot({ path: 'validation-artifacts/desktop-full-page.png', fullPage: true });
+            await desktopContext.close();
+
+            const mobileContext = await browser.newContext({ ...devices['iPhone 13'], reducedMotion: 'reduce' });
+            const mobilePage = await mobileContext.newPage();
+            const mobile = await inspect(mobilePage, 'mobile');
+            await mobilePage.screenshot({ path: 'validation-artifacts/mobile-hero.png' });
+            await mobilePage.screenshot({ path: 'validation-artifacts/mobile-full-page.png', fullPage: true });
+            await mobileContext.close();
+            await browser.close();
+            fs.writeFileSync('validation-artifacts/metadata-schema-validation.json', JSON.stringify({ desktop, mobile }, null, 2));
+          })().catch(error => { console.error(error); process.exit(1); });
+          NODE
+          node validate-preview.cjs
+      - name: Validate routes and social image
+        shell: bash
+        run: |
+          set -euo pipefail
+          : > validation-artifacts/link-test-results.txt
+          for path in / /intake /member-login /dashboard /robots.txt /sitemap.xml /og-natcorp.jpg /headquarters.webp; do
+            code=$(curl -L -sS -o /dev/null -w '%{http_code}' "$PREVIEW_URL$path")
+            echo "$code $path" | tee -a validation-artifacts/link-test-results.txt
+            test "$code" = "200"
+          done
+          curl -L -sS "$PREVIEW_URL/og-natcorp.jpg" -o validation-artifacts/og-natcorp.jpg
+          python <<'PY'
+          from PIL import Image
+          image = Image.open('validation-artifacts/og-natcorp.jpg')
+          assert image.size == (1200, 630), image.size
+          print(f'og-natcorp.jpg {image.size[0]}x{image.size[1]}')
+          PY
+      - name: Upload validation package
+        uses: actions/upload-artifact@v4
+        with:
+          name: natcorp-production-metadata-preview-validation
+          path: validation-artifacts/
+          retention-days: 30
