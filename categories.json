@@ -1,7 +1,7 @@
 {
   "source": "planetbids",
-  "generatedAt": "2026-08-11T14:26:24.610Z",
-  "count": 8751,
+  "generatedAt": "2026-08-13T14:27:48.330Z",
+  "count": 8821,
   "portalsCaptured": 10,
   "categories": [
     {
@@ -1655,11 +1655,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "92002",
-      "categoryName": "ACCESS SERVICES, DATA",
-      "catType": "C"
-    },
-    {
       "categoryId": "92804",
       "categoryName": "ACCESSORIES (NOT OTHERWISE CLASSIFIED) MAINT./REPA",
       "catType": "C"
@@ -1691,7 +1686,7 @@
     },
     {
       "categoryId": "94610",
-      "categoryName": "ACCOUNTING AND BILLING SERVICES (INCLUDING PAYROLL",
+      "categoryName": "Account/Billing Services",
       "catType": "C"
     },
     {
@@ -1857,11 +1852,6 @@
     {
       "categoryId": "61503",
       "categoryName": "ADDING MACHINES AND CALCULATOR PAPER (ROLLS)",
-      "catType": "C"
-    },
-    {
-      "categoryId": "33504",
-      "categoryName": "Additives and Supplements, Fertilizer ",
       "catType": "C"
     },
     {
@@ -2065,11 +2055,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "91501",
-      "categoryName": "Advertising Agency Services",
-      "catType": "C"
-    },
-    {
       "categoryId": "91807",
       "categoryName": "Advertising Consulting ",
       "catType": "C"
@@ -2077,6 +2062,11 @@
     {
       "categoryId": "541870",
       "categoryName": "Advertising Material Distribution Services",
+      "catType": "C"
+    },
+    {
+      "categoryId": "91501",
+      "categoryName": "Advertising Services",
       "catType": "C"
     },
     {
@@ -2111,7 +2101,7 @@
     },
     {
       "categoryId": "90505",
-      "categoryName": "AERIAL PHOTOGRAPHY",
+      "categoryName": "Aerial Photography Services",
       "catType": "C"
     },
     {
@@ -2121,7 +2111,12 @@
     },
     {
       "categoryId": "90510",
-      "categoryName": "AERIAL SURVEYS (INCLUDING WILDLIFE CENSUSES)",
+      "categoryName": "Aerial Survey Services",
+      "catType": "C"
+    },
+    {
+      "categoryId": "80505",
+      "categoryName": "Aerobic Training Equipment & Supplies",
       "catType": "C"
     },
     {
@@ -2250,6 +2245,16 @@
       "catType": "C"
     },
     {
+      "categoryId": "98111",
+      "categoryName": "Air Compressor Rental or Lease",
+      "catType": "C"
+    },
+    {
+      "categoryId": "02585",
+      "categoryName": "Air Compressors & Accessories",
+      "catType": "C"
+    },
+    {
       "categoryId": "02500",
       "categoryName": "Air Compressors And Accessories ",
       "catType": "C"
@@ -2260,13 +2265,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "98111",
-      "categoryName": "AIR COMPRESSORS AND ACCESSORIES RENTAL OR LEASE",
+      "categoryId": "03105",
+      "categoryName": "AIR CONDITIONERS (COOLING AND COOLING/HEATING TYPE",
       "catType": "C"
     },
     {
-      "categoryId": "03105",
-      "categoryName": "AIR CONDITIONERS (COOLING AND COOLING/HEATING TYPE",
+      "categoryId": "03106",
+      "categoryName": "Air Conditioners & Supplies ",
       "catType": "C"
     },
     {
@@ -2287,11 +2292,6 @@
     {
       "categoryId": "03104",
       "categoryName": "AIR CONDITIONERS: CONTROLLED ENVIRONMENT (FOR COMP",
-      "catType": "C"
-    },
-    {
-      "categoryId": "03106",
-      "categoryName": "AIR CONDITIONING AND HEATING: CENTRAL UNITS, AND P",
       "catType": "C"
     },
     {
@@ -2425,11 +2425,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "03506",
-      "categoryName": "Aircraft Accessories",
-      "catType": "C"
-    },
-    {
       "categoryId": "03500",
       "categoryName": "Aircraft And Airport Equipment, Parts, And Supplies",
       "catType": "C"
@@ -2475,6 +2470,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "90516",
+      "categoryName": "Aircraft Maintenance/Repair Services",
+      "catType": "C"
+    },
+    {
       "categoryId": "336411",
       "categoryName": "Aircraft Manufacturing",
       "catType": "C"
@@ -2487,6 +2487,11 @@
     {
       "categoryId": "90511",
       "categoryName": "Aircraft Painting Services",
+      "catType": "C"
+    },
+    {
+      "categoryId": "03506",
+      "categoryName": "Aircraft Parts & Supplies",
       "catType": "C"
     },
     {
@@ -2511,12 +2516,7 @@
     },
     {
       "categoryId": "03520",
-      "categoryName": "Airplanes ",
-      "catType": "C"
-    },
-    {
-      "categoryId": "90516",
-      "categoryName": "Airplanes, Helicopters and Accessories Maintenance and Repair",
+      "categoryName": "Airplanes",
       "catType": "C"
     },
     {
@@ -2595,18 +2595,23 @@
       "catType": "C"
     },
     {
+      "categoryId": "99050",
+      "categoryName": "Alarm/Security Installation",
+      "catType": "C"
+    },
+    {
       "categoryId": "97708",
       "categoryName": "Albums, Tapes, Compact Disks, etc. Rental or Lease",
       "catType": "C"
     },
     {
-      "categoryId": "95205",
-      "categoryName": "Alcohol and Drug Detoxification",
+      "categoryId": "95206",
+      "categoryName": "Alcohol & Drug Prevention Services",
       "catType": "C"
     },
     {
-      "categoryId": "95206",
-      "categoryName": "Alcohol and Drug Prevention",
+      "categoryId": "95205",
+      "categoryName": "Alcohol and Drug Detoxification",
       "catType": "C"
     },
     {
@@ -3015,6 +3020,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "07103",
+      "categoryName": "Ambulance, Rescue Vehicles",
+      "catType": "C"
+    },
+    {
       "categoryId": "07003",
       "categoryName": "AMBULANCES AND RESCUE VEHICLES",
       "catType": "C"
@@ -3052,6 +3062,11 @@
     {
       "categoryId": "33512",
       "categoryName": "AMMONIUM SULFATE",
+      "catType": "C"
+    },
+    {
+      "categoryId": "68004",
+      "categoryName": "Ammunition",
       "catType": "C"
     },
     {
@@ -3196,7 +3211,7 @@
     },
     {
       "categoryId": "04003",
-      "categoryName": "Animal Care Supplies (Collars, Clothing, Leashes, etc.) ",
+      "categoryName": "Animal Care Supplies",
       "catType": "C"
     },
     {
@@ -3232,6 +3247,11 @@
     {
       "categoryId": "96703",
       "categoryName": "Animal Food Manufacturing Services",
+      "catType": "C"
+    },
+    {
+      "categoryId": "32525",
+      "categoryName": "Animal Food, Dog & Cat",
       "catType": "C"
     },
     {
@@ -3370,13 +3390,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "04500",
-      "categoryName": "Appliances And Equipment, Household Type ",
+      "categoryId": "93107",
+      "categoryName": "Appliance/Kitchen Equipment Maintenance",
       "catType": "C"
     },
     {
-      "categoryId": "93107",
-      "categoryName": "Appliances and Equipment, Household, (Not Laundry or HVAC) Maintenance and Repair ",
+      "categoryId": "04500",
+      "categoryName": "Appliances And Equipment, Household Type ",
       "catType": "C"
     },
     {
@@ -3386,7 +3406,7 @@
     },
     {
       "categoryId": "04506",
-      "categoryName": "Appliances, Small, Electric (Not Otherwise Classified)",
+      "categoryName": "Appliances, Parts & Accessories",
       "catType": "C"
     },
     {
@@ -3421,7 +3441,7 @@
     },
     {
       "categoryId": "94616",
-      "categoryName": "Appraisal Services (Not Otherwise Classified) ",
+      "categoryName": "Appraisal Services",
       "catType": "C"
     },
     {
@@ -3530,6 +3550,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "90625",
+      "categoryName": "Architectural Design/Build Services",
+      "catType": "C"
+    },
+    {
       "categoryId": "541310",
       "categoryName": "Architectural Services",
       "catType": "C"
@@ -3592,6 +3617,16 @@
     {
       "categoryId": "05200",
       "categoryName": "Art Objects ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "05248",
+      "categoryName": "Art Objects-Mixed Media",
+      "catType": "C"
+    },
+    {
+      "categoryId": "78545",
+      "categoryName": "Art Supplies ",
       "catType": "C"
     },
     {
@@ -3835,8 +3870,8 @@
       "catType": "C"
     },
     {
-      "categoryId": "93111",
-      "categoryName": "Athletic And Sporting Goods Equipment And Accessories (Shoulder Pads, Etc.), Maintenance And Repair ",
+      "categoryId": "96320",
+      "categoryName": "Association Fees",
       "catType": "C"
     },
     {
@@ -3936,7 +3971,7 @@
     },
     {
       "categoryId": "91506",
-      "categoryName": "Audio Production",
+      "categoryName": "Audio Production Services",
       "catType": "C"
     },
     {
@@ -3992,6 +4027,16 @@
     {
       "categoryId": "42004",
       "categoryName": "Auditorium, Stadium, Team Seating Furniture And Portable Bleachers ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "07547",
+      "categoryName": "Auto Mechanic Equipment & Tools",
+      "catType": "C"
+    },
+    {
+      "categoryId": "06066",
+      "categoryName": "Auto/Trailer Parts & Accessories",
       "catType": "C"
     },
     {
@@ -4070,8 +4115,8 @@
       "catType": "C"
     },
     {
-      "categoryId": "97514",
-      "categoryName": "AUTOMOBILES AND OTHER PASSENGER VEHICLES (INCLUDIN",
+      "categoryId": "07104",
+      "categoryName": "Automobiles",
       "catType": "C"
     },
     {
@@ -4301,7 +4346,7 @@
     },
     {
       "categoryId": "08010",
-      "categoryName": "BADGES, BUTTONS, EMBLEMS, AND ID CARDS, CELLULOID ",
+      "categoryName": "Badges, ID Cards & Buttons",
       "catType": "C"
     },
     {
@@ -4457,11 +4502,6 @@
     {
       "categoryId": "08550",
       "categoryName": "BAGS, POTATO",
-      "catType": "C"
-    },
-    {
-      "categoryId": "08555",
-      "categoryName": "BAGS, SAND",
       "catType": "C"
     },
     {
@@ -4861,7 +4901,7 @@
     },
     {
       "categoryId": "59510",
-      "categoryName": "Bedding Plants and Cuttings ",
+      "categoryName": "Bedding Plants, Cuttings-Nursery",
       "catType": "C"
     },
     {
@@ -5011,7 +5051,7 @@
     },
     {
       "categoryId": "80534",
-      "categoryName": "Bicycles, Tricycles, etc. (For Exercise Bikes See 805-57) ",
+      "categoryName": "Bicycles & Accessories",
       "catType": "C"
     },
     {
@@ -5115,13 +5155,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "11500",
-      "categoryName": "Biochemicals, Research ",
+      "categoryId": "11510",
+      "categoryName": "Biochemicals",
       "catType": "C"
     },
     {
-      "categoryId": "11510",
-      "categoryName": "Biochemicals: Amino Acids, Enzymes, Nucleotides, Peptides, etc. ",
+      "categoryId": "11500",
+      "categoryName": "Biochemicals, Research ",
       "catType": "C"
     },
     {
@@ -5485,18 +5525,18 @@
       "catType": "C"
     },
     {
+      "categoryId": "12021",
+      "categoryName": "Boats & Accessories",
+      "catType": "C"
+    },
+    {
       "categoryId": "99817",
       "categoryName": "Boats and Marine Equipment",
       "catType": "C"
     },
     {
       "categoryId": "95924",
-      "categoryName": "Boats and Motors Maintenance and Repair ",
-      "catType": "C"
-    },
-    {
-      "categoryId": "12021",
-      "categoryName": "Boats, 21 Feet and Under",
+      "categoryName": "Boats, Maintenance & Repair",
       "catType": "C"
     },
     {
@@ -5536,7 +5576,7 @@
     },
     {
       "categoryId": "06512",
-      "categoryName": "Body and Frame Parts (Not Otherwise Classified) ",
+      "categoryName": "Body & Frame Parts, All Types",
       "catType": "C"
     },
     {
@@ -5650,11 +5690,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "64521",
-      "categoryName": "BOND PAPER (INCLUDING RECYCLED)",
-      "catType": "C"
-    },
-    {
       "categoryId": "96324",
       "categoryName": "Bonds, Notary",
       "catType": "C"
@@ -5746,7 +5781,7 @@
     },
     {
       "categoryId": "71510",
-      "categoryName": "BOOKS, MAGAZINES, PAMPHLETS, REPRINTS, ETC.",
+      "categoryName": "Books, Magazines, Periodicals & Publications",
       "catType": "C"
     },
     {
@@ -5781,7 +5816,7 @@
     },
     {
       "categoryId": "97105",
-      "categoryName": "Booth, Convention/Exhibit, Rental or Lease",
+      "categoryName": "Booth,Convention Rental or Lease",
       "catType": "C"
     },
     {
@@ -5801,12 +5836,12 @@
     },
     {
       "categoryId": "80008",
-      "categoryName": "BOOTS, LEATHER",
+      "categoryName": "Boots, Leather",
       "catType": "C"
     },
     {
       "categoryId": "80016",
-      "categoryName": "BOOTS, RUBBER",
+      "categoryName": "Boots, Rubber",
       "catType": "C"
     },
     {
@@ -5822,6 +5857,11 @@
     {
       "categoryId": "80025",
       "categoryName": "Boots, Rubber, Waders, Safety Toe ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "80086",
+      "categoryName": "Boots, Work",
       "catType": "C"
     },
     {
@@ -6405,6 +6445,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "91052",
+      "categoryName": "Building Maintenance Repair Services",
+      "catType": "C"
+    },
+    {
       "categoryId": "91000",
       "categoryName": "Building Maintenance, Installation And Repair Services ",
       "catType": "C"
@@ -6425,13 +6470,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "15098",
-      "categoryName": "BUILDING SUPPLIES, FOR ITEMS NOT ON JIT CONTRACT",
+      "categoryId": "15010",
+      "categoryName": "Building Supplies",
       "catType": "C"
     },
     {
-      "categoryId": "97108",
-      "categoryName": "Building, Fabricated, Rental or Lease ",
+      "categoryId": "15098",
+      "categoryName": "BUILDING SUPPLIES, FOR ITEMS NOT ON JIT CONTRACT",
       "catType": "C"
     },
     {
@@ -6851,7 +6896,7 @@
     },
     {
       "categoryId": "91524",
-      "categoryName": "Cable Television Services (Includes Pay-Per-View Services)",
+      "categoryName": "Cable TV Services",
       "catType": "C"
     },
     {
@@ -7001,7 +7046,7 @@
     },
     {
       "categoryId": "65515",
-      "categoryName": "Camera Accessories: Batteries, Exposure Meters (Light Meters), Flash Equipment and Bar Lights (See Class 285 for Lamps)",
+      "categoryName": "Camera Accessories & Supplies",
       "catType": "C"
     },
     {
@@ -7032,6 +7077,11 @@
     {
       "categoryId": "65540",
       "categoryName": "Cameras Video Portable Body and Dash",
+      "catType": "C"
+    },
+    {
+      "categoryId": "65529",
+      "categoryName": "Cameras, All Types",
       "catType": "C"
     },
     {
@@ -7301,7 +7351,7 @@
     },
     {
       "categoryId": "99022",
-      "categoryName": "CARD ACCESS SECURITY SERVICES",
+      "categoryName": "Card Access Security Services",
       "catType": "C"
     },
     {
@@ -7391,7 +7441,7 @@
     },
     {
       "categoryId": "36010",
-      "categoryName": "Carpets and Rugs: Cotton, Synthetic, Wool, etc. ",
+      "categoryName": "Carpets/Rugs - Floor Covering",
       "catType": "C"
     },
     {
@@ -7630,6 +7680,56 @@
       "catType": "C"
     },
     {
+      "categoryId": "980",
+      "categoryName": "Category 1 Civil & Mechanical Design for Q21141311004",
+      "catType": "G"
+    },
+    {
+      "categoryId": "989",
+      "categoryName": "Category 10 Public Outreach for Q21141311004",
+      "catType": "G"
+    },
+    {
+      "categoryId": "981",
+      "categoryName": "Category 2 Structural Design for Q21141311004",
+      "catType": "G"
+    },
+    {
+      "categoryId": "982",
+      "categoryName": "Category 3 Electrical, Instrumentation, & SCADA Design for Q21141311004",
+      "catType": "G"
+    },
+    {
+      "categoryId": "983",
+      "categoryName": "Category 4 SCADA\nProgramming for Q21141311004",
+      "catType": "G"
+    },
+    {
+      "categoryId": "984",
+      "categoryName": "Category 5 Hydrology, Modeling, Planning, & Studies for Q21141311004",
+      "catType": "G"
+    },
+    {
+      "categoryId": "985",
+      "categoryName": "Category 6 Flood Plain for Q21141311004",
+      "catType": "G"
+    },
+    {
+      "categoryId": "986",
+      "categoryName": "Category 7 Geotechnical for Q21141311004",
+      "catType": "G"
+    },
+    {
+      "categoryId": "987",
+      "categoryName": "Category 8 Condition Assessment for Q21141311004",
+      "catType": "G"
+    },
+    {
+      "categoryId": "988",
+      "categoryName": "Category 9 Environmental Services for Q21141311004",
+      "catType": "G"
+    },
+    {
       "categoryId": "722320",
       "categoryName": "Caterers",
       "catType": "C"
@@ -7860,11 +7960,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "33013",
-      "categoryName": "CHAIN LINK FENCING (INCLUDING FABRIC, GATES, PANEL",
-      "catType": "C"
-    },
-    {
       "categoryId": "54509",
       "categoryName": "CHAIN SAWS",
       "catType": "C"
@@ -7956,7 +8051,7 @@
     },
     {
       "categoryId": "96113",
-      "categoryName": "Chartering",
+      "categoryName": "Charter Services, Buses, Cars, Boats",
       "catType": "C"
     },
     {
@@ -8007,6 +8102,11 @@
     {
       "categoryId": "82032",
       "categoryName": "CHEMICAL FEED SYSTEMS (FOR PROPORTIONING PUMPS SEE",
+      "catType": "C"
+    },
+    {
+      "categoryId": "17513",
+      "categoryName": "Chemical Lab Equipment & Supplies",
       "catType": "C"
     },
     {
@@ -8075,6 +8175,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "19036",
+      "categoryName": "Chemicals & Solvents",
+      "catType": "C"
+    },
+    {
       "categoryId": "19000",
       "categoryName": "Chemicals And Solvents, Commercial (In Bulk) ",
       "catType": "C"
@@ -8110,11 +8215,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "19036",
-      "categoryName": "CHEMICALS, BULK (NOT OTHERWISE ITEMIZED)",
-      "catType": "C"
-    },
-    {
       "categoryId": "26016",
       "categoryName": "Chemicals, Cleaners, Lubricants, etc., Dental ",
       "catType": "C"
@@ -8137,11 +8237,6 @@
     {
       "categoryId": "11515",
       "categoryName": "Chemicals, Isotopically Labeled (With Deuterium, Radionuclides, etc.) ",
-      "catType": "C"
-    },
-    {
-      "categoryId": "17513",
-      "categoryName": "CHEMICALS, LABORATORY (ACS, CP, PRACTICAL, REAGENT",
       "catType": "C"
     },
     {
@@ -8181,7 +8276,7 @@
     },
     {
       "categoryId": "95218",
-      "categoryName": "Child Care Food Program ",
+      "categoryName": "Child Care Food Program",
       "catType": "C"
     },
     {
@@ -8400,11 +8495,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "78532",
-      "categoryName": "Classroom Equipment and Supplies (Not Otherwise Classified)",
-      "catType": "C"
-    },
-    {
       "categoryId": "212325",
       "categoryName": "Clay and Ceramic and Refractory Minerals Mining",
       "catType": "C"
@@ -8600,11 +8690,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "46516",
-      "categoryName": "Clinical Forensic and Postmortem Equipment and Supplies (Not Otherwise Classified)",
-      "catType": "C"
-    },
-    {
       "categoryId": "19300",
       "categoryName": "Clinical Laboratory Reagents And Tests (Blood Grouping, Diagnostic, Drug Monitoring, Etc.)",
       "catType": "C"
@@ -8722,6 +8807,11 @@
     {
       "categoryId": "20015",
       "categoryName": "CLOTHING, DISPOSABLE: APRONS, CAPES, CAPS, COVERAL",
+      "catType": "C"
+    },
+    {
+      "categoryId": "20031",
+      "categoryName": "Clothing, Hazardous Environment",
       "catType": "C"
     },
     {
@@ -9520,6 +9610,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "20455",
+      "categoryName": "Computer Hardware",
+      "catType": "C"
+    },
+    {
       "categoryId": "20400",
       "categoryName": "Computer Hardware And Peripherals For Microcomputers ",
       "catType": "C"
@@ -9532,6 +9627,11 @@
     {
       "categoryId": "91828",
       "categoryName": "Computer Hardware Consulting ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "93921",
+      "categoryName": "Computer Hardware Maintenance ",
       "catType": "C"
     },
     {
@@ -9580,8 +9680,18 @@
       "catType": "C"
     },
     {
+      "categoryId": "20468",
+      "categoryName": "Computer Peripherals & Supplies",
+      "catType": "C"
+    },
+    {
       "categoryId": "96426",
       "categoryName": "COMPUTER PROGRAMMING PERSONNEL",
+      "catType": "C"
+    },
+    {
+      "categoryId": "20880",
+      "categoryName": "Computer Software",
       "catType": "C"
     },
     {
@@ -9607,6 +9717,11 @@
     {
       "categoryId": "334112",
       "categoryName": "Computer Storage Device Manufacturing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "92047",
+      "categoryName": "Computer Support Services",
       "catType": "C"
     },
     {
@@ -9657,11 +9772,6 @@
     {
       "categoryId": "89820",
       "categoryName": "Computerized Axial Tomography (CAT) Scanning Systems",
-      "catType": "C"
-    },
-    {
-      "categoryId": "93921",
-      "categoryName": "COMPUTERS, DATA PROCESSING EQUIPMENT AND ACCESSORI",
       "catType": "C"
     },
     {
@@ -9736,6 +9846,11 @@
     },
     {
       "categoryId": "91430",
+      "categoryName": "Concrete",
+      "catType": "C"
+    },
+    {
+      "categoryId": "75070",
       "categoryName": "Concrete",
       "catType": "C"
     },
@@ -10090,11 +10205,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "91223",
-      "categoryName": "Construction General (Digging, Ditching, Road Grading, Rock Stabilization, etc.)",
-      "catType": "C"
-    },
-    {
       "categoryId": "333120",
       "categoryName": "Construction Machinery Manufacturing",
       "catType": "C"
@@ -10112,6 +10222,11 @@
     {
       "categoryId": "212321",
       "categoryName": "Construction Sand and Gravel Mining",
+      "catType": "C"
+    },
+    {
+      "categoryId": "91223",
+      "categoryName": "Construction Services (General-Not Streets)",
       "catType": "C"
     },
     {
@@ -10152,6 +10267,11 @@
     {
       "categoryId": "91313",
       "categoryName": "CONSTRUCTION, BRIDGE (INCL. RECONSTRUCTION/REHABIL",
+      "catType": "C"
+    },
+    {
+      "categoryId": "90930",
+      "categoryName": "Construction, Buildings, New",
       "catType": "C"
     },
     {
@@ -10456,7 +10576,7 @@
     },
     {
       "categoryId": "96330",
-      "categoryName": "Contributions",
+      "categoryName": "Contribution/Sponsorship Fees",
       "catType": "C"
     },
     {
@@ -10835,8 +10955,23 @@
       "catType": "C"
     },
     {
+      "categoryId": "01539",
+      "categoryName": "Copy Machine Chemicals & Supplies",
+      "catType": "C"
+    },
+    {
+      "categoryId": "60038",
+      "categoryName": "Copy Machine Equipment",
+      "catType": "C"
+    },
+    {
       "categoryId": "93927",
-      "categoryName": "Copy Machine Maintenance and Repair ",
+      "categoryName": "Copy Machine Maintenance",
+      "catType": "C"
+    },
+    {
+      "categoryId": "98526",
+      "categoryName": "Copy Machine Rental or Lease",
       "catType": "C"
     },
     {
@@ -10850,18 +10985,8 @@
       "catType": "C"
     },
     {
-      "categoryId": "98526",
-      "categoryName": "COPY MACHINES (INCL. COST-PER-COPY TYPE LEASES) RE",
-      "catType": "C"
-    },
-    {
       "categoryId": "60039",
       "categoryName": "Copy Machines, Analog",
-      "catType": "C"
-    },
-    {
-      "categoryId": "60038",
-      "categoryName": "COPY MACHINES, BOND (PLAIN) PAPER TYPE INCLUDING P",
       "catType": "C"
     },
     {
@@ -11315,6 +11440,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "23275",
+      "categoryName": "Crafts, Art Supplies",
+      "catType": "C"
+    },
+    {
       "categoryId": "23200",
       "categoryName": "Crafts, General ",
       "catType": "C"
@@ -11456,7 +11586,7 @@
     },
     {
       "categoryId": "99025",
-      "categoryName": "Crime Prevention Services ",
+      "categoryName": "Crime Prevention Services",
       "catType": "C"
     },
     {
@@ -11870,6 +12000,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "92002",
+      "categoryName": "Data Access Services",
+      "catType": "C"
+    },
+    {
       "categoryId": "69037",
       "categoryName": "DATA ACQUISITION SYSTEMS",
       "catType": "C"
@@ -11896,7 +12031,7 @@
     },
     {
       "categoryId": "92021",
-      "categoryName": "DATA ENTRY SERVICES",
+      "categoryName": "Data Entry Services",
       "catType": "C"
     },
     {
@@ -12222,11 +12357,6 @@
     {
       "categoryId": "79005",
       "categoryName": "Desert Plant Seed ",
-      "catType": "C"
-    },
-    {
-      "categoryId": "90625",
-      "categoryName": "Design Build Services",
       "catType": "C"
     },
     {
@@ -12700,11 +12830,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "86030",
-      "categoryName": "DISPENSING MACHINES AND COLLECTION BOXES FOR TICKE",
-      "catType": "C"
-    },
-    {
       "categoryId": "541850",
       "categoryName": "Display Advertising",
       "catType": "C"
@@ -12825,8 +12950,8 @@
       "catType": "C"
     },
     {
-      "categoryId": "32525",
-      "categoryName": "Dog and Cat Food",
+      "categoryId": "96227",
+      "categoryName": "Document Shredding Services",
       "catType": "C"
     },
     {
@@ -13065,6 +13190,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "26520",
+      "categoryName": "Draperies, Curtains",
+      "catType": "C"
+    },
+    {
       "categoryId": "26500",
       "categoryName": "Draperies, Curtains, And Upholstery Material (Including Automobile Upholstery)",
       "catType": "C"
@@ -13097,11 +13227,6 @@
     {
       "categoryId": "30535",
       "categoryName": "DRAWING BOARDS, CURVES, PROTRACTORS, TEMPLATES, TR",
-      "catType": "C"
-    },
-    {
-      "categoryId": "78545",
-      "categoryName": "DRAWING SUPPLIES, SCHOOLROOM: COLORED PENCILS, COM",
       "catType": "C"
     },
     {
@@ -13307,6 +13432,11 @@
     {
       "categoryId": "99835",
       "categoryName": "Drugs, First Aid, Veterinary",
+      "catType": "C"
+    },
+    {
+      "categoryId": "26972",
+      "categoryName": "Drugs, Pharmaceutical",
       "catType": "C"
     },
     {
@@ -13695,13 +13825,23 @@
       "catType": "C"
     },
     {
+      "categoryId": "78593",
+      "categoryName": "Educational Equipment & Supplies",
+      "catType": "C"
+    },
+    {
       "categoryId": "78553",
-      "categoryName": "Educational Games and Toys, All Types (See 037-84; 208-47; 209-48; and 805-51 for other type games)",
+      "categoryName": "Educational Games/Toys",
       "catType": "C"
     },
     {
       "categoryId": "92419",
       "categoryName": "EDUCATIONAL RESEARCH SERVICES",
+      "catType": "C"
+    },
+    {
+      "categoryId": "92418",
+      "categoryName": "Educational Services",
       "catType": "C"
     },
     {
@@ -13880,6 +14020,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "28569",
+      "categoryName": "Electrical Equipment & Supplies",
+      "catType": "C"
+    },
+    {
       "categoryId": "0053",
       "categoryName": "Electrical Equipment & Supplies",
       "catType": "C"
@@ -14020,6 +14165,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "28766",
+      "categoryName": "Electronic Components & Parts",
+      "catType": "C"
+    },
+    {
       "categoryId": "28798",
       "categoryName": "ELECTRONIC COMPONENTS, REPLACEMENT PARTS, AND ACCE",
       "catType": "C"
@@ -14130,6 +14280,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "29570",
+      "categoryName": "Elevators & Parts",
+      "catType": "C"
+    },
+    {
       "categoryId": "37018",
       "categoryName": "Elevators, Continuous Bucket Type ",
       "catType": "C"
@@ -14152,6 +14307,11 @@
     {
       "categoryId": "20021",
       "categoryName": "EMBLEMS AND SHOULDER PATCHES (FOR UNIFORMS)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "20137",
+      "categoryName": "Emblems, Patches & Braids",
       "catType": "C"
     },
     {
@@ -14375,6 +14535,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "30542",
+      "categoryName": "Engineer/Survey Equipment & Supplies",
+      "catType": "C"
+    },
+    {
       "categoryId": "321213",
       "categoryName": "Engineered Wood Member (except Truss) Manufacturing",
       "catType": "C"
@@ -14382,11 +14547,6 @@
     {
       "categoryId": "30500",
       "categoryName": "Engineering And Architectural Equipment, Surveying Equipment, Drawing Instruments, And Supplies",
-      "catType": "C"
-    },
-    {
-      "categoryId": "93831",
-      "categoryName": "Engineering and Surveying Equipment Maintenance and Repair; Drawing Instruments, etc. (Including Photogrammetry Equipment)",
       "catType": "C"
     },
     {
@@ -14406,11 +14566,16 @@
     },
     {
       "categoryId": "97935",
-      "categoryName": "ENGINEERING EQUIPMENT AND SUPPLIES RENTAL OR LEASE",
+      "categoryName": "Engineering Equipment Rental or Lease",
       "catType": "C"
     },
     {
       "categoryId": "541330",
+      "categoryName": "Engineering Services",
+      "catType": "C"
+    },
+    {
+      "categoryId": "92536",
       "categoryName": "Engineering Services",
       "catType": "C"
     },
@@ -14430,8 +14595,8 @@
       "catType": "C"
     },
     {
-      "categoryId": "30542",
-      "categoryName": "ENGINEERING SUPPLIES, MISCELLANEOUS",
+      "categoryId": "93831",
+      "categoryName": "Engineering/Survey Equipment Maintenance",
       "catType": "C"
     },
     {
@@ -14620,13 +14785,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "92642",
-      "categoryName": "Environmental Services",
+      "categoryId": "49032",
+      "categoryName": "ENVIRONMENTAL TEST CHAMBERS AND ROOMS (CONTROLLED ",
       "catType": "C"
     },
     {
-      "categoryId": "49032",
-      "categoryName": "ENVIRONMENTAL TEST CHAMBERS AND ROOMS (CONTROLLED ",
+      "categoryId": "92642",
+      "categoryName": "Environmental/Ecological Services",
       "catType": "C"
     },
     {
@@ -14651,7 +14816,7 @@
     },
     {
       "categoryId": "80544",
-      "categoryName": "Equestrian Equipment, Clothing and Supplies (Including Polo)",
+      "categoryName": "Equestrian Equipment & Supplies",
       "catType": "C"
     },
     {
@@ -14821,7 +14986,7 @@
     },
     {
       "categoryId": "92420",
-      "categoryName": "EXAMINATION AND TESTING",
+      "categoryName": "Examination & Testing",
       "catType": "C"
     },
     {
@@ -14836,7 +15001,7 @@
     },
     {
       "categoryId": "91244",
-      "categoryName": "EXCAVATION SERVICES",
+      "categoryName": "Excavation Services",
       "catType": "C"
     },
     {
@@ -15355,6 +15520,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "33013",
+      "categoryName": "Fencing, Chain Link",
+      "catType": "C"
+    },
+    {
       "categoryId": "33010",
       "categoryName": "Fencing, Concrete or Rock ",
       "catType": "C"
@@ -15377,6 +15547,11 @@
     {
       "categoryId": "33049",
       "categoryName": "Fencing, Split Rail ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "33055",
+      "categoryName": "Fencing, Temporary",
       "catType": "C"
     },
     {
@@ -15487,6 +15662,11 @@
     {
       "categoryId": "33598",
       "categoryName": "FERTILIZERS AND SOIL CONDITIONERS, FOR ITEMS NOT O",
+      "catType": "C"
+    },
+    {
+      "categoryId": "33504",
+      "categoryName": "Fertilizers, Additives/Supplements",
       "catType": "C"
     },
     {
@@ -15905,6 +16085,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "94649",
+      "categoryName": "Financial Services",
+      "catType": "C"
+    },
+    {
       "categoryId": "94600",
       "categoryName": "Financial Services ",
       "catType": "C"
@@ -15965,11 +16150,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "99042",
-      "categoryName": "FIRE AND SAFETY SERVICES",
-      "catType": "C"
-    },
-    {
       "categoryId": "91024",
       "categoryName": "Fire And/Or Water Damage Restoration Services ",
       "catType": "C"
@@ -16000,6 +16180,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "93632",
+      "categoryName": "Fire Equipment Maintenance",
+      "catType": "C"
+    },
+    {
       "categoryId": "72027",
       "categoryName": "FIRE EQUIPMENT PUMPS AND PUMP PARTS",
       "catType": "C"
@@ -16022,11 +16207,6 @@
     {
       "categoryId": "34028",
       "categoryName": "FIRE EXTINGUISHERS, RECHARGERS, AND PARTS",
-      "catType": "C"
-    },
-    {
-      "categoryId": "93632",
-      "categoryName": "Fire Fighting Equipment Maintenance and Repair",
       "catType": "C"
     },
     {
@@ -16071,7 +16251,12 @@
     },
     {
       "categoryId": "34034",
-      "categoryName": "Fire Protection Clothing (Turnout Coats, Bunker Pants, Hoods, Gloves, etc.) ",
+      "categoryName": "Fire Protection Clothing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "34070",
+      "categoryName": "Fire Protection Equipment & Supplies",
       "catType": "C"
     },
     {
@@ -16080,18 +16265,28 @@
       "catType": "C"
     },
     {
-      "categoryId": "93633",
-      "categoryName": "Fire Protection Equipment and Systems Including Fire Hydrants, Fire Sprinkler Systems, Smoke Detectors, Jaws of Life, etc.",
-      "catType": "C"
-    },
-    {
       "categoryId": "98138",
       "categoryName": "FIRE PROTECTION SYSTEMS AND SUPPLIES RENTAL OR LEA",
       "catType": "C"
     },
     {
+      "categoryId": "93633",
+      "categoryName": "Fire Protection Systems Maintenance",
+      "catType": "C"
+    },
+    {
       "categoryId": "34036",
       "categoryName": "FIRE PUMP, BACK CARRYING TYPE",
+      "catType": "C"
+    },
+    {
+      "categoryId": "34072",
+      "categoryName": "Fire Rescue Supplies",
+      "catType": "C"
+    },
+    {
+      "categoryId": "99042",
+      "categoryName": "Fire Safety Services",
       "catType": "C"
     },
     {
@@ -16155,11 +16350,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "93838",
-      "categoryName": "First Aid and Safety Equipment (Except Nuclear and Welding) Maintenance and Repair",
-      "catType": "C"
-    },
-    {
       "categoryId": "97937",
       "categoryName": "First Aid and Safety Equipment (Including Manikins and Models) Rental or Lease",
       "catType": "C"
@@ -16181,7 +16371,12 @@
     },
     {
       "categoryId": "34532",
-      "categoryName": "FIRST AID CABINETS, KITS, AND REFILLS",
+      "categoryName": "First Aid Cabinet Kits/Refills",
+      "catType": "C"
+    },
+    {
+      "categoryId": "93838",
+      "categoryName": "First Aid/Safety Equipment Maintenance ",
       "catType": "C"
     },
     {
@@ -16426,7 +16621,7 @@
     },
     {
       "categoryId": "57837",
-      "categoryName": "FLOOD CONTROL DEVICES, EQUIPMENT, ACCESSORIES AND ",
+      "categoryName": "Flood Control Equipment & Accessories",
       "catType": "C"
     },
     {
@@ -16830,6 +17025,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "39356",
+      "categoryName": "Food/Staples & Supplies",
+      "catType": "C"
+    },
+    {
       "categoryId": "37600",
       "categoryName": "Foods, Catering",
       "catType": "C"
@@ -16895,6 +17095,16 @@
       "catType": "C"
     },
     {
+      "categoryId": "46516",
+      "categoryName": "Forensic Equipment & Supplies",
+      "catType": "C"
+    },
+    {
+      "categoryId": "96140",
+      "categoryName": "Forensic Services",
+      "catType": "C"
+    },
+    {
       "categoryId": "113210",
       "categoryName": "Forest Nurseries and Gathering of Forest Products",
       "catType": "C"
@@ -16911,7 +17121,7 @@
     },
     {
       "categoryId": "57838",
-      "categoryName": "Forestry Equipment and Supplies ",
+      "categoryName": "Forestry Equipment & Supplies",
       "catType": "C"
     },
     {
@@ -17192,6 +17402,11 @@
     {
       "categoryId": "84522",
       "categoryName": "Fuel Test Kits and Devices",
+      "catType": "C"
+    },
+    {
+      "categoryId": "40515",
+      "categoryName": "Fuel, All Types",
       "catType": "C"
     },
     {
@@ -17586,7 +17801,7 @@
     },
     {
       "categoryId": "98141",
-      "categoryName": "GAS EQUIPMENT RENTAL",
+      "categoryName": "Gas Equipment Rental or Lease",
       "catType": "C"
     },
     {
@@ -17725,11 +17940,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "40515",
-      "categoryName": "GASOLINE, AUTOMOTIVE",
-      "catType": "C"
-    },
-    {
       "categoryId": "40518",
       "categoryName": "GASOLINE, AVIATION (INCL. JET FUEL)",
       "catType": "C"
@@ -17840,11 +18050,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "92847",
-      "categoryName": "General Maintenance and Repair, Vehicle (Not Otherwise Classified), to Include Oil Changes, Lubrication, Guaranteed Maintenance Programs",
-      "catType": "C"
-    },
-    {
       "categoryId": "622110",
       "categoryName": "General Medical and Surgical Hospitals",
       "catType": "C"
@@ -17885,18 +18090,18 @@
       "catType": "C"
     },
     {
+      "categoryId": "28537",
+      "categoryName": "Generators, Portable",
+      "catType": "C"
+    },
+    {
       "categoryId": "93639",
       "categoryName": "Generators, Portable and Stationary, Including Parts and Accessories Maintenance and Repair ",
       "catType": "C"
     },
     {
-      "categoryId": "28537",
-      "categoryName": "GENERATORS, PORTABLE, ENGINE DRIVEN",
-      "catType": "C"
-    },
-    {
       "categoryId": "28539",
-      "categoryName": "GENERATORS, STATIONARY TYPE (NOT AUTOMOTIVE)",
+      "categoryName": "Generators, Stationary",
       "catType": "C"
     },
     {
@@ -18130,13 +18335,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "47541",
-      "categoryName": "Gloves and Finger Cots, Medical Type",
+      "categoryId": "20139",
+      "categoryName": "Gloves",
       "catType": "C"
     },
     {
-      "categoryId": "20139",
-      "categoryName": "Gloves, Cloth Type(All Types) ",
+      "categoryId": "47541",
+      "categoryName": "Gloves and Finger Cots, Medical Type",
       "catType": "C"
     },
     {
@@ -18220,8 +18425,13 @@
       "catType": "C"
     },
     {
+      "categoryId": "65023",
+      "categoryName": "Golf/Lawn Maintenance Equipment & Supplies",
+      "catType": "C"
+    },
+    {
       "categoryId": "80554",
-      "categoryName": "Golfing Equipment ",
+      "categoryName": "Golf/Sport Equipment & Supplies",
       "catType": "C"
     },
     {
@@ -18361,7 +18571,7 @@
     },
     {
       "categoryId": "96546",
-      "categoryName": "Graphic Design Services for Printing",
+      "categoryName": "Graphic Design Services-Printing",
       "catType": "C"
     },
     {
@@ -18386,12 +18596,17 @@
     },
     {
       "categoryId": "79020",
-      "categoryName": "GRASS SEED",
+      "categoryName": "Grass Seed",
       "catType": "C"
     },
     {
       "categoryId": "02037",
       "categoryName": "Grass Seed Strippers and Cleaners ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "79050",
+      "categoryName": "Grass Sod",
       "catType": "C"
     },
     {
@@ -18490,13 +18705,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "327992",
-      "categoryName": "Ground or Treated Mineral and Earth Manufacturing",
+      "categoryId": "59535",
+      "categoryName": "Ground Coverings-Nursery",
       "catType": "C"
     },
     {
-      "categoryId": "59535",
-      "categoryName": "Groundcovers and Vines",
+      "categoryId": "327992",
+      "categoryName": "Ground or Treated Mineral and Earth Manufacturing",
       "catType": "C"
     },
     {
@@ -18546,7 +18761,7 @@
     },
     {
       "categoryId": "99046",
-      "categoryName": "Guard and Security Services ",
+      "categoryName": "Guard & Security Services",
       "catType": "C"
     },
     {
@@ -18765,6 +18980,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "93643",
+      "categoryName": "Hardware & Tool Maintenance",
+      "catType": "C"
+    },
+    {
       "categoryId": "45037",
       "categoryName": "Hardware Accessories: Mounts, Patches, Plates, Seats, Shoes, Stays, etc.",
       "catType": "C"
@@ -18815,8 +19035,8 @@
       "catType": "C"
     },
     {
-      "categoryId": "93643",
-      "categoryName": "Hardware, Shelf Hardware, and Allied Items Maintenance and Repair ",
+      "categoryId": "45041",
+      "categoryName": "Hardware, Tools & Related Items ",
       "catType": "C"
     },
     {
@@ -18875,11 +19095,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "34556",
-      "categoryName": "HATS AND HELMETS, SAFETY",
-      "catType": "C"
-    },
-    {
       "categoryId": "20030",
       "categoryName": "HATS, FELT, DRESS AND WORK, MEN'S",
       "catType": "C"
@@ -18935,11 +19150,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "20031",
-      "categoryName": "Hazardous Environment Clothing",
-      "catType": "C"
-    },
-    {
       "categoryId": "20037",
       "categoryName": "HAZARDOUS ENVIRONMENT CLOTHING",
       "catType": "C"
@@ -18955,11 +19165,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "92645",
-      "categoryName": "HAZARDOUS MATERIAL AND WASTE SERVICES",
-      "catType": "C"
-    },
-    {
       "categoryId": "10031",
       "categoryName": "HAZARDOUS MATERIAL CONTAINMENT/STORAGE (PETROLEUM)",
       "catType": "C"
@@ -18970,8 +19175,18 @@
       "catType": "C"
     },
     {
+      "categoryId": "57847",
+      "categoryName": "Hazardous Materials",
+      "catType": "C"
+    },
+    {
       "categoryId": "562112",
       "categoryName": "Hazardous Waste Collection",
+      "catType": "C"
+    },
+    {
+      "categoryId": "92645",
+      "categoryName": "Hazardous Waste Services",
       "catType": "C"
     },
     {
@@ -18986,7 +19201,7 @@
     },
     {
       "categoryId": "34564",
-      "categoryName": "HEAD, EAR, EYE AND FACE PROTECTION",
+      "categoryName": "Head/Ear/Eye/Face Protection",
       "catType": "C"
     },
     {
@@ -19017,6 +19232,11 @@
     {
       "categoryId": "95856",
       "categoryName": "Health Care Management Services (Including Managed Care Services) ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "94848",
+      "categoryName": "Health Care Services",
       "catType": "C"
     },
     {
@@ -19231,7 +19451,7 @@
     },
     {
       "categoryId": "03550",
-      "categoryName": "HELICOPTERS",
+      "categoryName": "Helicopters",
       "catType": "C"
     },
     {
@@ -19820,6 +20040,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "95290",
+      "categoryName": "Human Services Training",
+      "catType": "C"
+    },
+    {
       "categoryId": "114210",
       "categoryName": "Hunting and Trapping",
       "catType": "C"
@@ -20251,7 +20476,7 @@
     },
     {
       "categoryId": "97540",
-      "categoryName": "INDUSTRIAL EQUIPMENT RENTAL OR LEASE",
+      "categoryName": "Industrial Equipment Rental or Lease",
       "catType": "C"
     },
     {
@@ -20267,11 +20492,6 @@
     {
       "categoryId": "423830",
       "categoryName": "Industrial Machinery and Equipment Merchant Wholesalers",
-      "catType": "C"
-    },
-    {
-      "categoryId": "54531",
-      "categoryName": "Industrial Machinery, Equipment, Components and Parts (Not Otherwise Classified)",
       "catType": "C"
     },
     {
@@ -20505,11 +20725,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "99050",
-      "categoryName": "Installation of Security Equipment",
-      "catType": "C"
-    },
-    {
       "categoryId": "36022",
       "categoryName": "Installation Supplies: Adhesive Edge Strip, Seam Tape, Tack Strips, etc.",
       "catType": "C"
@@ -20640,13 +20855,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "524210",
-      "categoryName": "Insurance Agencies and Brokerages",
+      "categoryId": "95352",
+      "categoryName": "Insurance & Insurance Services",
       "catType": "C"
     },
     {
-      "categoryId": "95352",
-      "categoryName": "Insurance and Insurance Services",
+      "categoryId": "524210",
+      "categoryName": "Insurance Agencies and Brokerages",
       "catType": "C"
     },
     {
@@ -20697,11 +20912,6 @@
     {
       "categoryId": "88343",
       "categoryName": "Interactive Voice Response (IVR) Systems",
-      "catType": "C"
-    },
-    {
-      "categoryId": "98547",
-      "categoryName": "INTERCOM AND OTHER SOUND EQUIPMENT RENTAL OR LEASE",
       "catType": "C"
     },
     {
@@ -20766,7 +20976,7 @@
     },
     {
       "categoryId": "96117",
-      "categoryName": "Interpreter Services - Electronically Assisted - F",
+      "categoryName": "Interpreter Services",
       "catType": "C"
     },
     {
@@ -21001,7 +21211,7 @@
     },
     {
       "categoryId": "48565",
-      "categoryName": "Janitorial Equipment and Supplies (Not Otherwise Classified)",
+      "categoryName": "Janitorial Equipment & Supplies",
       "catType": "C"
     },
     {
@@ -21220,6 +21430,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "16507",
+      "categoryName": "Kitchen/Cafeteria Equipment",
+      "catType": "C"
+    },
+    {
       "categoryId": "09038",
       "categoryName": "Knitted Cuffs",
       "catType": "C"
@@ -21242,6 +21457,11 @@
     {
       "categoryId": "16040",
       "categoryName": "Knockers and Stunners ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "49043",
+      "categoryName": "Lab/Scientific Equipment & Supplies",
       "catType": "C"
     },
     {
@@ -21287,11 +21507,6 @@
     {
       "categoryId": "96148",
       "categoryName": "Laboratory And Field Testing Services (Not Otherwise Classified) Incl. Hazardous Waste",
-      "catType": "C"
-    },
-    {
-      "categoryId": "49043",
-      "categoryName": "Laboratory and Scientific Equipment and Supplies (Not Otherwise Classified)",
       "catType": "C"
     },
     {
@@ -21701,7 +21916,7 @@
     },
     {
       "categoryId": "95261",
-      "categoryName": "Law Enforcement - Community Relations Services",
+      "categoryName": "Law Enforcement Community Services",
       "catType": "C"
     },
     {
@@ -21715,13 +21930,8 @@
       "catType": "C"
     },
     {
-      "categoryId": "93446",
-      "categoryName": "LAWN EQUIPMENT MAINT./REPAIR",
-      "catType": "C"
-    },
-    {
-      "categoryId": "98347",
-      "categoryName": "LAWN EQUIPMENT RENTAL OR LEASE",
+      "categoryId": "51545",
+      "categoryName": "Lawn Maintenance Equipment , Mowers",
       "catType": "C"
     },
     {
@@ -21755,11 +21965,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "51545",
-      "categoryName": "LAWN MOWERS, POWER, HEAVY DUTY, ROTARY TYPE (SEE C",
-      "catType": "C"
-    },
-    {
       "categoryId": "51550",
       "categoryName": "LAWN MOWERS, POWER, LIGHT DUTY, REEL TYPE (FOR YAR",
       "catType": "C"
@@ -21772,6 +21977,11 @@
     {
       "categoryId": "51547",
       "categoryName": "Lawn Mowers, Power, Medium Duty, Riding",
+      "catType": "C"
+    },
+    {
+      "categoryId": "93446",
+      "categoryName": "Lawn/Park Equipment Maintenance",
       "catType": "C"
     },
     {
@@ -21911,7 +22121,7 @@
     },
     {
       "categoryId": "71546",
-      "categoryName": "Legal Books and Publications",
+      "categoryName": "Legal Books & Publications",
       "catType": "C"
     },
     {
@@ -22540,6 +22750,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "96135",
+      "categoryName": "Lock Box Services",
+      "catType": "C"
+    },
+    {
       "categoryId": "68061",
       "categoryName": "LOCKERS, SECURITY",
       "catType": "C"
@@ -22715,6 +22930,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "54023",
+      "categoryName": "Lumber & Related Items",
+      "catType": "C"
+    },
+    {
       "categoryId": "99863",
       "categoryName": "Lumber and Pilings",
       "catType": "C"
@@ -22742,11 +22962,6 @@
     {
       "categoryId": "54020",
       "categoryName": "LUMBER, FIR",
-      "catType": "C"
-    },
-    {
-      "categoryId": "54023",
-      "categoryName": "Lumber, Hardwood, All Kinds ",
       "catType": "C"
     },
     {
@@ -22857,6 +23072,11 @@
     {
       "categoryId": "99865",
       "categoryName": "Machinery ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "54531",
+      "categoryName": "Machinery & Hardware, Industrial",
       "catType": "C"
     },
     {
@@ -22985,11 +23205,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "91557",
-      "categoryName": "Mailing/Postage and Shipping Services, Electronic",
-      "catType": "C"
-    },
-    {
       "categoryId": "42066",
       "categoryName": "MAILROOM FURNITURE: BINS, BOXES, CARTS, CONSOLES (",
       "catType": "C"
@@ -23031,7 +23246,7 @@
     },
     {
       "categoryId": "91375",
-      "categoryName": "MAINTENANCE AND REPAIR, PARKING LOT AND ALLEY",
+      "categoryName": "Maintenance and Repair, Parking Lot and Alley",
       "catType": "C"
     },
     {
@@ -23107,11 +23322,6 @@
     {
       "categoryId": "91364",
       "categoryName": "Maintenance and Repair: Airport Roadway, Runway and Taxiway ",
-      "catType": "C"
-    },
-    {
-      "categoryId": "91052",
-      "categoryName": "Maintenance Services, Building (Not Otherwise Classified)",
       "catType": "C"
     },
     {
@@ -23645,11 +23855,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "07547",
-      "categoryName": "Mechanic's Equipment and Tools (Not Otherwise Classified) ",
-      "catType": "C"
-    },
-    {
       "categoryId": "07548",
       "categoryName": "MECHANIC'S WIRE",
       "catType": "C"
@@ -23707,6 +23912,11 @@
     {
       "categoryId": "91878",
       "categoryName": "Medical Consulting ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "47569",
+      "categoryName": "Medical Equipment & Supplies",
       "catType": "C"
     },
     {
@@ -24045,11 +24255,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "89044",
-      "categoryName": "METERS, WATER",
-      "catType": "C"
-    },
-    {
       "categoryId": "40532",
       "categoryName": "Methanol (Fuel) ",
       "catType": "C"
@@ -24067,11 +24272,6 @@
     {
       "categoryId": "20454",
       "categoryName": "MICROCOMPUTERS, HANDHELD, LAPTOP, AND NOTEBOOK",
-      "catType": "C"
-    },
-    {
-      "categoryId": "20455",
-      "categoryName": "MICROCOMPUTERS, MULTI-PROCESSOR",
       "catType": "C"
     },
     {
@@ -24390,11 +24590,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "05248",
-      "categoryName": "Mixed Media ",
-      "catType": "C"
-    },
-    {
       "categoryId": "485111",
       "categoryName": "Mixed Mode Transit Systems",
       "catType": "C"
@@ -24472,6 +24667,11 @@
     {
       "categoryId": "42555",
       "categoryName": "MODULAR PANEL SYSTEMS, (WITH SYNTHETIC CONNECTING ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "42594",
+      "categoryName": "Modular Work Stations",
       "catType": "C"
     },
     {
@@ -24790,6 +24990,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "07156",
+      "categoryName": "Motorcycles",
+      "catType": "C"
+    },
+    {
       "categoryId": "07012",
       "categoryName": "Motorcycles, Accessories, and Parts ",
       "catType": "C"
@@ -24827,11 +25032,6 @@
     {
       "categoryId": "28571",
       "categoryName": "MOTORS AND PARTS, INTEGRAL H.P., THREE PHASE, ELEC",
-      "catType": "C"
-    },
-    {
-      "categoryId": "02585",
-      "categoryName": "MOTORS, AIR COMPRESSOR",
       "catType": "C"
     },
     {
@@ -25410,11 +25610,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "03752",
-      "categoryName": "Novelties and Advertising Specialty Products",
-      "catType": "C"
-    },
-    {
       "categoryId": "34064",
       "categoryName": "NOZZLES, FIRE HOSE AND PARTS",
       "catType": "C"
@@ -25610,6 +25805,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "98559",
+      "categoryName": "Office Equipment Rental or Lease",
+      "catType": "C"
+    },
+    {
       "categoryId": "99258",
       "categoryName": "Office Equipment Testing Services ",
       "catType": "C"
@@ -25625,6 +25825,16 @@
       "catType": "C"
     },
     {
+      "categoryId": "42558",
+      "categoryName": "Office Furniture, Chairs, Desks & Tables",
+      "catType": "C"
+    },
+    {
+      "categoryId": "93960",
+      "categoryName": "Office Machine Maintenance",
+      "catType": "C"
+    },
+    {
       "categoryId": "532420",
       "categoryName": "Office Machinery and Equipment Rental and Leasing",
       "catType": "C"
@@ -25635,23 +25845,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "93960",
-      "categoryName": "Office Machines and Mechanical Aids, Small, Maintenance and Repair",
-      "catType": "C"
-    },
-    {
       "categoryId": "60073",
-      "categoryName": "Office Machines, Equipment, Accessories, and Supplies - Recycled",
+      "categoryName": "Office Machines, Accessories & Supplies",
       "catType": "C"
     },
     {
       "categoryId": "60000",
       "categoryName": "Office Machines, Equipment, And Accessories ",
-      "catType": "C"
-    },
-    {
-      "categoryId": "98559",
-      "categoryName": "OFFICE MACHINES, EQUIPMENT, AND ACCESSORIES (ALL) ",
       "catType": "C"
     },
     {
@@ -25667,6 +25867,11 @@
     {
       "categoryId": "453210",
       "categoryName": "Office Supplies and Stationery Stores",
+      "catType": "C"
+    },
+    {
+      "categoryId": "61560",
+      "categoryName": "Office Supplies, General",
       "catType": "C"
     },
     {
@@ -26197,11 +26402,6 @@
     {
       "categoryId": "96670",
       "categoryName": "OPTICAL SCANNING FORM PRINTING",
-      "catType": "C"
-    },
-    {
-      "categoryId": "92038",
-      "categoryName": "OPTICAL SCANNING SERVICES",
       "catType": "C"
     },
     {
@@ -27070,6 +27270,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "63543",
+      "categoryName": "Paint Equipment & Supplies",
+      "catType": "C"
+    },
+    {
       "categoryId": "19265",
       "categoryName": "PAINT SPRAY BOOTH COMPOUNDS, WATER-SOLUBLE",
       "catType": "C"
@@ -27090,6 +27295,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "63056",
+      "categoryName": "Paint, All Types",
+      "catType": "C"
+    },
+    {
       "categoryId": "63047",
       "categoryName": "PAINT, ALUMINUM (NOT ROOF COATING)",
       "catType": "C"
@@ -27107,11 +27317,6 @@
     {
       "categoryId": "63055",
       "categoryName": "Paint, Freezer and Wet Surface",
-      "catType": "C"
-    },
-    {
-      "categoryId": "63056",
-      "categoryName": "PAINT, HOUSE AND TRIM",
       "catType": "C"
     },
     {
@@ -27365,11 +27570,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "01539",
-      "categoryName": "PAPER, CHEMICALS, AND SUPPLIES (FOR COATED OR TREA",
-      "catType": "C"
-    },
-    {
       "categoryId": "01545",
       "categoryName": "PAPER, CHEMICALS, AND SUPPLIES (FOR DIFFUSION TRAN",
       "catType": "C"
@@ -27377,6 +27577,11 @@
     {
       "categoryId": "01570",
       "categoryName": "PAPER, CHEMICALS, AND SUPPLIES (FOR THERMAL PROCES",
+      "catType": "C"
+    },
+    {
+      "categoryId": "64521",
+      "categoryName": "Paper, Copy, Bond ",
       "catType": "C"
     },
     {
@@ -27445,11 +27650,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "93165",
-      "categoryName": "Park, Playground, and Swimming Pool Equipment Maintenance and Repair",
-      "catType": "C"
-    },
-    {
       "categoryId": "65000",
       "categoryName": "Park, Playground, Recreational Area And Swimming Pool Equipment And Supplies",
       "catType": "C"
@@ -27466,7 +27666,7 @@
     },
     {
       "categoryId": "93653",
-      "categoryName": "Parking Equipment Maintenance and Repair (See 936-37 for Parking Gates)",
+      "categoryName": "Parking Equipment Maintenance and Repair",
       "catType": "C"
     },
     {
@@ -27491,12 +27691,12 @@
     },
     {
       "categoryId": "96860",
-      "categoryName": "Parking Meter Services (Including Collection, Installation, and Removal)",
+      "categoryName": "Parking Meter Services (inc. Collection, Installation, and Removal)",
       "catType": "C"
     },
     {
       "categoryId": "55038",
-      "categoryName": "Parking Meters and Area Control Equipment ",
+      "categoryName": "Parking Meters, Area control Equipment",
       "catType": "C"
     },
     {
@@ -27527,6 +27727,16 @@
     {
       "categoryId": "0018",
       "categoryName": "Parks, Recreation, Buildings & Facilities",
+      "catType": "C"
+    },
+    {
+      "categoryId": "93165",
+      "categoryName": "Parks, Swimming pools, Playground Equipment Mainte",
+      "catType": "C"
+    },
+    {
+      "categoryId": "98347",
+      "categoryName": "Parks/Lawn Equipment Rental or Lease",
       "catType": "C"
     },
     {
@@ -27612,11 +27822,6 @@
     {
       "categoryId": "55840",
       "categoryName": "Passenger Cars, Light (Self-Propelled)",
-      "catType": "C"
-    },
-    {
-      "categoryId": "29570",
-      "categoryName": "PASSENGER ELEVATORS AND PARTS",
       "catType": "C"
     },
     {
@@ -27905,11 +28110,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "20468",
-      "categoryName": "PERIPHERALS, MISCELLANEOUS: JOY STICKS, GRAPHIC DI",
-      "catType": "C"
-    },
-    {
       "categoryId": "311991",
       "categoryName": "Perishable Prepared Food Manufacturing",
       "catType": "C"
@@ -28007,6 +28207,11 @@
     {
       "categoryId": "325320",
       "categoryName": "Pesticide and Other Agricultural Chemical Manufacturing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "67554",
+      "categoryName": "Pesticides",
       "catType": "C"
     },
     {
@@ -28215,13 +28420,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "93966",
-      "categoryName": "Photographic Equipment (Not Including Graphic Arts, Microfilm, and X-Ray) Maintenance and Repair",
+      "categoryId": "423410",
+      "categoryName": "Photographic Equipment and Supplies Merchant Wholesalers",
       "catType": "C"
     },
     {
-      "categoryId": "423410",
-      "categoryName": "Photographic Equipment and Supplies Merchant Wholesalers",
+      "categoryId": "93966",
+      "categoryName": "Photographic Equipment Maintenance",
       "catType": "C"
     },
     {
@@ -28540,6 +28745,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "65996",
+      "categoryName": "Pipe, Tubing, & Fittings",
+      "catType": "C"
+    },
+    {
       "categoryId": "65800",
       "categoryName": "Pipe, Tubing, And Accessories (Not Fittings)",
       "catType": "C"
@@ -28780,11 +28990,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "42558",
-      "categoryName": "PLASTIC, POLYPROPYLENE, FIBERGLASS OFFICE FURNITUR",
-      "catType": "C"
-    },
-    {
       "categoryId": "91465",
       "categoryName": "Plastics ",
       "catType": "C"
@@ -28896,7 +29101,7 @@
     },
     {
       "categoryId": "65038",
-      "categoryName": "Playground Equipment (Not Otherwise Classified) (See 420-04 For Bleachers) ",
+      "categoryName": "Playground Equipment & Supplies",
       "catType": "C"
     },
     {
@@ -28916,7 +29121,7 @@
     },
     {
       "categoryId": "20471",
-      "categoryName": "PLOTTERS, GRAPHIC",
+      "categoryName": "Plotters & Supplies",
       "catType": "C"
     },
     {
@@ -28947,6 +29152,11 @@
     {
       "categoryId": "67054",
       "categoryName": "PLUMBING BRASS (TUBULAR GOODS)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "67057",
+      "categoryName": "Plumbing Equipment & Supplies",
       "catType": "C"
     },
     {
@@ -29130,8 +29340,13 @@
       "catType": "C"
     },
     {
+      "categoryId": "68008",
+      "categoryName": "Police Equipment & Supplies",
+      "catType": "C"
+    },
+    {
       "categoryId": "93657",
-      "categoryName": "Police Equipment Maintenance and Repair ",
+      "categoryName": "Police Equipment Maintenance ",
       "catType": "C"
     },
     {
@@ -29142,6 +29357,16 @@
     {
       "categoryId": "922120",
       "categoryName": "Police Protection",
+      "catType": "C"
+    },
+    {
+      "categoryId": "68067",
+      "categoryName": "Police Training/Instructional Aids",
+      "catType": "C"
+    },
+    {
+      "categoryId": "07105",
+      "categoryName": "Police/Fire/Security Vehicles",
       "catType": "C"
     },
     {
@@ -29317,6 +29542,11 @@
     {
       "categoryId": "96357",
       "categoryName": "Postage Related Purchases (Incl. Postage Stamps, Pre-Sort 1st Class Inscriptions, Postage by Phone for Meters, etc.)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "91557",
+      "categoryName": "Postage Services",
       "catType": "C"
     },
     {
@@ -29675,6 +29905,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "97108",
+      "categoryName": "Prefab Building Rental or Lease",
+      "catType": "C"
+    },
+    {
       "categoryId": "96762",
       "categoryName": "Prefabricated and Manufactured Buildings or Homes Manufacturing Services",
       "catType": "C"
@@ -29905,11 +30140,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "96676",
-      "categoryName": "Print-On-Demand Printing Services (Including Print and Distribute Services) ",
-      "catType": "C"
-    },
-    {
       "categoryId": "334418",
       "categoryName": "Printed Circuit Assembly (Electronic Assembly) Manufacturing",
       "catType": "C"
@@ -29927,6 +30157,11 @@
     {
       "categoryId": "20670",
       "categoryName": "PRINTER SHARING DEVICES",
+      "catType": "C"
+    },
+    {
+      "categoryId": "20482",
+      "categoryName": "Printers & Supplies",
       "catType": "C"
     },
     {
@@ -29977,11 +30212,6 @@
     {
       "categoryId": "20678",
       "categoryName": "Printers, Mainframe Computer (Not Otherwise Classified) ",
-      "catType": "C"
-    },
-    {
-      "categoryId": "20482",
-      "categoryName": "Printers, Microcomputer (Not Otherwise Classified)",
       "catType": "C"
     },
     {
@@ -30040,8 +30270,8 @@
       "catType": "C"
     },
     {
-      "categoryId": "93660",
-      "categoryName": "Printing Plant and Bindery Equipment Maintenance and Repair ",
+      "categoryId": "70051",
+      "categoryName": "Printing Plant Equipment & Accessories",
       "catType": "C"
     },
     {
@@ -30051,7 +30281,7 @@
     },
     {
       "categoryId": "98564",
-      "categoryName": "Printing Plant Equipment and Supplies Rental or Lease ",
+      "categoryName": "Printing Plant Equipment Rental or Lease",
       "catType": "C"
     },
     {
@@ -30068,6 +30298,21 @@
       "categoryId": "70073",
       "categoryName": "PRINTING PRESSES, OFFSET; AND ACCESSORIES",
       "catType": "C"
+    },
+    {
+      "categoryId": "96676",
+      "categoryName": "Printing Services",
+      "catType": "C"
+    },
+    {
+      "categoryId": "93660",
+      "categoryName": "Printing Shop Equipment Maintenance",
+      "catType": "C"
+    },
+    {
+      "categoryId": "997",
+      "categoryName": "Printing, Digital, Category A, 2022",
+      "catType": "G"
     },
     {
       "categoryId": "68070",
@@ -30287,6 +30532,11 @@
     {
       "categoryId": "711320",
       "categoryName": "Promoters of Performing Arts, Sports, and Similar Events without Facilities",
+      "catType": "C"
+    },
+    {
+      "categoryId": "03752",
+      "categoryName": "Promotional Gifts & Novelties ",
       "catType": "C"
     },
     {
@@ -30540,6 +30790,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "93662",
+      "categoryName": "Pump & Accessory Maintenance",
+      "catType": "C"
+    },
+    {
       "categoryId": "333911",
       "categoryName": "Pump and Pumping Equipment Manufacturing",
       "catType": "C"
@@ -30555,6 +30810,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "72056",
+      "categoryName": "Pumping Equipment & Accessories",
+      "catType": "C"
+    },
+    {
       "categoryId": "0054",
       "categoryName": "Pumping Equipment & Accessories",
       "catType": "C"
@@ -30567,11 +30827,6 @@
     {
       "categoryId": "72098",
       "categoryName": "PUMPING EQUIPMENT AND ACCESSORIES; FOR ITEMS NOT O",
-      "catType": "C"
-    },
-    {
-      "categoryId": "93662",
-      "categoryName": "PUMPS AND PUMP ACCESSORIES MAINT./REPAIR",
       "catType": "C"
     },
     {
@@ -30705,6 +30960,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "999",
+      "categoryName": "Qualified Bidders",
+      "catType": "G"
+    },
+    {
       "categoryId": "91888",
       "categoryName": "Quality Assurance/Control Consulting",
       "catType": "C"
@@ -30820,13 +31080,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "98569",
-      "categoryName": "Radio and Telecommunications Equipment and Accessory Rental or Lease (Including Radio Towers) ",
+      "categoryId": "334220",
+      "categoryName": "Radio and Television Broadcasting and Wireless Communications Equipment Manufacturing",
       "catType": "C"
     },
     {
-      "categoryId": "334220",
-      "categoryName": "Radio and Television Broadcasting and Wireless Communications Equipment Manufacturing",
+      "categoryId": "72616",
+      "categoryName": "Radio Antennas & Accessories",
       "catType": "C"
     },
     {
@@ -30905,11 +31165,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "93972",
-      "categoryName": "RADIO/TELECOMMUNICATIONS/TELEPHONE EQUIPMENT (INCL",
-      "catType": "C"
-    },
-    {
       "categoryId": "92676",
       "categoryName": "RADIOACTIVE WASTE DISPOSAL SERVICES",
       "catType": "C"
@@ -30925,6 +31180,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "72670",
+      "categoryName": "Radios, Pagers",
+      "catType": "C"
+    },
+    {
       "categoryId": "12078",
       "categoryName": "Rafts ",
       "catType": "C"
@@ -30937,6 +31197,11 @@
     {
       "categoryId": "99882",
       "categoryName": "Rags",
+      "catType": "C"
+    },
+    {
+      "categoryId": "73510",
+      "categoryName": "Rags, Shop Towels",
       "catType": "C"
     },
     {
@@ -31001,7 +31266,7 @@
     },
     {
       "categoryId": "20165",
-      "categoryName": "Rainwear (Raincoats, Slicker Suits, Storm Suits, Umbrellas, etc.) ",
+      "categoryName": "Rainwear",
       "catType": "C"
     },
     {
@@ -31056,7 +31321,7 @@
     },
     {
       "categoryId": "95271",
-      "categoryName": "Rape and Sexual Assault Prevention",
+      "categoryName": "Rape/Assault Prevention Services",
       "catType": "C"
     },
     {
@@ -31132,11 +31397,6 @@
     {
       "categoryId": "95272",
       "categoryName": "Reading Services for the Blind",
-      "catType": "C"
-    },
-    {
-      "categoryId": "75070",
-      "categoryName": "READY-MIX CONCRETE",
       "catType": "C"
     },
     {
@@ -31520,11 +31780,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "23275",
-      "categoryName": "Recycled Crafts ",
-      "catType": "C"
-    },
-    {
       "categoryId": "21070",
       "categoryName": "Recycled Culvert, Piling and Septic Tank Accessories and Supplies ",
       "catType": "C"
@@ -31607,16 +31862,6 @@
     {
       "categoryId": "33569",
       "categoryName": "Recycled Fertilizer And Soil Conditioners ",
-      "catType": "C"
-    },
-    {
-      "categoryId": "34070",
-      "categoryName": "Recycled Fire Protection Equipment and Supplies ",
-      "catType": "C"
-    },
-    {
-      "categoryId": "34578",
-      "categoryName": "Recycled First Aid and Safety Equipment and Supplies",
       "catType": "C"
     },
     {
@@ -31872,11 +32117,6 @@
     {
       "categoryId": "65896",
       "categoryName": "Recycled Pipe and Tubing",
-      "catType": "C"
-    },
-    {
-      "categoryId": "65996",
-      "categoryName": "Recycled Pipe and Tubing Fittings",
       "catType": "C"
     },
     {
@@ -32421,7 +32661,7 @@
     },
     {
       "categoryId": "92678",
-      "categoryName": "REMEDIATION SERVICES, ENVIRONMENTAL",
+      "categoryName": "Remediation Services",
       "catType": "C"
     },
     {
@@ -32535,11 +32775,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "28766",
-      "categoryName": "REPLACEMENT AND COMPONENT PARTS: CAPACITORS, CHOKE",
-      "catType": "C"
-    },
-    {
       "categoryId": "06069",
       "categoryName": "REPLACEMENT PARTS FOR AMERICAN MOTORS",
       "catType": "C"
@@ -32582,11 +32817,6 @@
     {
       "categoryId": "04088",
       "categoryName": "Reptiles, Live",
-      "catType": "C"
-    },
-    {
-      "categoryId": "34072",
-      "categoryName": "RESCUE EQUIPMENT, SUPPLIES AND ACCESSORIES INCLUDI",
       "catType": "C"
     },
     {
@@ -33000,11 +33230,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "77545",
-      "categoryName": "Road Maintenance Salt (See Class 192 for Ice Removal Chemicals) ",
-      "catType": "C"
-    },
-    {
       "categoryId": "74570",
       "categoryName": "ROAD OIL",
       "catType": "C"
@@ -33246,7 +33471,7 @@
     },
     {
       "categoryId": "77072",
-      "categoryName": "ROOFING SUPPLIES (NOT OTHERWISE CLASSIFIED)",
+      "categoryName": "Roofing Supplies",
       "catType": "C"
     },
     {
@@ -33545,8 +33770,18 @@
       "catType": "C"
     },
     {
+      "categoryId": "34578",
+      "categoryName": "Safety Equipment & Supplies",
+      "catType": "C"
+    },
+    {
       "categoryId": "44063",
       "categoryName": "Safety Glass, Laminated ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "34556",
+      "categoryName": "Safety Hats/Helmets",
       "catType": "C"
     },
     {
@@ -33560,13 +33795,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "99800",
-      "categoryName": "Sale Of Surplus And Obsolete Items",
+      "categoryId": "34592",
+      "categoryName": "Saftey Vests",
       "catType": "C"
     },
     {
-      "categoryId": "86040",
-      "categoryName": "SALES BOOKS",
+      "categoryId": "99800",
+      "categoryName": "Sale Of Surplus And Obsolete Items",
       "catType": "C"
     },
     {
@@ -33631,7 +33866,12 @@
     },
     {
       "categoryId": "75077",
-      "categoryName": "SAND AND GRAVEL",
+      "categoryName": "Sand & Gravel",
+      "catType": "C"
+    },
+    {
+      "categoryId": "08555",
+      "categoryName": "Sand Bags",
       "catType": "C"
     },
     {
@@ -33850,6 +34090,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "20490",
+      "categoryName": "Scanner/Optical Readers",
+      "catType": "C"
+    },
+    {
       "categoryId": "20489",
       "categoryName": "SCANNERS AND READERS, MAGNETIC STRIP",
       "catType": "C"
@@ -33861,11 +34106,6 @@
     },
     {
       "categoryId": "20686",
-      "categoryName": "SCANNERS AND READERS, OPTICAL CHARACTER: BAR CODE,",
-      "catType": "C"
-    },
-    {
-      "categoryId": "20490",
       "categoryName": "SCANNERS AND READERS, OPTICAL CHARACTER: BAR CODE,",
       "catType": "C"
     },
@@ -33882,6 +34122,11 @@
     {
       "categoryId": "96165",
       "categoryName": "Scanning And Testing For Electrical Hot-Spots, Etc. ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "92038",
+      "categoryName": "Scanning/Optical Services",
       "catType": "C"
     },
     {
@@ -33942,6 +34187,11 @@
     {
       "categoryId": "99889",
       "categoryName": "School Equipment",
+      "catType": "C"
+    },
+    {
+      "categoryId": "78532",
+      "categoryName": "School Equipment & Supplies",
       "catType": "C"
     },
     {
@@ -34490,11 +34740,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "89065",
-      "categoryName": "SEWAGE AND WASTE TREATING EQUIPMENT AND SUPPLIES",
-      "catType": "C"
-    },
-    {
       "categoryId": "90680",
       "categoryName": "Sewage Collection, Treatment, And Disposal - Architectural ",
       "catType": "C"
@@ -34965,11 +35210,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "80086",
-      "categoryName": "SHOES AND BOOTS, WORK, MEN'S",
-      "catType": "C"
-    },
-    {
       "categoryId": "80088",
       "categoryName": "SHOES AND BOOTS, WORK, WOMEN'S",
       "catType": "C"
@@ -35177,6 +35417,11 @@
     {
       "categoryId": "80145",
       "categoryName": "Sign Making Equipment Including Computerized Type ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "80186",
+      "categoryName": "Sign Making Materials & Equipment",
       "catType": "C"
     },
     {
@@ -35850,11 +36095,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "79050",
-      "categoryName": "SOD, GRASS",
-      "catType": "C"
-    },
-    {
       "categoryId": "03775",
       "categoryName": "Soda Fountain Equipment and Accessories ",
       "catType": "C"
@@ -35867,6 +36107,11 @@
     {
       "categoryId": "18086",
       "categoryName": "SODIUM CARBOXYMETHYLCELLULOSE (CMC) AND OTHER CELL",
+      "catType": "C"
+    },
+    {
+      "categoryId": "77545",
+      "categoryName": "Sodium Chloride - Salt",
       "catType": "C"
     },
     {
@@ -35906,7 +36151,7 @@
     },
     {
       "categoryId": "92045",
-      "categoryName": "SOFTWARE MAINTENANCE/SUPPORT",
+      "categoryName": "Software Maintenance Support",
       "catType": "C"
     },
     {
@@ -36021,7 +36266,7 @@
     },
     {
       "categoryId": "29080",
-      "categoryName": "Solar Powered Electrical Systems (For Battery Charging, etc.)",
+      "categoryName": "Solar Powered Energy Collecting Systems",
       "catType": "C"
     },
     {
@@ -36132,6 +36377,16 @@
     {
       "categoryId": "512240",
       "categoryName": "Sound Recording Studios",
+      "catType": "C"
+    },
+    {
+      "categoryId": "80318",
+      "categoryName": "Sound System Equipment & Supplies",
+      "catType": "C"
+    },
+    {
+      "categoryId": "98547",
+      "categoryName": "Sound System Rental or Lease",
       "catType": "C"
     },
     {
@@ -36291,12 +36546,17 @@
     },
     {
       "categoryId": "96686",
-      "categoryName": "SPECIALTY PRINTING: DIE CUTTING, LASER, PLASTIC, T",
+      "categoryName": "Specialty Printing Services",
       "catType": "C"
     },
     {
       "categoryId": "07566",
       "categoryName": "SPECIALTY PRODUCTS: CARBURETOR CLEANING COMPOUND, ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "07177",
+      "categoryName": "Specialty Vehicles",
       "catType": "C"
     },
     {
@@ -36375,6 +36635,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "86076",
+      "categoryName": "Spitter Tickets, Parking Lots",
+      "catType": "C"
+    },
+    {
       "categoryId": "05582",
       "categoryName": "SPLASH GUARDS",
       "catType": "C"
@@ -36417,6 +36682,11 @@
     {
       "categoryId": "611620",
       "categoryName": "Sports and Recreation Instruction",
+      "catType": "C"
+    },
+    {
+      "categoryId": "93111",
+      "categoryName": "Sports Equipment Maintenance",
       "catType": "C"
     },
     {
@@ -37256,7 +37526,7 @@
     },
     {
       "categoryId": "97170",
-      "categoryName": "Storage Space Rental",
+      "categoryName": "Storage Space Rental or Lease",
       "catType": "C"
     },
     {
@@ -37346,7 +37616,7 @@
     },
     {
       "categoryId": "28576",
-      "categoryName": "STREET LIGHTING LUMINAIRES, ACCESSORIES AND PARTS",
+      "categoryName": "Street Lights & Accessories",
       "catType": "C"
     },
     {
@@ -37655,11 +37925,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "92047",
-      "categoryName": "SUPPORT SERVICES, COMPUTER",
-      "catType": "C"
-    },
-    {
       "categoryId": "325613",
       "categoryName": "Surface Active Agent Manufacturing",
       "catType": "C"
@@ -37725,6 +37990,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "92586",
+      "categoryName": "Surveying Services",
+      "catType": "C"
+    },
+    {
       "categoryId": "90779",
       "categoryName": "Surveying Services (Not Aerial)",
       "catType": "C"
@@ -37745,11 +38015,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "92586",
-      "categoryName": "Surveyor Services, Land",
-      "catType": "C"
-    },
-    {
       "categoryId": "92876",
       "categoryName": "Suspension (Axles, Springs, Steering, etc.) Maintenance and Repair",
       "catType": "C"
@@ -37757,6 +38022,11 @@
     {
       "categoryId": "47578",
       "categoryName": "Sutures and Suturing Needles, Disposable (Including Skin Staplers, Skin Closures and Supplies)",
+      "catType": "C"
+    },
+    {
+      "categoryId": "07180",
+      "categoryName": "SUV's ",
       "catType": "C"
     },
     {
@@ -37800,13 +38070,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "98883",
-      "categoryName": "Swimming Pool Management And Operation ",
+      "categoryId": "65066",
+      "categoryName": "Swimming Pool Equipment & Supplies",
       "catType": "C"
     },
     {
-      "categoryId": "65066",
-      "categoryName": "SWIMMING POOLS, EQUIPMENT, AND SUPPLIES (INCLUDING",
+      "categoryId": "98883",
+      "categoryName": "Swimming Pool Management And Operation ",
       "catType": "C"
     },
     {
@@ -38102,6 +38372,11 @@
     {
       "categoryId": "83000",
       "categoryName": "Tanks (Metal, Plastic, Wood, And Synthetic Materials): Mobile, Portable, Stationary, And Underground Types",
+      "catType": "C"
+    },
+    {
+      "categoryId": "83079",
+      "categoryName": "Tanks & Cylinders",
       "catType": "C"
     },
     {
@@ -38465,6 +38740,21 @@
       "catType": "C"
     },
     {
+      "categoryId": "83885",
+      "categoryName": "Telecommunication Equipment & Supplies",
+      "catType": "C"
+    },
+    {
+      "categoryId": "93972",
+      "categoryName": "Telecommunication Equipment Maintenance ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "98569",
+      "categoryName": "Telecommunication Equipment Rental or Lease",
+      "catType": "C"
+    },
+    {
       "categoryId": "72559",
       "categoryName": "TELECOMMUNICATION PARTS AND ACCESSORIES (NOT OTHER",
       "catType": "C"
@@ -38565,6 +38855,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "83985",
+      "categoryName": "Telephone Equipment & Accessories",
+      "catType": "C"
+    },
+    {
       "categoryId": "72555",
       "categoryName": "TELEPHONE EQUIPMENT AND PIECE PARTS (NOT LINES OR ",
       "catType": "C"
@@ -38575,6 +38870,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "91577",
+      "categoryName": "Telephone Services",
+      "catType": "C"
+    },
+    {
       "categoryId": "91576",
       "categoryName": "Telephone Services Includes Installation, Moves, Changes, Adds, Programming, Training, etc. ",
       "catType": "C"
@@ -38582,11 +38882,6 @@
     {
       "categoryId": "91575",
       "categoryName": "Telephone Services, Cellular ",
-      "catType": "C"
-    },
-    {
-      "categoryId": "91577",
-      "categoryName": "Telephone Services, Long Distance and Local (Including Telex and Watts Services",
       "catType": "C"
     },
     {
@@ -38735,11 +39030,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "33055",
-      "categoryName": "TEMPORARY FENCING (FOR CONSTRUCTION AND OTHER INDU",
-      "catType": "C"
-    },
-    {
       "categoryId": "561320",
       "categoryName": "Temporary Help Services",
       "catType": "C"
@@ -38840,11 +39130,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "93885",
-      "categoryName": "TESTING AND TRAINING APPARATUS, INSTRUMENTS, AND M",
-      "catType": "C"
-    },
-    {
       "categoryId": "97981",
       "categoryName": "TESTING AND TRAINING APPARATUS, INSTRUMENTS, AND M",
       "catType": "C"
@@ -38882,6 +39167,11 @@
     {
       "categoryId": "90783",
       "categoryName": "Testing Services ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "93885",
+      "categoryName": "Testing/Training Equipment Maintenance",
       "catType": "C"
     },
     {
@@ -38935,13 +39225,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "85500",
-      "categoryName": "Theatrical Equipment And Supplies ",
+      "categoryId": "85570",
+      "categoryName": "Theatrical Equipment & Supplies",
       "catType": "C"
     },
     {
-      "categoryId": "98174",
-      "categoryName": "THEATRICAL EQUIPMENT AND SUPPLIES (INCLUDING COSTU",
+      "categoryId": "85500",
+      "categoryName": "Theatrical Equipment And Supplies ",
       "catType": "C"
     },
     {
@@ -38950,8 +39240,13 @@
       "catType": "C"
     },
     {
+      "categoryId": "98174",
+      "categoryName": "Theatrical Equipment Rental or Lease",
+      "catType": "C"
+    },
+    {
       "categoryId": "96173",
-      "categoryName": "Theatrical Services (Including Production, Scenery Design, Stage, etc.) ",
+      "categoryName": "Theatrical Services",
       "catType": "C"
     },
     {
@@ -39070,8 +39365,13 @@
       "catType": "C"
     },
     {
+      "categoryId": "86030",
+      "categoryName": "Ticket Dispensing Machines",
+      "catType": "C"
+    },
+    {
       "categoryId": "31885",
-      "categoryName": "Ticket Vending Machine",
+      "categoryName": "Ticket Vending Machines & Supplies",
       "catType": "C"
     },
     {
@@ -39080,8 +39380,8 @@
       "catType": "C"
     },
     {
-      "categoryId": "31875",
-      "categoryName": "Tickets, Non-Magnetic ",
+      "categoryId": "86040",
+      "categoryName": "Tickets, Coupons, Sales Books",
       "catType": "C"
     },
     {
@@ -39112,11 +39412,6 @@
     {
       "categoryId": "96690",
       "categoryName": "TICKETS, SPECIAL TAGS, PRINTED: CONTINUOUS, GANG O",
-      "catType": "C"
-    },
-    {
-      "categoryId": "86076",
-      "categoryName": "TICKETS, SPITTER",
       "catType": "C"
     },
     {
@@ -39345,6 +39640,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "96339",
+      "categoryName": "Tipping or Other Fees",
+      "catType": "C"
+    },
+    {
       "categoryId": "423130",
       "categoryName": "Tire and Tube Merchant Wholesalers",
       "catType": "C"
@@ -39475,6 +39775,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "86330",
+      "categoryName": "Tires/Tubes, All Types",
+      "catType": "C"
+    },
+    {
       "categoryId": "49384",
       "categoryName": "TISSUE DISRUPTING, GRINDING, AND HOMOGENIZING EQUI",
       "catType": "C"
@@ -39485,13 +39790,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "95387",
-      "categoryName": "Title",
+      "categoryId": "541191",
+      "categoryName": "Title Abstract and Settlement Offices",
       "catType": "C"
     },
     {
-      "categoryId": "541191",
-      "categoryName": "Title Abstract and Settlement Offices",
+      "categoryId": "95387",
+      "categoryName": "Title Insurance",
       "catType": "C"
     },
     {
@@ -39555,13 +39860,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "97773",
-      "categoryName": "Toilets and showers",
+      "categoryId": "93484",
+      "categoryName": "Toilets, Portable, Maintenance and Repair (Including Servicing)",
       "catType": "C"
     },
     {
-      "categoryId": "93484",
-      "categoryName": "Toilets, Portable, Maintenance and Repair (Including Servicing)",
+      "categoryId": "97773",
+      "categoryName": "Toilets, Rental or Lease",
       "catType": "C"
     },
     {
@@ -39700,13 +40005,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "79070",
-      "categoryName": "TOP SOIL AND FILL DIRT (FOR MULCH SEE CLASS 335)",
+      "categoryId": "05588",
+      "categoryName": "Tops and Covers (For Short Wheelbase Vehicles)",
       "catType": "C"
     },
     {
-      "categoryId": "05588",
-      "categoryName": "Tops and Covers (For Short Wheelbase Vehicles)",
+      "categoryId": "79070",
+      "categoryName": "Topsoil & Fill Dirt",
       "catType": "C"
     },
     {
@@ -39752,11 +40057,6 @@
     {
       "categoryId": "56055",
       "categoryName": "TOW, BATTERY POWERED",
-      "catType": "C"
-    },
-    {
-      "categoryId": "73510",
-      "categoryName": "TOWELS, SHOP TYPE, NEW",
       "catType": "C"
     },
     {
@@ -39901,7 +40201,7 @@
     },
     {
       "categoryId": "55078",
-      "categoryName": "TRAFFIC CONES, LANE MARKERS, AND BARRICADES (PORTA",
+      "categoryName": "Traffic Cones, Makers & Barriers",
       "catType": "C"
     },
     {
@@ -39995,6 +40295,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "55088",
+      "categoryName": "Traffic Signal Equipment & Supplies",
+      "catType": "C"
+    },
+    {
       "categoryId": "96882",
       "categoryName": "Traffic Signal Installation ",
       "catType": "C"
@@ -40020,11 +40325,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "55088",
-      "categoryName": "Traffic Signals And Equipment, Electric Systems ",
-      "catType": "C"
-    },
-    {
       "categoryId": "06588",
       "categoryName": "Trailer Bodies and Parts (Including Access Steps and Ladders)",
       "catType": "C"
@@ -40037,6 +40337,11 @@
     {
       "categoryId": "97584",
       "categoryName": "TRAILER RENTAL OR LEASE",
+      "catType": "C"
+    },
+    {
+      "categoryId": "07360",
+      "categoryName": "Trailers, All Types",
       "catType": "C"
     },
     {
@@ -40152,11 +40457,6 @@
     {
       "categoryId": "78592",
       "categoryName": "Training Aids, Materials, and Equipment for the Industrial Trades (Welding, Electrical, Instrumentation, Industrial Mechanics, etc.)",
-      "catType": "C"
-    },
-    {
-      "categoryId": "95290",
-      "categoryName": "TRAINING AND INSTRUCTION (FOR CLIENTS, NOT STAFF)",
       "catType": "C"
     },
     {
@@ -40671,7 +40971,7 @@
     },
     {
       "categoryId": "59575",
-      "categoryName": "TREES, ORNAMENTAL AND SHADE",
+      "categoryName": "Trees, Ornamental/Shade",
       "catType": "C"
     },
     {
@@ -40691,7 +40991,7 @@
     },
     {
       "categoryId": "08078",
-      "categoryName": "Trophies, Plaques, Awards, Certificates, etc.",
+      "categoryName": "Trophies, Awards & Certificates",
       "catType": "C"
     },
     {
@@ -40747,6 +41047,21 @@
     {
       "categoryId": "532120",
       "categoryName": "Truck, Utility Trailer, and RV (Recreational Vehicle) Rental and Leasing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "07230",
+      "categoryName": "Trucks - Fire/Rescue",
+      "catType": "C"
+    },
+    {
+      "categoryId": "07201",
+      "categoryName": "Trucks - Less than 1 Ton",
+      "catType": "C"
+    },
+    {
+      "categoryId": "07203",
+      "categoryName": "Trucks - More than 1 Ton",
       "catType": "C"
     },
     {
@@ -41705,6 +42020,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "07190",
+      "categoryName": "Vans",
+      "catType": "C"
+    },
+    {
       "categoryId": "07092",
       "categoryName": "VANS, CARGO",
       "catType": "C"
@@ -41770,8 +42090,18 @@
       "catType": "C"
     },
     {
+      "categoryId": "92847",
+      "categoryName": "Vehicle Maintenance/Repair",
+      "catType": "C"
+    },
+    {
       "categoryId": "96293",
       "categoryName": "Vehicle Registration Services ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "97514",
+      "categoryName": "Vehicle Rental or Lease",
       "catType": "C"
     },
     {
@@ -41811,7 +42141,12 @@
     },
     {
       "categoryId": "97785",
-      "categoryName": "Vending Machine Rental or Lease ",
+      "categoryName": "Vending Machine Rental or Lease",
+      "catType": "C"
+    },
+    {
+      "categoryId": "31875",
+      "categoryName": "Vending Machine Tickets",
       "catType": "C"
     },
     {
@@ -41915,8 +42250,8 @@
       "catType": "C"
     },
     {
-      "categoryId": "34592",
-      "categoryName": "VEST, SAFETY",
+      "categoryId": "87558",
+      "categoryName": "Veterinary Drugs & Vacines",
       "catType": "C"
     },
     {
@@ -42135,18 +42470,13 @@
       "catType": "C"
     },
     {
-      "categoryId": "78593",
-      "categoryName": "Vocational Equipment and Supplies ",
-      "catType": "C"
-    },
-    {
       "categoryId": "624310",
       "categoryName": "Vocational Rehabilitation Services",
       "catType": "C"
     },
     {
       "categoryId": "92486",
-      "categoryName": "Vocational Training, All Types (Including Vocational Rehabilitation and Technical Education)",
+      "categoryName": "Vocational Training",
       "catType": "C"
     },
     {
@@ -42401,7 +42731,7 @@
     },
     {
       "categoryId": "95896",
-      "categoryName": "Waste Management Services ",
+      "categoryName": "Waste Management Services",
       "catType": "C"
     },
     {
@@ -42427,6 +42757,11 @@
     {
       "categoryId": "61595",
       "categoryName": "WASTEBASKETS, OFFICE, ALL TYPES",
+      "catType": "C"
+    },
+    {
+      "categoryId": "89065",
+      "categoryName": "Wastewater Equipment & Supplies",
       "catType": "C"
     },
     {
@@ -42555,6 +42890,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "89044",
+      "categoryName": "Water Meters & Accessories",
+      "catType": "C"
+    },
+    {
       "categoryId": "96810",
       "categoryName": "Water Meters and Meter Reporting Systems",
       "catType": "C"
@@ -42591,7 +42931,7 @@
     },
     {
       "categoryId": "49396",
-      "categoryName": "WATER QUALITY MONITORING EQUIPMENT: BOD ANALYZERS,",
+      "categoryName": "Water Quality Monitoring Equipment & Supplies",
       "catType": "C"
     },
     {
@@ -42650,11 +42990,6 @@
       "catType": "C"
     },
     {
-      "categoryId": "93691",
-      "categoryName": "WATER SUPPLY AND SEWAGE TREATMENT EQUIPMENT",
-      "catType": "C"
-    },
-    {
       "categoryId": "96892",
       "categoryName": "Water Supply Plant Operating And Monitoring System Services (Including Water Resources Development And Water Quality Management Services) ",
       "catType": "C"
@@ -42685,6 +43020,16 @@
       "catType": "C"
     },
     {
+      "categoryId": "89087",
+      "categoryName": "Water Treatment Equipment & Supplies",
+      "catType": "C"
+    },
+    {
+      "categoryId": "93691",
+      "categoryName": "Water Treatment Equipment Maintenance",
+      "catType": "C"
+    },
+    {
       "categoryId": "72084",
       "categoryName": "WATER WELL ACCESSORIES: DRIVE POINTS, FOOT VALVES ",
       "catType": "C"
@@ -42700,6 +43045,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "57895",
+      "categoryName": "Water, Potable",
+      "catType": "C"
+    },
+    {
       "categoryId": "92695",
       "categoryName": "WATER/WASTEWATER CONSERVATION SERVICES",
       "catType": "C"
@@ -42707,6 +43057,11 @@
     {
       "categoryId": "0008",
       "categoryName": "Water/Wastewater Infrastructure",
+      "catType": "C"
+    },
+    {
+      "categoryId": "88594",
+      "categoryName": "Water/Wastewater Treating Chemicals",
       "catType": "C"
     },
     {
@@ -42756,7 +43111,7 @@
     },
     {
       "categoryId": "93693",
-      "categoryName": "Weapon Maintenance and Repair ",
+      "categoryName": "Weapon & Accessories Maintenance",
       "catType": "C"
     },
     {
@@ -42905,6 +43260,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "43092",
+      "categoryName": "Welding & Industrial Gases",
+      "catType": "C"
+    },
+    {
       "categoryId": "89570",
       "categoryName": "WELDING ACCESSORIES: CUTTING TIPS, HAMMERS, HOSE, ",
       "catType": "C"
@@ -42912,11 +43272,6 @@
     {
       "categoryId": "89596",
       "categoryName": "WELDING AND BRAZING TOOLS",
-      "catType": "C"
-    },
-    {
-      "categoryId": "43092",
-      "categoryName": "WELDING AND INDUSTRIAL GASES: ACETYLENE, ARGON, CA",
       "catType": "C"
     },
     {
@@ -42945,6 +43300,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "89571",
+      "categoryName": "Welding Equipment & Supplies",
+      "catType": "C"
+    },
+    {
       "categoryId": "89500",
       "categoryName": "Welding Equipment And Supplies",
       "catType": "C"
@@ -42955,13 +43315,8 @@
       "catType": "C"
     },
     {
-      "categoryId": "89571",
-      "categoryName": "Welding Equipment and Supplies, Plastic ",
-      "catType": "C"
-    },
-    {
       "categoryId": "93695",
-      "categoryName": "WELDING EQUIPMENT MAINT./REPAIR",
+      "categoryName": "Welding Equipment Maintenance",
       "catType": "C"
     },
     {
@@ -43607,11 +43962,6 @@
     {
       "categoryId": "20091",
       "categoryName": "Work Clothes, Arc Rated for Electrical Work",
-      "catType": "C"
-    },
-    {
-      "categoryId": "42594",
-      "categoryName": "WORK STATIONS, MODULAR, SYSTEMS FURNITURE",
       "catType": "C"
     },
     {
