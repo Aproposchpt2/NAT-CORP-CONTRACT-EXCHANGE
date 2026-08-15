@@ -1,20 +1,16 @@
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import { db, env, json, rpc, sameOrigin } from './_shared/natcorp-db.mjs';
 
-// Credit gate -- 2026-08-15. Jeff retired the 3-tier pricing model on both
-// NGCC and NAT-CORP in favor of one subscription price with Analyze Fit as
-// a paid upsell (product_entitlements + analyze_fit_credit_ledger, shared
-// Supabase project, granted by the purchasing hub's stripe-webhook.js).
-// That system only ever existed on the purchase side -- this consumption
-// gate mirrors the one just added to NGCC's analyze-fit.mjs, and uses the
-// identical resolution algorithm (stripe-webhook.js's
-// activeSubscriptionProduct: prefer natcorp if both) so the same email
-// always resolves to the same credit pool everywhere it's checked.
-async function activeCreditProduct(email) {
-  const rows = await db('product_entitlements', 'GET', `?customer_email=eq.${encodeURIComponent(email)}&product_code=in.(ngcc,natcorp)&status=in.(trialing,active)&select=product_code&order=updated_at.desc&limit=2`);
-  if (!Array.isArray(rows) || !rows.length) return null;
-  return rows.some((r) => r.product_code === 'natcorp') ? 'natcorp' : rows[0].product_code;
-}
+// Credit gate -- 2026-08-15, revised same day when Jeff changed the pricing
+// model: subscriptions no longer include any Analyze Fit credit at all
+// (unlimited contract downloads only), so this no longer checks for an
+// active subscription -- every report, subscriber or not, is a separate
+// $79 purchase (one flat price shared with NGCC; the purchasing hub's
+// offer page asks the buyer which platform, carried through Stripe as
+// client_reference_id, so the webhook grants to the right product_code).
+// Just a direct balance check against product_code='natcorp' here (this
+// file only runs on NAT-CORP, so that's hardcoded).
+const CREDIT_PRODUCT = 'natcorp';
 async function creditBalance(email, product) {
   const rows = await db('analyze_fit_credit_ledger', 'GET', `?customer_email=eq.${encodeURIComponent(email)}&product_code=eq.${product}&select=credit_delta`);
   return (Array.isArray(rows) ? rows : []).reduce((sum, r) => sum + Number(r.credit_delta || 0), 0);
@@ -262,11 +258,9 @@ async function submitAndAnalyze(request, context, profile) {
   if (deadline && deadline <= Date.now()) throw new Error('The selected contract response deadline has passed. Analyze Fit generation is blocked for this opportunity.');
   const payload = intakePayload(profile || {});
 
-  const creditProduct = await activeCreditProduct(payload.contact_email);
-  if (!creditProduct) throw new Error('An active NGCC or NAT-CORP subscription is required to generate an Analyze Fit report.');
-  const balance = await creditBalance(payload.contact_email, creditProduct);
-  if (balance < 1) throw new Error('No Analyze Fit report credits remaining this period. Purchase an additional report at ai4-product-purchasing.ai4businesses.org/analyze-fit to continue.');
-  await consumeCredit(payload.contact_email, creditProduct, context.opportunity.id);
+  const balance = await creditBalance(payload.contact_email, CREDIT_PRODUCT);
+  if (balance < 1) throw new Error('No Analyze Fit report credits available. Purchase a report ($79) at ai4-product-purchasing.ai4businesses.org/analyze-fit to continue.');
+  await consumeCredit(payload.contact_email, CREDIT_PRODUCT, context.opportunity.id);
 
   let intake, run;
   try {
@@ -302,7 +296,7 @@ async function submitAndAnalyze(request, context, profile) {
     run = runRows?.[0];
     if (!run) throw new Error('Analyze Fit run could not be created.');
   } catch (error) {
-    await refundCredit(payload.contact_email, creditProduct, context.opportunity.id, 'refund_setup_failed');
+    await refundCredit(payload.contact_email, CREDIT_PRODUCT, context.opportunity.id, 'refund_setup_failed');
     throw error;
   }
 
@@ -365,7 +359,7 @@ async function submitAndAnalyze(request, context, profile) {
       completed_at: nowIso(),
       updated_at: nowIso(),
     }, 'return=minimal').catch(() => {});
-    await refundCredit(payload.contact_email, creditProduct, context.opportunity.id, 'refund_analysis_failed');
+    await refundCredit(payload.contact_email, CREDIT_PRODUCT, context.opportunity.id, 'refund_analysis_failed');
     throw error;
   }
 }
