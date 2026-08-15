@@ -1,0 +1,142 @@
+name: Nat-Corp Controlled Browser Release Gate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/natcorp-release-gate.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  browser-release-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Execute controlled browser journey
+        env:
+          PREVIEW_URL: https://deploy-preview-58--national-corp-contract-exchange.netlify.app
+        run: |
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          const assert = require('node:assert/strict');
+
+          const base = process.env.PREVIEW_URL;
+          const report = {
+            preview: base,
+            intake: false,
+            discovery: false,
+            editVerification: false,
+            serverProfile: false,
+            allStateMatching: false,
+            residentStateFilter: false,
+            allStateCount: null,
+            residentStateCount: null,
+            residentState: null,
+          };
+
+          const browser = await chromium.launch({ headless: true });
+          const context = await browser.newContext();
+          const page = await context.newPage();
+          const consoleErrors = [];
+          page.on('console', msg => { if (msg.type() === 'error') consoleErrors.push(msg.text()); });
+          page.on('pageerror', err => consoleErrors.push(`pageerror: ${err.message}`));
+
+          try {
+            await page.goto(`${base}/intake`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+            await page.waitForSelector('#intakeForm', { timeout: 30000 });
+
+            for (const id of ['contactName','businessName','businessEmail','website','visitorEmail']) {
+              assert.equal(await page.locator(`#${id}`).count(), 1, `missing intake field ${id}`);
+            }
+            for (const retired of ['entityType','contactTitle','phone','dba','modeGrid']) {
+              assert.equal(await page.locator(`#${retired}`).count(), 0, `retired intake field still present: ${retired}`);
+            }
+            report.intake = true;
+
+            await page.fill('#contactName', 'Nat-Corp Release Gate');
+            await page.fill('#businessName', 'Apropos Group LLC');
+            await page.fill('#businessEmail', 'release-gate@aproposgroupllc.com');
+            await page.fill('#website', 'https://aproposgroupllc.com');
+
+            await Promise.all([
+              page.waitForURL(/\/profile-review\.html(?:$|\?)/, { timeout: 150000 }),
+              page.click('#submitButton'),
+            ]);
+
+            assert.ok(!page.url().includes('#profile='), 'profile leaked into URL fragment');
+            assert.equal(await page.evaluate(() => localStorage.length), 0, 'profile flow wrote browser localStorage');
+
+            await page.waitForSelector('#content:not([hidden])', { timeout: 150000 });
+            const profileText = await page.locator('#workspace').innerText();
+            assert.match(profileText, /Primary Services|Capabilities|Core Competencies/, 'website-discovered profile not rendered');
+            report.discovery = true;
+
+            await page.click('#editButton');
+            await page.waitForSelector('#editMode.on');
+            assert.equal(await page.locator('#services').count(), 1, 'services editor missing');
+            assert.equal(await page.locator('#capabilities').count(), 1, 'capabilities editor missing');
+
+            const currentState = (await page.inputValue('#residentState')).trim().toUpperCase();
+            if (!currentState) await page.fill('#residentState', 'NV');
+
+            await Promise.all([
+              page.waitForURL(/\/dashboard(?:$|\?)/, { timeout: 90000 }),
+              page.click('#saveButton'),
+            ]);
+            report.editVerification = true;
+
+            assert.ok(!page.url().includes('#profile='), 'verified profile leaked into dashboard URL');
+            assert.equal(await page.evaluate(() => localStorage.length), 0, 'dashboard wrote browser localStorage');
+
+            await page.waitForFunction(() => {
+              const el = document.querySelector('#engineStatus');
+              return el && /complete|unavailable/i.test(el.textContent || '');
+            }, { timeout: 90000 });
+
+            const engineStatus = (await page.locator('#engineStatus').innerText()).trim();
+            assert.match(engineStatus, /complete/i, `matching engine did not complete: ${engineStatus}`);
+            report.serverProfile = true;
+
+            const sourceStatus = (await page.locator('#sourceStatus').innerText()).trim();
+            assert.ok(sourceStatus && sourceStatus !== 'Pending', 'APIE inventory source did not resolve');
+
+            const options = await page.locator('#scopeFilter option').allTextContents();
+            assert.deepEqual(options.map(x => x.trim()), ['All States', 'Resident State'], 'geographic filter options drifted');
+
+            const resultStat = (await page.locator('#resultStat').innerText()).trim();
+            assert.match(resultStat, /^\d+$/, `all-state result count is not numeric: ${resultStat}`);
+            report.allStateCount = Number(resultStat);
+            report.allStateMatching = true;
+
+            report.residentState = (await page.locator('#residentState').innerText()).trim();
+            assert.match(report.residentState, /^[A-Z]{2}$/, `resident state not established: ${report.residentState}`);
+
+            const residentOption = page.locator('#scopeFilter option[value="resident"]');
+            assert.equal(await residentOption.isDisabled(), false, 'Resident State filter is disabled');
+            await page.selectOption('#scopeFilter', 'resident');
+            await page.waitForTimeout(400);
+            const residentShown = (await page.locator('#shownCount').innerText()).trim();
+            assert.match(residentShown, /^\d+$/, `resident-state count is not numeric: ${residentShown}`);
+            report.residentStateCount = Number(residentShown);
+            assert.ok(report.residentStateCount <= report.allStateCount, 'Resident State filter increased result population');
+            report.residentStateFilter = true;
+
+            console.log('NATCORP_RELEASE_GATE_RESULT=' + JSON.stringify(report));
+            if (consoleErrors.length) console.log('BROWSER_CONSOLE_ERRORS=' + JSON.stringify(consoleErrors));
+          } finally {
+            await browser.close();
+          }
+          NODE
