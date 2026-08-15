@@ -1,6 +1,7 @@
 import { db, json, sameOrigin } from './_shared/natcorp-db.mjs';
 
 const emailOk = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim());
+const safe = (value, max = 1000) => String(value ?? '').trim().slice(0, max);
 
 export default async function handler(req) {
   if (req.method !== 'POST') return json(405, { ok: false, error: 'POST only' });
@@ -8,14 +9,29 @@ export default async function handler(req) {
   try {
     const { profile = {} } = await req.json();
     const email = String(profile.email || profile.contact_email || '').trim().toLowerCase();
-    const businessName = String(profile.business_name || '').trim();
-    if (!emailOk(email) || !businessName || !Array.isArray(profile.service_states)) {
-      return json(400, { ok: false, error: 'A valid email and completed business profile are required.' });
+    const businessName = safe(profile.business_name || profile.legal_name, 240);
+    if (!emailOk(email) || !businessName) {
+      return json(400, { ok: false, error: 'A valid email and business name are required.' });
     }
+    const serviceStates = Array.isArray(profile.service_states) ? profile.service_states : [];
     const saved = { ...profile, email, contact_email: email, business_name: businessName };
     await db('natcorp_business_intakes', 'POST', '', [{
-      status: 'submitted', contact_email: email, intake_payload: saved,
-      submitted_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+      opportunity_id: null,
+      intake_kind: 'business_profile',
+      status: 'submitted',
+      contact_email: email,
+      contact_name: safe(profile.contact_name, 220) || null,
+      business_name: businessName,
+      business_email: email,
+      website: safe(profile.website, 700) || null,
+      resident_state: safe(profile.state || serviceStates[0], 2).toUpperCase() || null,
+      matching_scope: 'all_states',
+      discovery_status: 'verified',
+      intake_payload: saved,
+      verified_profile: saved,
+      verified_at: new Date().toISOString(),
+      submitted_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     }], 'return=minimal');
     return json(200, { ok: true });
   } catch (error) {
