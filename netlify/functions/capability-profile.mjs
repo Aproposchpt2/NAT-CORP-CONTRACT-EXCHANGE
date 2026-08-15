@@ -95,7 +95,7 @@ async function discoverWebsite(session) {
     body: JSON.stringify({
       model,
       store: false,
-      reasoning: { effort: 'minimal' },
+      reasoning: { effort: 'low' },
       input: [
         { role: 'system', content: 'Use current public web evidence from the allowed business domain only. Return one valid JSON object and never invent evidence.' },
         { role: 'user', content: prompt },
