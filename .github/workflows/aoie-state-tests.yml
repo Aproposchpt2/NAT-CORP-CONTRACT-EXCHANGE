@@ -7,17 +7,22 @@ on:
       - fix/dashboard-controls-premium-analyze-fit
       - agent/var-session-revocation
       - agent/premium-platinum-business-dna
+      - agent/natcorp-website-capability-intake
     paths:
       - 'netlify/functions/_shared/aoie-state-*.mjs'
+      - 'netlify/functions/_shared/natcorp-profile-session.mjs'
       - 'netlify/functions/aoie-state-shadow.mjs'
+      - 'netlify/functions/capability-profile.mjs'
       - 'netlify/functions/analyze-fit-state.mjs'
       - 'netlify/functions/business-profile-agent.mjs'
       - 'tests/aoie-state-*.test.mjs'
       - 'tests/analyze-fit-premium.test.mjs'
+      - 'tests/capability-profile-flow.test.js'
       - 'tests/business-profile-agent.test.mjs'
       - 'assets/business-dna-builder.css'
       - 'assets/business-dna-builder-*.js'
       - 'welcome.html'
+      - 'profile-review.html'
       - 'business-dna-builder-preview.html'
       - 'aois-dashboard-preview.html'
       - 'analyze-fit-v2.html'
@@ -29,15 +34,19 @@ on:
   pull_request:
     paths:
       - 'netlify/functions/_shared/aoie-state-*.mjs'
+      - 'netlify/functions/_shared/natcorp-profile-session.mjs'
       - 'netlify/functions/aoie-state-shadow.mjs'
+      - 'netlify/functions/capability-profile.mjs'
       - 'netlify/functions/analyze-fit-state.mjs'
       - 'netlify/functions/business-profile-agent.mjs'
       - 'tests/aoie-state-*.test.mjs'
       - 'tests/analyze-fit-premium.test.mjs'
+      - 'tests/capability-profile-flow.test.js'
       - 'tests/business-profile-agent.test.mjs'
       - 'assets/business-dna-builder.css'
       - 'assets/business-dna-builder-*.js'
       - 'welcome.html'
+      - 'profile-review.html'
       - 'business-dna-builder-preview.html'
       - 'aois-dashboard-preview.html'
       - 'analyze-fit-v2.html'
@@ -69,7 +78,9 @@ jobs:
         run: node tests/aoie-state-source.test.mjs
       - name: Run Business Profile Agent fixtures
         run: node tests/business-profile-agent.test.mjs
-      - name: Validate Business DNA browser scripts
+      - name: Run verified capability-flow fixtures
+        run: node --test tests/capability-profile-flow.test.js
+      - name: Validate retained Business DNA browser scripts
         run: |
           node --check assets/business-dna-builder-1.js
           node --check assets/business-dna-builder-2.js
@@ -77,11 +88,15 @@ jobs:
           node --check assets/business-dna-builder-4.js
       - name: Validate AOIE function syntax
         run: node --check netlify/functions/aoie-state-shadow.mjs
+      - name: Validate capability profile function syntax
+        run: |
+          node --check netlify/functions/capability-profile.mjs
+          node --check netlify/functions/_shared/natcorp-profile-session.mjs
       - name: Validate Analyze Fit function syntax
         run: node --check netlify/functions/analyze-fit-state.mjs
       - name: Validate Business Profile Agent syntax
         run: node --check netlify/functions/business-profile-agent.mjs
-      - name: Run fresh-visit dashboard and report regressions
+      - name: Run verified capability journey and report regressions
         id: regressions
         continue-on-error: true
         run: node tests/analyze-fit-premium.test.mjs > regression-output.txt 2>&1
@@ -89,7 +104,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: fresh-visit-regression-output
+          name: verified-capability-regression-output
           path: regression-output.txt
           if-no-files-found: error
           retention-days: 7
