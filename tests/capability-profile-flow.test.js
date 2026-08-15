@@ -6,7 +6,7 @@ const root = path.resolve(__dirname, '..');
 const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
 
 test('customer-facing flow does not use browser profile storage or URL profile handoff', () => {
-  for (const file of ['welcome.html', 'profile-review.html', 'aois-dashboard-preview.html', 'business-dna-builder-preview.html']) {
+  for (const file of ['welcome.html', 'profile-building.html', 'profile-review.html', 'aois-dashboard-preview.html', 'business-dna-builder-preview.html']) {
     const text = read(file);
     assert.doesNotMatch(text, /localStorage/i, `${file} must not use localStorage`);
     assert.doesNotMatch(text, /#profile=/i, `${file} must not pass profiles in URL fragments`);
@@ -17,6 +17,38 @@ test('intake contains only approved business identity fields', () => {
   const text = read('welcome.html');
   for (const id of ['contactName','businessName','businessEmail','website','visitorEmail']) assert.match(text, new RegExp(`id="${id}"`));
   for (const retired of ['entityType','contactTitle','phone','dba','modeGrid']) assert.doesNotMatch(text, new RegExp(`id="${retired}"`));
+});
+
+test('intake stops after server session creation and redirects to profile build landing', () => {
+  const text = read('welcome.html');
+  assert.match(text, /await api\(payload\)/);
+  assert.match(text, /location\.assign\('\/profile-building\.html'\)/);
+  assert.doesNotMatch(text, /action:'discover'/);
+  assert.doesNotMatch(text, /capability-profile-discover/);
+});
+
+test('profile build landing starts background Agent and shows persisted activity progress', () => {
+  const text = read('profile-building.html');
+  assert.match(text, /Nat-Corp is building/);
+  assert.match(text, /Activity Progress/);
+  assert.match(text, /capability-profile-discover/);
+  assert.match(text, /fetch\('\/api\/capability-profile'/);
+  for (const stage of ['Website validation','Agent website search','Evidence review','Capability extraction','Business profile build','Ready for review']) {
+    assert.match(text, new RegExp(stage));
+  }
+  assert.match(text, /Review My Business Profile/);
+});
+
+test('website discovery runs as a Netlify background function with real activity checkpoints', () => {
+  const background = read('netlify/functions/capability-profile-discover-background.mjs');
+  assert.match(background, /allowed_domains: \[domain\]/);
+  assert.match(background, /setActivity\(session, 'website_validation'/);
+  assert.match(background, /setActivity\(session, 'agent_search'/);
+  assert.match(background, /setActivity\(session, 'evidence_review'/);
+  assert.match(background, /setActivity\(session, 'capability_extraction'/);
+  assert.match(background, /setActivity\(session, 'profile_build'/);
+  assert.match(background, /stage: 'review_ready'/);
+  assert.match(background, /discovery_status=in\.\(intake_created,failed\)/);
 });
 
 test('profile verification is a formal gate before dashboard', () => {
@@ -34,11 +66,10 @@ test('dashboard exposes only All States and Resident State geography views', () 
   assert.doesNotMatch(text, /All selected states/);
 });
 
-test('server profile flow uses HttpOnly session cookie and official-domain web discovery', () => {
+test('server profile flow uses HttpOnly session cookie and verified profile authority', () => {
   const session = read('netlify/functions/_shared/natcorp-profile-session.mjs');
   const endpoint = read('netlify/functions/capability-profile.mjs');
   assert.match(session, /HttpOnly; Secure; SameSite=Lax/);
-  assert.match(endpoint, /allowed_domains: \[domain\]/);
   assert.match(endpoint, /geographic_search_scope: 'all_states'/);
   assert.match(endpoint, /verification_status: 'USER_CONFIRMED'/);
 });

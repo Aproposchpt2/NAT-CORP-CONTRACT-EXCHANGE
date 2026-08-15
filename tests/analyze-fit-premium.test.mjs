@@ -5,6 +5,7 @@ const read=(path)=>fs.readFileSync(path,'utf8');
 const files={
   publicSite:read('index.html'),
   intake:read('welcome.html'),
+  profileBuild:read('profile-building.html'),
   profileReview:read('profile-review.html'),
   legacyBusinessIntake:read('business-dna-builder-preview.html'),
   dashboard:read('aois-dashboard-preview.html'),
@@ -12,6 +13,7 @@ const files={
   netlify:read('netlify.toml'),
   aoieFunction:read('netlify/functions/aoie-state-shadow.mjs'),
   capabilityFunction:read('netlify/functions/capability-profile.mjs'),
+  capabilityBackground:read('netlify/functions/capability-profile-discover-background.mjs'),
   profileSession:read('netlify/functions/_shared/natcorp-profile-session.mjs'),
   analyzeFunction:read('netlify/functions/analyze-fit-state.mjs'),
   businessAgent:read('netlify/functions/business-profile-agent.mjs'),
@@ -27,14 +29,13 @@ function compileInlineScripts(name,html){
 
 for(const [name,html] of [
   ['Intake',files.intake],
+  ['Profile Build',files.profileBuild],
   ['Profile Review',files.profileReview],
   ['Legacy Business Intake Redirect',files.legacyBusinessIntake],
   ['Dashboard',files.dashboard],
   ['Analyze Fit',files.analyzeFit],
 ]) compileInlineScripts(name,html);
 
-// Analyze Fit remains protected as a six-page executive decision report. These are
-// the headings actually rendered by the current implementation on main.
 for(const title of [
   'Executive Decision Summary',
   'Fit Analysis',
@@ -43,8 +44,6 @@ for(const title of [
   'Executive Recommendation',
 ]) assert.ok(files.analyzeFit.includes(title),`Missing current Analyze Fit page: ${title}`);
 
-// Protect the underlying assessment domains even when the visible report uses
-// executive-friendly page titles rather than one heading per JSON field.
 for(const field of [
   'strategic_alignment',
   'eligibility',
@@ -61,7 +60,8 @@ for(const field of [
 assert.ok(files.publicSite.includes('Opportunity Builds Business. Business Builds Community.'),'Protected public Hero messaging must remain present.');
 assert.ok(files.publicSite.includes('A Shared Commitment to Economic Opportunity.'),'Protected second-section messaging must remain present.');
 
-// Approved business-first intake contract.
+// Approved business-first intake contract. Intake must finish quickly and hand off
+// to the activity landing; it must not hold the browser open for website discovery.
 for(const id of ['contactName','businessName','businessEmail','website','visitorEmail']){
   assert.match(files.intake,new RegExp(`id="${id}"`),`Intake missing approved field ${id}`);
 }
@@ -70,8 +70,16 @@ for(const retired of ['entityType','contactTitle','phone','dba','modeGrid']){
 }
 assert.ok(files.intake.includes('/api/capability-profile'),'Intake must use the server-side capability-profile endpoint.');
 assert.ok(files.intake.includes("action:'start'"),'Intake must create a server-side business session.');
-assert.ok(files.intake.includes("action:'discover'"),'Intake must launch website capability discovery.');
-assert.ok(files.intake.includes('/profile-review.html'),'Intake must continue to formal profile verification.');
+assert.ok(files.intake.includes('/profile-building.html'),'Intake must redirect to the profile-build activity landing.');
+assert.ok(!files.intake.includes("action:'discover'"),'Intake must not synchronously launch website discovery.');
+assert.ok(!files.intake.includes('/api/capability-profile-discover'),'Intake must not queue discovery before the customer reaches the activity landing.');
+
+// Landing page owns the async discovery launch and live activity presentation.
+assert.ok(files.profileBuild.includes('Nat-Corp is building'),'Profile Build must tell the customer the profile is being built.');
+assert.ok(files.profileBuild.includes('Activity Progress'),'Profile Build must expose the activity progress meter.');
+assert.ok(files.profileBuild.includes('/api/capability-profile-discover'),'Profile Build must start the background discovery Agent.');
+assert.ok(files.profileBuild.includes('/api/capability-profile'),'Profile Build must poll the server-side profile session.');
+assert.ok(files.profileBuild.includes('Review My Business Profile'),'Profile Build must stop at the customer review control point.');
 
 // Mandatory verification/edit gate before matching.
 assert.ok(files.profileReview.includes('Profile Is Correct'),'Profile Review must expose the confirmation gate.');
@@ -91,6 +99,7 @@ assert.ok(files.dashboard.includes("scope:'all'"),'Dashboard must request capabi
 // Browser state may never become profile authority in the redesigned customer path.
 for(const [name,content] of Object.entries({
   Intake:files.intake,
+  'Profile Build':files.profileBuild,
   'Profile Review':files.profileReview,
   'Legacy Business Intake Redirect':files.legacyBusinessIntake,
   Dashboard:files.dashboard,
@@ -100,15 +109,18 @@ for(const [name,content] of Object.entries({
   assert.ok(!/document\.cookie/.test(content),`${name} must not create a browser-authored cookie.`);
 }
 
-// Server-side session/security contract.
+// Server-side session/security and asynchronous discovery contract.
 assert.ok(files.profileSession.includes('HttpOnly; Secure; SameSite=Lax'),'Profile session cookie must remain HttpOnly, Secure and SameSite=Lax.');
 assert.ok(files.profileSession.includes("createHash('sha256')"),'Only a hash of the opaque session token may be stored server-side.');
-assert.ok(files.capabilityFunction.includes('allowed_domains: [domain]'),'Website discovery must stay constrained to the submitted official domain.');
+assert.ok(files.capabilityBackground.includes('allowed_domains: [domain]'),'Website discovery must stay constrained to the submitted official domain.');
+assert.ok(files.capabilityBackground.includes("reasoning: { effort: 'low' }"),'Background discovery must retain bounded low-reasoning configuration.');
+assert.ok(files.capabilityBackground.includes("search_context_size: 'low'"),'Background discovery must retain bounded web-search context.');
+assert.ok(files.capabilityBackground.includes('AbortSignal.timeout(90000)'),'Background discovery may use the long-running function window rather than a synchronous gateway window.');
+for(const stage of ['website_validation','agent_search','evidence_review','capability_extraction','profile_build','review_ready']){
+  assert.ok(files.capabilityBackground.includes(stage),`Background discovery must persist activity stage ${stage}.`);
+}
 assert.ok(files.capabilityFunction.includes("verification_status: 'USER_CONFIRMED'"),'Confirmed AOIE profile must preserve user authority.');
 assert.ok(files.capabilityFunction.includes("geographic_search_scope: 'all_states'"),'Verified matching scope must remain all-states capability-first.');
-assert.ok(files.capabilityFunction.includes("reasoning: { effort: 'low' }"),'Website discovery must retain bounded low-reasoning latency configuration.');
-assert.ok(files.capabilityFunction.includes("search_context_size: 'low'"),'Website discovery must retain bounded web-search context.');
-assert.ok(files.capabilityFunction.includes('AbortSignal.timeout(45000)'),'Website discovery must fail inside the hosting execution window.');
 
 // Same-origin browser callers may match only the verified session profile.
 assert.ok(files.aoieFunction.includes("authMode === 'internal' && payload?.profile"),'Only authorized internal AOIE calls may inject a request profile.');
@@ -119,8 +131,6 @@ assert.ok(files.aoieFunction.includes("match_readiness_status: 'eq.MATCH_READY'"
 assert.ok(files.aoieFunction.includes('legacy_natcorp_qa_release_filter_applied: false'),'Obsolete Nat-Corp QA labels must not exclude valid APIE match-ready contracts.');
 assert.ok(files.aoieFunction.includes('resident_state_is_presentation_filter: true'),'Resident State must remain a presentation filter after capability matching.');
 
-// Analyze Fit itself remains live and fail-closed; it is no longer a required
-// profile-handoff step in the redesigned dashboard journey.
 assert.ok(files.analyzeFit.includes('/api/analyze-fit-state'),'Analyze Fit must use the live assessment endpoint.');
 assert.ok(files.analyzeFit.includes('Business-to-Contract Fit Assessment'),'Analyze Fit report identity must remain present.');
 assert.ok(files.analyzeFunction.includes('rateLimit'),'Analyze Fit must retain a platform rate limit.');
