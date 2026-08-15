@@ -1,6 +1,42 @@
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import { db, env, json, rpc, sameOrigin } from './_shared/natcorp-db.mjs';
 
+// Credit gate -- 2026-08-15. Jeff retired the 3-tier pricing model on both
+// NGCC and NAT-CORP in favor of one subscription price with Analyze Fit as
+// a paid upsell (product_entitlements + analyze_fit_credit_ledger, shared
+// Supabase project, granted by the purchasing hub's stripe-webhook.js).
+// That system only ever existed on the purchase side -- this consumption
+// gate mirrors the one just added to NGCC's analyze-fit.mjs, and uses the
+// identical resolution algorithm (stripe-webhook.js's
+// activeSubscriptionProduct: prefer natcorp if both) so the same email
+// always resolves to the same credit pool everywhere it's checked.
+async function activeCreditProduct(email) {
+  const rows = await db('product_entitlements', 'GET', `?customer_email=eq.${encodeURIComponent(email)}&product_code=in.(ngcc,natcorp)&status=in.(trialing,active)&select=product_code&order=updated_at.desc&limit=2`);
+  if (!Array.isArray(rows) || !rows.length) return null;
+  return rows.some((r) => r.product_code === 'natcorp') ? 'natcorp' : rows[0].product_code;
+}
+async function creditBalance(email, product) {
+  const rows = await db('analyze_fit_credit_ledger', 'GET', `?customer_email=eq.${encodeURIComponent(email)}&product_code=eq.${product}&select=credit_delta`);
+  return (Array.isArray(rows) ? rows : []).reduce((sum, r) => sum + Number(r.credit_delta || 0), 0);
+}
+// reason is a DB-enforced CHECK-constrained enum (trial_grant, monthly_grant,
+// additional_purchase, usage, admin_adjustment, partner_grant,
+// refund_reversal) -- consumption/refund detail goes in metadata, not reason.
+async function consumeCredit(email, product, opportunityId) {
+  return db('analyze_fit_credit_ledger', 'POST', '', [{
+    customer_email: email.toLowerCase().trim(), product_code: product, credit_delta: -1,
+    reason: 'usage', metadata: { opportunity_id: opportunityId },
+  }], 'return=minimal');
+}
+async function refundCredit(email, product, opportunityId, refundFor) {
+  try {
+    await db('analyze_fit_credit_ledger', 'POST', '', [{
+      customer_email: email.toLowerCase().trim(), product_code: product, credit_delta: 1,
+      reason: 'refund_reversal', metadata: { opportunity_id: opportunityId, refund_for: refundFor },
+    }], 'return=minimal');
+  } catch { /* best-effort refund -- don't let this mask the original error */ }
+}
+
 const safe = (v, n = 7000) => String(v ?? '').trim().slice(0, n);
 const arr = (v) => Array.isArray(v) ? v : [];
 const nowIso = () => new Date().toISOString();
@@ -225,37 +261,50 @@ async function submitAndAnalyze(request, context, profile) {
   const deadline = context.opportunity?.response_deadline ? new Date(context.opportunity.response_deadline).getTime() : 0;
   if (deadline && deadline <= Date.now()) throw new Error('The selected contract response deadline has passed. Analyze Fit generation is blocked for this opportunity.');
   const payload = intakePayload(profile || {});
-  const intakeRows = await db('natcorp_business_intakes', 'POST', '', [{
-    outreach_id: context.outreach?.outreach_id || request.metadata?.outreach_id || null,
-    opportunity_id: context.opportunity.id,
-    candidate_id: context.candidate?.candidate_id || request.metadata?.candidate_id || null,
-    business_profile_id: request.business_profile_id || null,
-    status: 'submitted',
-    contact_email: payload.contact_email,
-    intake_payload: payload,
-    submitted_at: nowIso(),
-    updated_at: nowIso(),
-  }], 'return=representation');
-  let intake = intakeRows?.[0];
-  if (!intake) throw new Error('Business confirmation could not be recorded.');
 
-  const dnaResult = await rpc('natcorp_build_business_dna', { p_intake_id: intake.intake_id });
-  const dnaProfileId = dnaResult?.business_profile_id || dnaResult?.[0]?.business_profile_id;
-  const refreshed = await db('natcorp_business_intakes', 'GET', `?intake_id=eq.${encodeURIComponent(intake.intake_id)}&select=*`);
-  intake = refreshed?.[0] || { ...intake, business_profile_id: dnaProfileId || intake.business_profile_id };
-  if (!intake.business_profile_id) throw new Error('Business DNA could not be completed.');
+  const creditProduct = await activeCreditProduct(payload.contact_email);
+  if (!creditProduct) throw new Error('An active NGCC or NAT-CORP subscription is required to generate an Analyze Fit report.');
+  const balance = await creditBalance(payload.contact_email, creditProduct);
+  if (balance < 1) throw new Error('No Analyze Fit report credits remaining this period. Purchase an additional report at ai4-product-purchasing.ai4businesses.org/analyze-fit to continue.');
+  await consumeCredit(payload.contact_email, creditProduct, context.opportunity.id);
 
-  const runRows = await db('natcorp_analyze_fit_runs', 'POST', '', [{
-    intake_id: intake.intake_id,
-    opportunity_id: context.opportunity.id,
-    candidate_id: context.candidate?.candidate_id || request.metadata?.candidate_id || null,
-    business_profile_id: intake.business_profile_id,
-    contract_dna_id: context.contract_dna?.id || null,
-    status: 'running',
-    started_at: nowIso(),
-  }], 'return=representation');
-  const run = runRows?.[0];
-  if (!run) throw new Error('Analyze Fit run could not be created.');
+  let intake, run;
+  try {
+    const intakeRows = await db('natcorp_business_intakes', 'POST', '', [{
+      outreach_id: context.outreach?.outreach_id || request.metadata?.outreach_id || null,
+      opportunity_id: context.opportunity.id,
+      candidate_id: context.candidate?.candidate_id || request.metadata?.candidate_id || null,
+      business_profile_id: request.business_profile_id || null,
+      status: 'submitted',
+      contact_email: payload.contact_email,
+      intake_payload: payload,
+      submitted_at: nowIso(),
+      updated_at: nowIso(),
+    }], 'return=representation');
+    intake = intakeRows?.[0];
+    if (!intake) throw new Error('Business confirmation could not be recorded.');
+
+    const dnaResult = await rpc('natcorp_build_business_dna', { p_intake_id: intake.intake_id });
+    const dnaProfileId = dnaResult?.business_profile_id || dnaResult?.[0]?.business_profile_id;
+    const refreshed = await db('natcorp_business_intakes', 'GET', `?intake_id=eq.${encodeURIComponent(intake.intake_id)}&select=*`);
+    intake = refreshed?.[0] || { ...intake, business_profile_id: dnaProfileId || intake.business_profile_id };
+    if (!intake.business_profile_id) throw new Error('Business DNA could not be completed.');
+
+    const runRows = await db('natcorp_analyze_fit_runs', 'POST', '', [{
+      intake_id: intake.intake_id,
+      opportunity_id: context.opportunity.id,
+      candidate_id: context.candidate?.candidate_id || request.metadata?.candidate_id || null,
+      business_profile_id: intake.business_profile_id,
+      contract_dna_id: context.contract_dna?.id || null,
+      status: 'running',
+      started_at: nowIso(),
+    }], 'return=representation');
+    run = runRows?.[0];
+    if (!run) throw new Error('Analyze Fit run could not be created.');
+  } catch (error) {
+    await refundCredit(payload.contact_email, creditProduct, context.opportunity.id, 'refund_setup_failed');
+    throw error;
+  }
 
   try {
     const result = await runAnalysis(context, intake);
@@ -316,6 +365,7 @@ async function submitAndAnalyze(request, context, profile) {
       completed_at: nowIso(),
       updated_at: nowIso(),
     }, 'return=minimal').catch(() => {});
+    await refundCredit(payload.contact_email, creditProduct, context.opportunity.id, 'refund_analysis_failed');
     throw error;
   }
 }
