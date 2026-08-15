@@ -1,10 +1,12 @@
-name: Nat-Corp Production Capability Smoke
+name: Nat-Corp Capability Preview Smoke
 
 on:
   pull_request:
     branches: [main]
     paths:
       - '.github/workflows/natcorp-production-capability-smoke.yml'
+      - 'welcome.html'
+      - 'netlify/functions/capability-profile-discover-background.mjs'
 
 permissions:
   contents: read
@@ -12,14 +14,21 @@ permissions:
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 7
     steps:
-      - name: Exercise production capability-profile start and discover
+      - name: Exercise preview start, background discovery, and polling
         shell: bash
         run: |
           set -euo pipefail
-          base='https://natcorp.aproposgroupllc.com'
-          payload='{"action":"start","contact_name":"Nat-Corp 502 Diagnostic","business_name":"Apropos Group LLC","business_email":"natcorp-502-diagnostic@aproposgroupllc.com","website":"https://aproposgroupllc.com","visitor_email":""}'
+          base='https://deploy-preview-59--national-corp-contract-exchange.netlify.app'
+          payload='{"action":"start","contact_name":"Nat-Corp 502 Preview","business_name":"Apropos Group LLC","business_email":"natcorp-502-preview@aproposgroupllc.com","website":"https://aproposgroupllc.com","visitor_email":""}'
+
+          for attempt in {1..30}; do
+            code=$(curl --max-time 10 --silent --output /dev/null --write-out '%{http_code}' "${base}/intake" || true)
+            if [ "$code" = '200' ]; then break; fi
+            sleep 5
+          done
+          test "$code" = '200'
 
           start_code=$(curl --max-time 30 --silent --show-error \
             --cookie-jar cookies.txt \
@@ -32,21 +41,38 @@ jobs:
             --data "$payload" \
             "${base}/api/capability-profile")
           echo "START_HTTP=${start_code}"
-          cat start-body.json
-          echo
           test "$start_code" = '201'
 
-          discover_code=$(curl --max-time 70 --silent --show-error \
+          queue_code=$(curl --max-time 20 --silent --show-error \
             --cookie cookies.txt \
             --header "Origin: ${base}" \
             --header "Referer: ${base}/intake" \
             --header 'Sec-Fetch-Site: same-origin' \
             --header 'Content-Type: application/json' \
-            --output discover-body.json \
+            --output queue-body.txt \
             --write-out '%{http_code}' \
-            --data '{"action":"discover"}' \
-            "${base}/api/capability-profile")
-          echo "DISCOVER_HTTP=${discover_code}"
-          cat discover-body.json
-          echo
-          test "$discover_code" = '200'
+            --data '{}' \
+            "${base}/api/capability-profile-discover")
+          echo "QUEUE_HTTP=${queue_code}"
+          test "$queue_code" = '202'
+
+          final=''
+          for attempt in {1..36}; do
+            sleep 5
+            poll_code=$(curl --max-time 20 --silent --show-error \
+              --cookie cookies.txt \
+              --header "Origin: ${base}" \
+              --header "Referer: ${base}/intake" \
+              --header 'Sec-Fetch-Site: same-origin' \
+              --header 'Accept: application/json' \
+              --output poll-body.json \
+              --write-out '%{http_code}' \
+              "${base}/api/capability-profile")
+            test "$poll_code" = '200'
+            final=$(jq -r '.session.discovery_status // ""' poll-body.json)
+            echo "POLL_${attempt}=${final}"
+            if [ "$final" = 'review_ready' ]; then break; fi
+            if [ "$final" = 'failed' ]; then cat poll-body.json; exit 1; fi
+          done
+          test "$final" = 'review_ready'
+          echo 'ASYNC_DISCOVERY_PASS'
