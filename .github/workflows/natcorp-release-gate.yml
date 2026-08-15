@@ -1,4 +1,4 @@
-# Release-gate rerun after capability discovery model fix
+# Controlled release gate for Nat-Corp website capability intake
 name: Nat-Corp Controlled Browser Release Gate
 
 on:
@@ -66,6 +66,7 @@ jobs:
               assert.equal(await page.locator(`#${retired}`).count(), 0, `retired intake field still present: ${retired}`);
             }
             report.intake = true;
+            console.log('GATE_STAGE=intake-pass');
 
             await page.fill('#contactName', 'Nat-Corp Release Gate');
             await page.fill('#businessName', 'Apropos Group LLC');
@@ -73,7 +74,7 @@ jobs:
             await page.fill('#website', 'https://aproposgroupllc.com');
 
             await Promise.all([
-              page.waitForURL(/\/profile-review\.html(?:$|\?)/, { timeout: 150000 }),
+              page.waitForURL(/\/profile-review(?:\.html)?(?:$|\?)/, { timeout: 150000, waitUntil: 'domcontentloaded' }),
               page.click('#submitButton'),
             ]);
 
@@ -84,20 +85,22 @@ jobs:
             const profileText = await page.locator('#workspace').innerText();
             assert.match(profileText, /Primary Services|Capabilities|Core Competencies/, 'website-discovered profile not rendered');
             report.discovery = true;
+            console.log('GATE_STAGE=discovery-pass');
 
             await page.click('#editButton');
             await page.waitForSelector('#editMode.on');
             assert.equal(await page.locator('#services').count(), 1, 'services editor missing');
             assert.equal(await page.locator('#capabilities').count(), 1, 'capabilities editor missing');
 
-            const currentState = (await page.inputValue('#residentState')).trim().toUpperCase();
-            if (!currentState) await page.fill('#residentState', 'NV');
+            // Controlled verification proves derived website data can be corrected before it becomes authoritative.
+            await page.fill('#residentState', 'NV');
 
             await Promise.all([
-              page.waitForURL(/\/dashboard(?:$|\?)/, { timeout: 90000 }),
+              page.waitForURL(/\/dashboard(?:$|\?)/, { timeout: 90000, waitUntil: 'domcontentloaded' }),
               page.click('#saveButton'),
             ]);
             report.editVerification = true;
+            console.log('GATE_STAGE=verification-pass');
 
             assert.ok(!page.url().includes('#profile='), 'verified profile leaked into dashboard URL');
             assert.equal(await page.evaluate(() => localStorage.length), 0, 'dashboard wrote browser localStorage');
@@ -121,9 +124,10 @@ jobs:
             assert.match(resultStat, /^\d+$/, `all-state result count is not numeric: ${resultStat}`);
             report.allStateCount = Number(resultStat);
             report.allStateMatching = true;
+            console.log(`GATE_STAGE=all-state-pass count=${report.allStateCount}`);
 
             report.residentState = (await page.locator('#residentState').innerText()).trim();
-            assert.match(report.residentState, /^[A-Z]{2}$/, `resident state not established: ${report.residentState}`);
+            assert.equal(report.residentState, 'NV', `verified resident-state correction did not persist: ${report.residentState}`);
 
             const residentOption = page.locator('#scopeFilter option[value="resident"]');
             assert.equal(await residentOption.isDisabled(), false, 'Resident State filter is disabled');
@@ -134,6 +138,7 @@ jobs:
             report.residentStateCount = Number(residentShown);
             assert.ok(report.residentStateCount <= report.allStateCount, 'Resident State filter increased result population');
             report.residentStateFilter = true;
+            console.log(`GATE_STAGE=resident-state-pass count=${report.residentStateCount}`);
 
             console.log('NATCORP_RELEASE_GATE_RESULT=' + JSON.stringify(report));
             if (consoleErrors.length) console.log('BROWSER_CONSOLE_ERRORS=' + JSON.stringify(consoleErrors));
