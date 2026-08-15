@@ -1,3 +1,4 @@
+# Release-gate rerun after capability discovery model fix
 name: Nat-Corp Controlled Browser Release Gate
 
 on:
