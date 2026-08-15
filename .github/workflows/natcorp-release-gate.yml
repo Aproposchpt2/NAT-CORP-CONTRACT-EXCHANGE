@@ -1,4 +1,4 @@
-# Controlled release gate for Nat-Corp website capability intake
+# Controlled release gate after bounded discovery deploy is ready
 name: Nat-Corp Controlled Browser Release Gate
 
 on:
@@ -92,7 +92,6 @@ jobs:
             assert.equal(await page.locator('#services').count(), 1, 'services editor missing');
             assert.equal(await page.locator('#capabilities').count(), 1, 'capabilities editor missing');
 
-            // Controlled verification proves derived website data can be corrected before it becomes authoritative.
             await page.fill('#residentState', 'NV');
 
             await Promise.all([
