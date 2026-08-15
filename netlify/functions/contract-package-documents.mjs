@@ -20,16 +20,25 @@ const DOCUMENT_TYPE_LABEL = {
   AMENDMENT: 'Amendment',
   ADDENDUM: 'Addendum',
   ATTACHMENT: 'Attachment',
+  SCOPE_OF_WORK: 'Scope of Work',
+  OTHER: 'Supporting Document',
 };
 
-async function signedUrl(bucket, path, expiresIn = 600) {
+// download: falsy = inline view (opens in the browser's own PDF viewer,
+// which has its own print control); a filename string = forces
+// Content-Disposition: attachment via Supabase Storage's own signed-URL
+// support for it -- the plain `download` HTML attribute doesn't work
+// cross-origin, so this has to happen server-side at sign time, not in
+// the link markup. Jeff's feedback (2026-08-15): the drawer only offered
+// one bare link per document with no explicit download option.
+async function signedUrl(bucket, path, { expiresIn = 600, download = null } = {}) {
   const base = env('SUPABASE_URL').replace(/\/$/, '');
   const key = env('SUPABASE_SERVICE_ROLE_KEY') || env('SUPABASE_SERVICE_KEY');
   const encodedPath = String(path || '').split('/').map(encodeURIComponent).join('/');
   const res = await fetch(`${base}/storage/v1/object/sign/${encodeURIComponent(bucket)}/${encodedPath}`, {
     method: 'POST',
     headers: { apikey: key, authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ expiresIn }),
+    body: JSON.stringify(download ? { expiresIn, download } : { expiresIn }),
     signal: AbortSignal.timeout(15000),
   });
   const data = await res.json().catch(() => ({}));
@@ -56,9 +65,14 @@ export default async function handler(req) {
 
     const documents = await Promise.all((rows || []).map(async (d) => {
       let url = null;
+      let downloadUrl = null;
       let error = null;
-      try { url = await signedUrl(d.storage_bucket, d.storage_path); }
-      catch (e) { error = e.message; }
+      try {
+        [url, downloadUrl] = await Promise.all([
+          signedUrl(d.storage_bucket, d.storage_path),
+          signedUrl(d.storage_bucket, d.storage_path, { download: d.original_filename || true }),
+        ]);
+      } catch (e) { error = e.message; }
       return {
         id: d.id,
         filename: d.original_filename,
@@ -67,6 +81,7 @@ export default async function handler(req) {
         byte_size: d.byte_size,
         extraction_status: d.extraction_status,
         url,
+        download_url: downloadUrl,
         error,
       };
     }));
