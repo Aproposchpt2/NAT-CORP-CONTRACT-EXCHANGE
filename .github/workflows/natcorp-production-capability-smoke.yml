@@ -1,0 +1,52 @@
+name: Nat-Corp Production Capability Smoke
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/natcorp-production-capability-smoke.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Exercise production capability-profile start and discover
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://natcorp.aproposgroupllc.com'
+          payload='{"action":"start","contact_name":"Nat-Corp 502 Diagnostic","business_name":"Apropos Group LLC","business_email":"natcorp-502-diagnostic@aproposgroupllc.com","website":"https://aproposgroupllc.com","visitor_email":""}'
+
+          start_code=$(curl --max-time 30 --silent --show-error \
+            --cookie-jar cookies.txt \
+            --header "Origin: ${base}" \
+            --header "Referer: ${base}/intake" \
+            --header 'Sec-Fetch-Site: same-origin' \
+            --header 'Content-Type: application/json' \
+            --output start-body.json \
+            --write-out '%{http_code}' \
+            --data "$payload" \
+            "${base}/api/capability-profile")
+          echo "START_HTTP=${start_code}"
+          cat start-body.json
+          echo
+          test "$start_code" = '201'
+
+          discover_code=$(curl --max-time 70 --silent --show-error \
+            --cookie cookies.txt \
+            --header "Origin: ${base}" \
+            --header "Referer: ${base}/intake" \
+            --header 'Sec-Fetch-Site: same-origin' \
+            --header 'Content-Type: application/json' \
+            --output discover-body.json \
+            --write-out '%{http_code}' \
+            --data '{"action":"discover"}' \
+            "${base}/api/capability-profile")
+          echo "DISCOVER_HTTP=${discover_code}"
+          cat discover-body.json
+          echo
+          test "$discover_code" = '200'
