@@ -470,7 +470,7 @@ async function selfServeAnalyze(session, opportunity) {
       intake_kind: 'opportunity',
       opportunity_id: opportunity.id,
       business_profile_id: session.business_profile_id,
-      status: 'self_serve_confirmed',
+      status: 'submitted', // natcorp_business_intakes_status_check only allows started/submitted/dna_complete/analysis_complete/closed -- confirmed via pg_constraint after this failed live
       contact_email: email,
       intake_payload: { source: 'self_serve_dashboard' },
       submitted_at: nowIso(),
