@@ -95,14 +95,15 @@ async function discoverWebsite(session) {
     body: JSON.stringify({
       model,
       store: false,
+      reasoning: { effort: 'minimal' },
       input: [
         { role: 'system', content: 'Use current public web evidence from the allowed business domain only. Return one valid JSON object and never invent evidence.' },
         { role: 'user', content: prompt },
       ],
-      tools: [{ type: 'web_search', filters: { allowed_domains: [domain] }, search_context_size: 'high' }],
-      max_output_tokens: 7000,
+      tools: [{ type: 'web_search', filters: { allowed_domains: [domain] }, search_context_size: 'low' }],
+      max_output_tokens: 3500,
     }),
-    signal: AbortSignal.timeout(110000),
+    signal: AbortSignal.timeout(45000),
   });
   const raw = await response.text();
   if (!response.ok) throw new Error(`Business website discovery failed (${response.status}): ${raw.slice(0, 450)}`);
