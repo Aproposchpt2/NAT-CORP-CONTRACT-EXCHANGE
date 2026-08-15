@@ -1,7 +1,7 @@
 {
   "source": "planetbids",
-  "generatedAt": "2026-08-14T14:22:12.489Z",
-  "count": 8776,
+  "generatedAt": "2026-08-15T13:38:03.880Z",
+  "count": 8821,
   "portalsCaptured": 10,
   "categories": [
     {
@@ -2040,6 +2040,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "91510",
+      "categoryName": "Advertising",
+      "catType": "C"
+    },
+    {
       "categoryId": "91502",
       "categoryName": "ADVERTISING (NOTICE OF BID SOLICITATION)",
       "catType": "C"
@@ -2052,11 +2057,6 @@
     {
       "categoryId": "91807",
       "categoryName": "Advertising Consulting ",
-      "catType": "C"
-    },
-    {
-      "categoryId": "91510",
-      "categoryName": "Advertising Digital",
       "catType": "C"
     },
     {
@@ -3330,6 +3330,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "06099",
+      "categoryName": "Antifreeze - Recycled",
+      "catType": "C"
+    },
+    {
       "categoryId": "43504",
       "categoryName": "ANTIMICROBIAL SOLUTIONS, TOPICAL: SURGICAL PREP, E",
       "catType": "C"
@@ -3917,6 +3922,11 @@
     {
       "categoryId": "96208",
       "categoryName": "Athletic Training ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "89900",
+      "categoryName": "Athletics Assets Acct 603XXX",
       "catType": "C"
     },
     {
@@ -5740,6 +5750,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "91520",
+      "categoryName": "Bookbinding/Rebinding/Repair",
+      "catType": "C"
+    },
+    {
       "categoryId": "42503",
       "categoryName": "BOOKCASES AND BOOKSHELVES, METAL AND WOOD",
       "catType": "C"
@@ -6392,11 +6407,6 @@
     {
       "categoryId": "91003",
       "categoryName": "Building Cleaning, Exterior ",
-      "catType": "C"
-    },
-    {
-      "categoryId": "90931",
-      "categoryName": "Building Const. Green",
       "catType": "C"
     },
     {
@@ -7180,6 +7190,51 @@
       "catType": "C"
     },
     {
+      "categoryId": "89904",
+      "categoryName": "CAP-AM Equip Inst 10 yr",
+      "catType": "C"
+    },
+    {
+      "categoryId": "89902",
+      "categoryName": "CAP-AM Equip Inst 5 yr",
+      "catType": "C"
+    },
+    {
+      "categoryId": "89903",
+      "categoryName": "CAP-AM Equip Non Inst 10 yr",
+      "catType": "C"
+    },
+    {
+      "categoryId": "89901",
+      "categoryName": "CAP-AM Equip Non Inst 5 yr",
+      "catType": "C"
+    },
+    {
+      "categoryId": "89905",
+      "categoryName": "CAP-AM Equip Non Inst Auto",
+      "catType": "C"
+    },
+    {
+      "categoryId": "90931",
+      "categoryName": "CAP-CWIP Const Contract ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "90933",
+      "categoryName": "CAP-CWIP Construction Other",
+      "catType": "C"
+    },
+    {
+      "categoryId": "90941",
+      "categoryName": "CAP-CWIP Contingency",
+      "catType": "C"
+    },
+    {
+      "categoryId": "90909",
+      "categoryName": "CAP-CWIP Equip part of project",
+      "catType": "C"
+    },
+    {
       "categoryId": "28511",
       "categoryName": "CAPACITORS, MOTOR STARTING AND RUNNING",
       "catType": "C"
@@ -7742,6 +7797,11 @@
     {
       "categoryId": "29010",
       "categoryName": "CELLS, SOLAR (PHOTOVOLTAIC CELLS), UNMOUNTED",
+      "catType": "C"
+    },
+    {
+      "categoryId": "91600",
+      "categoryName": "Cellular Service",
       "catType": "C"
     },
     {
@@ -8725,6 +8785,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "20100",
+      "categoryName": "Clothing Accessories (See Class 800 For Shoes And Boots) ",
+      "catType": "C"
+    },
+    {
       "categoryId": "448150",
       "categoryName": "Clothing Accessories Stores",
       "catType": "C"
@@ -9535,6 +9600,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "92700",
+      "categoryName": "Computer Equip Maint",
+      "catType": "C"
+    },
+    {
       "categoryId": "541513",
       "categoryName": "Computer Facilities Management Services",
       "catType": "C"
@@ -9637,6 +9707,11 @@
     {
       "categoryId": "20900",
       "categoryName": "Computer Software For Mini And Mainframe Computers (Preprogrammed) ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "20601",
+      "categoryName": "Computer Software, Packaged & Custom",
       "catType": "C"
     },
     {
@@ -10495,9 +10570,9 @@
       "catType": "C"
     },
     {
-      "categoryId": "99999",
-      "categoryName": "Contract Management sub listing",
-      "catType": "G"
+      "categoryId": "91900",
+      "categoryName": "Contractual Services - Other",
+      "catType": "C"
     },
     {
       "categoryId": "96330",
@@ -13490,6 +13565,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "27200",
+      "categoryName": "Dues & Subscriptions",
+      "catType": "C"
+    },
+    {
       "categoryId": "29530",
       "categoryName": "DUMBWAITERS AND PARTS",
       "catType": "C"
@@ -13992,6 +14072,11 @@
     {
       "categoryId": "96435",
       "categoryName": "ELECTRICIANS",
+      "catType": "C"
+    },
+    {
+      "categoryId": "92450",
+      "categoryName": "Electricity",
       "catType": "C"
     },
     {
@@ -14815,6 +14900,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "31100",
+      "categoryName": "Ergonomic Supplies",
+      "catType": "C"
+    },
+    {
       "categoryId": "98814",
       "categoryName": "Erosion Control Services ",
       "catType": "C"
@@ -14992,6 +15082,11 @@
     {
       "categoryId": "20946",
       "categoryName": "EXPERT SYSTEM SOFTWARE",
+      "catType": "C"
+    },
+    {
+      "categoryId": "20846",
+      "categoryName": "Expet System Software, Other Than Micro",
       "catType": "C"
     },
     {
@@ -16932,6 +17027,11 @@
     {
       "categoryId": "39356",
       "categoryName": "Food/Staples & Supplies",
+      "catType": "C"
+    },
+    {
+      "categoryId": "37600",
+      "categoryName": "Foods, Catering",
       "catType": "C"
     },
     {
@@ -19610,6 +19710,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "95100",
+      "categoryName": "Honoraria",
+      "catType": "C"
+    },
+    {
       "categoryId": "44544",
       "categoryName": "HOOKS",
       "catType": "C"
@@ -19762,6 +19867,11 @@
     {
       "categoryId": "47500",
       "categoryName": "Hospital, Surgical, And Medical Related Accessories And Sundry Items",
+      "catType": "C"
+    },
+    {
+      "categoryId": "47600",
+      "categoryName": "Hospital/Medical Supplies",
       "catType": "C"
     },
     {
@@ -20792,6 +20902,11 @@
     {
       "categoryId": "93649",
       "categoryName": "Intelligent Transportation Systems Equipment Maintenance and Repair",
+      "catType": "C"
+    },
+    {
+      "categoryId": "99600",
+      "categoryName": "Inter-Agency Agreements",
       "catType": "C"
     },
     {
@@ -23470,6 +23585,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "91877",
+      "categoryName": "Marketing / Sports",
+      "catType": "C"
+    },
+    {
       "categoryId": "91876",
       "categoryName": "Marketing Consulting ",
       "catType": "C"
@@ -23852,6 +23972,11 @@
     {
       "categoryId": "96348",
       "categoryName": "Membership Fees",
+      "catType": "C"
+    },
+    {
+      "categoryId": "95700",
+      "categoryName": "Memberships",
       "catType": "C"
     },
     {
@@ -24362,6 +24487,11 @@
     {
       "categoryId": "12055",
       "categoryName": "Minnow Tanks",
+      "catType": "C"
+    },
+    {
+      "categoryId": "91021",
+      "categoryName": "Minor HazMat Surveys & Monitor",
       "catType": "C"
     },
     {
@@ -25365,8 +25495,18 @@
       "catType": "C"
     },
     {
+      "categoryId": "99999",
+      "categoryName": "No Invited Bidder Category",
+      "catType": "C"
+    },
+    {
       "categoryId": "92662",
       "categoryName": "Noise Consultant",
+      "catType": "C"
+    },
+    {
+      "categoryId": "31200",
+      "categoryName": "Non Cap Equip/Furniture",
       "catType": "C"
     },
     {
@@ -27070,6 +27210,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "96700",
+      "categoryName": "Paging Services",
+      "catType": "C"
+    },
+    {
       "categoryId": "80354",
       "categoryName": "Paging Systems, Airport",
       "catType": "C"
@@ -27387,6 +27532,11 @@
     {
       "categoryId": "70068",
       "categoryName": "Paper Joggers ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "61099",
+      "categoryName": "Paper Product, Non-Recycled",
       "catType": "C"
     },
     {
@@ -31316,7 +31466,7 @@
     },
     {
       "categoryId": "86365",
-      "categoryName": "Recapped/Retreaded Tires (See Class 928 if Recapping/Retreading Own Tires as a Service) ",
+      "categoryName": "Recapped/Retreaded Tires (See Class 928 If Recapping/Retreading Own Tires As A Service) ",
       "catType": "C"
     },
     {
@@ -31711,7 +31861,7 @@
     },
     {
       "categoryId": "33569",
-      "categoryName": "Recycled Fertilizer and Soil Conditioners ",
+      "categoryName": "Recycled Fertilizer And Soil Conditioners ",
       "catType": "C"
     },
     {
@@ -31931,12 +32081,17 @@
     },
     {
       "categoryId": "63079",
-      "categoryName": "Recycled Paints, Lacquers, Shellacs, Varnish, Primers, Coatings, Sealers, etc.",
+      "categoryName": "Recycled Paints, Lacquers, Shellacs, Varnish, Primers, Coatings, Sealers, Etc. ",
       "catType": "C"
     },
     {
       "categoryId": "64066",
       "categoryName": "RECYCLED PAPER PLASTIC AND STYROFOAM PRODUCTS (DIS",
+      "catType": "C"
+    },
+    {
+      "categoryId": "64599",
+      "categoryName": "Recycled Paper; Office, Prntng",
       "catType": "C"
     },
     {
@@ -32080,6 +32235,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "19099",
+      "categoryName": "Recycled Solvents",
+      "catType": "C"
+    },
+    {
       "categoryId": "80377",
       "categoryName": "Recycled Sound Equipment, Components and Accessories",
       "catType": "C"
@@ -32102,6 +32262,11 @@
     {
       "categoryId": "81595",
       "categoryName": "Recycled Steam and Hot Water Fittings, Accessories and Supplies ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "57099",
+      "categoryName": "Recycled Steel",
       "catType": "C"
     },
     {
@@ -32537,6 +32702,11 @@
     {
       "categoryId": "311613",
       "categoryName": "Rendering and Meat Byproduct Processing",
+      "catType": "C"
+    },
+    {
+      "categoryId": "97400",
+      "categoryName": "Rent/Lease Equip Svs: Copiers",
       "catType": "C"
     },
     {
@@ -33790,6 +33960,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "72501",
+      "categoryName": "Satellite Telephone and Communication Services",
+      "catType": "C"
+    },
+    {
       "categoryId": "522120",
       "categoryName": "Savings Institutions",
       "catType": "C"
@@ -34072,6 +34247,11 @@
     {
       "categoryId": "99277",
       "categoryName": "Scientific Equipment Testing and Calibration Services ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "78600",
+      "categoryName": "Scientific Equipment/Supplies",
       "catType": "C"
     },
     {
@@ -34467,6 +34647,16 @@
     {
       "categoryId": "95280",
       "categoryName": "Senior Aides Program",
+      "catType": "C"
+    },
+    {
+      "categoryId": "89925",
+      "categoryName": "Sens Equip $1000-4999 Instruct",
+      "catType": "C"
+    },
+    {
+      "categoryId": "89924",
+      "categoryName": "Sens Equip $1000-4999 Non Inst",
       "catType": "C"
     },
     {
@@ -35950,6 +36140,16 @@
       "catType": "C"
     },
     {
+      "categoryId": "20860",
+      "categoryName": "Software Lic - Non-Cap Instr",
+      "catType": "C"
+    },
+    {
+      "categoryId": "99300",
+      "categoryName": "Software Maintenance",
+      "catType": "C"
+    },
+    {
       "categoryId": "92045",
       "categoryName": "Software Maintenance Support",
       "catType": "C"
@@ -36307,6 +36507,11 @@
     {
       "categoryId": "47065",
       "categoryName": "Specialized Mobility Items: Gridlock or other Devices for Wheelchair Mobility in Sand, Tricycles, etc. (For Wheelchairs See 470-80) ",
+      "catType": "C"
+    },
+    {
+      "categoryId": "99100",
+      "categoryName": "Specialized Training",
       "catType": "C"
     },
     {
@@ -37097,6 +37302,11 @@
     {
       "categoryId": "57072",
       "categoryName": "STEEL, MILD: BARS, PLATES, RODS, SHEETS, STRIPS, T",
+      "catType": "C"
+    },
+    {
+      "categoryId": "57098",
+      "categoryName": "Steel, Non-Recycled",
       "catType": "C"
     },
     {
@@ -39557,6 +39767,11 @@
     {
       "categoryId": "97581",
       "categoryName": "Tires and Tubes, Rental or Lease",
+      "catType": "C"
+    },
+    {
+      "categoryId": "86399",
+      "categoryName": "Tires, Recycled 15 & Smaller",
       "catType": "C"
     },
     {
@@ -42105,6 +42320,11 @@
       "catType": "C"
     },
     {
+      "categoryId": "88001",
+      "categoryName": "Video HW Equipment & Supplies",
+      "catType": "C"
+    },
+    {
       "categoryId": "99290",
       "categoryName": "Video Instrument Testing and Calibration Services ",
       "catType": "C"
@@ -42272,6 +42492,11 @@
     {
       "categoryId": "98586",
       "categoryName": "Voice Mail Systems Rental or Lease",
+      "catType": "C"
+    },
+    {
+      "categoryId": "88300",
+      "categoryName": "Voice Response Systems ",
       "catType": "C"
     },
     {
