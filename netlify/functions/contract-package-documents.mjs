@@ -26,11 +26,15 @@ const DOCUMENT_TYPE_LABEL = {
 
 // download: falsy = inline view (opens in the browser's own PDF viewer,
 // which has its own print control); a filename string = forces
-// Content-Disposition: attachment via Supabase Storage's own signed-URL
-// support for it -- the plain `download` HTML attribute doesn't work
-// cross-origin, so this has to happen server-side at sign time, not in
-// the link markup. Jeff's feedback (2026-08-15): the drawer only offered
-// one bare link per document with no explicit download option.
+// Content-Disposition: attachment. IMPORTANT, found by testing this live
+// and getting no Content-Disposition header at all: `download` is NOT a
+// field in the /sign POST body (confirmed via Supabase's own docs after
+// the first attempt shipped silently broken -- the API just ignored the
+// unrecognized body field) -- it's a query parameter appended to the
+// *resulting* signed URL itself, alongside its own `token=` param. The
+// plain HTML `download` attribute doesn't work cross-origin either (Storage
+// is a different origin than natcorp.aproposgroupllc.com), so this has to
+// happen in the URL Supabase hands back, not in the link markup.
 async function signedUrl(bucket, path, { expiresIn = 600, download = null } = {}) {
   const base = env('SUPABASE_URL').replace(/\/$/, '');
   const key = env('SUPABASE_SERVICE_ROLE_KEY') || env('SUPABASE_SERVICE_KEY');
@@ -38,12 +42,15 @@ async function signedUrl(bucket, path, { expiresIn = 600, download = null } = {}
   const res = await fetch(`${base}/storage/v1/object/sign/${encodeURIComponent(bucket)}/${encodedPath}`, {
     method: 'POST',
     headers: { apikey: key, authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-    body: JSON.stringify(download ? { expiresIn, download } : { expiresIn }),
+    body: JSON.stringify({ expiresIn }),
     signal: AbortSignal.timeout(15000),
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok || !data.signedURL) throw new Error(data.message || `Could not sign document URL (${res.status}).`);
-  return `${base}/storage/v1${data.signedURL}`;
+  const fullUrl = `${base}/storage/v1${data.signedURL}`;
+  if (!download) return fullUrl;
+  const filenamePart = typeof download === 'string' && download.trim() ? `=${encodeURIComponent(download.trim())}` : '';
+  return `${fullUrl}${fullUrl.includes('?') ? '&' : '?'}download${filenamePart}`;
 }
 
 export default async function handler(req) {
