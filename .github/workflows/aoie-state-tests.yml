@@ -8,11 +8,13 @@ on:
       - agent/var-session-revocation
       - agent/premium-platinum-business-dna
       - agent/natcorp-website-capability-intake
+      - hotfix/natcorp-capability-profile-502
     paths:
       - 'netlify/functions/_shared/aoie-state-*.mjs'
       - 'netlify/functions/_shared/natcorp-profile-session.mjs'
       - 'netlify/functions/aoie-state-shadow.mjs'
       - 'netlify/functions/capability-profile.mjs'
+      - 'netlify/functions/capability-profile-discover-background.mjs'
       - 'netlify/functions/analyze-fit-state.mjs'
       - 'netlify/functions/business-profile-agent.mjs'
       - 'tests/aoie-state-*.test.mjs'
@@ -22,6 +24,7 @@ on:
       - 'assets/business-dna-builder.css'
       - 'assets/business-dna-builder-*.js'
       - 'welcome.html'
+      - 'profile-building.html'
       - 'profile-review.html'
       - 'business-dna-builder-preview.html'
       - 'aois-dashboard-preview.html'
@@ -37,6 +40,7 @@ on:
       - 'netlify/functions/_shared/natcorp-profile-session.mjs'
       - 'netlify/functions/aoie-state-shadow.mjs'
       - 'netlify/functions/capability-profile.mjs'
+      - 'netlify/functions/capability-profile-discover-background.mjs'
       - 'netlify/functions/analyze-fit-state.mjs'
       - 'netlify/functions/business-profile-agent.mjs'
       - 'tests/aoie-state-*.test.mjs'
@@ -46,6 +50,7 @@ on:
       - 'assets/business-dna-builder.css'
       - 'assets/business-dna-builder-*.js'
       - 'welcome.html'
+      - 'profile-building.html'
       - 'profile-review.html'
       - 'business-dna-builder-preview.html'
       - 'aois-dashboard-preview.html'
@@ -91,6 +96,7 @@ jobs:
       - name: Validate capability profile function syntax
         run: |
           node --check netlify/functions/capability-profile.mjs
+          node --check netlify/functions/capability-profile-discover-background.mjs
           node --check netlify/functions/_shared/natcorp-profile-session.mjs
       - name: Validate Analyze Fit function syntax
         run: node --check netlify/functions/analyze-fit-state.mjs
