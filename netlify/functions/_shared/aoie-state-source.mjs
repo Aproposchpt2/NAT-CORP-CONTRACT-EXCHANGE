@@ -181,7 +181,12 @@ export function publicOpportunity(row) {
     internal_id: row.id || null,
     solicitation_number: row.solicitation_number || row.source_record_id || '',
     title: row.title || '',
-    description: row.description || null,
+    // Full description can be up to ~900KB on a real record (confirmed live) -- sending that
+    // per matching opportunity is most of why the 2026-08-15 504 fix still left a 12.6MB / 17s
+    // response. Capped to what's useful for client-side search/display; the real, full text is
+    // available via contract-package-documents.mjs's acquired package, not by round-tripping it
+    // through every match result.
+    description: row.description ? String(row.description).slice(0, 2000) : null,
     agency: row.organization_name || row.issuing_organization || row.issuing_department || 'Public Agency',
     state_code: row.state_code || row.place_of_performance_state || null,
     procurement_type: row.procurement_type || row.notice_type || null,
