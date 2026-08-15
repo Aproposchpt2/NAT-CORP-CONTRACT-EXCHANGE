@@ -1,5 +1,6 @@
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import { db, env, json, rpc, sameOrigin } from './_shared/natcorp-db.mjs';
+import { loadProfileSession } from './_shared/natcorp-profile-session.mjs';
 
 // Credit gate -- 2026-08-15, revised same day when Jeff changed the pricing
 // model: subscriptions no longer include any Analyze Fit credit at all
@@ -395,6 +396,148 @@ async function reportPayload(request, context) {
   };
 }
 
+// Self-serve entry point -- 2026-08-15. The owner-handoff flow above
+// (loadRequest/loadContext/submitAndAnalyze) only reaches contractors who
+// were cold-outreached and marked INTERESTED; the self-serve dashboard
+// (Intake -> Website Discovery -> Verify Profile -> Contract Matches,
+// aois-dashboard-preview.html) had NO path to Analyze Fit at all -- its
+// "Opportunity Review" drawer only offered external redirects (Official
+// Solicitation, Vendor Registration), one of them broken, neither
+// monetizable. Jeff's directive: we already have the full package
+// acquired: don't send the customer to the publisher, put the upsell in
+// front of them instead. This reuses runAnalysis() (below) and the same
+// credit gate as the owner-handoff path, authenticated via the visitor's
+// own natcorp_profile_session cookie (loadProfileSession) instead of a
+// request_id+token link, and still creates a natcorp_service_requests row
+// + token so the resulting report is viewable at the same
+// /analyze-fit-report?request=&token= page the owner-handoff flow uses --
+// one report-viewing surface for both paths.
+async function loadSelfServeContext(req, opportunityId) {
+  const session = await loadProfileSession(req);
+  if (!session || session.discovery_status !== 'verified' || !session.business_profile_id) {
+    throw new Error('A verified Business Capability Profile is required to run Analyze Fit.');
+  }
+  const opportunities = await db('state_contract_opportunities', 'GET', `?id=eq.${encodeURIComponent(opportunityId)}&select=*`);
+  const opportunity = opportunities?.[0];
+  if (!opportunity) throw new Error('The selected contract could not be loaded for Analyze Fit.');
+  return { session, opportunity };
+}
+
+async function selfServeAnalyze(session, opportunity) {
+  const deadline = opportunity.response_deadline ? new Date(opportunity.response_deadline).getTime() : 0;
+  if (deadline && deadline <= Date.now()) throw new Error('The selected contract response deadline has passed. Analyze Fit generation is blocked for this opportunity.');
+
+  const email = validEmail(session.business_email || session.contact_email || session.verified_profile?.contact_email || '');
+  if (!email) throw new Error('A contact email on the verified profile is required to run Analyze Fit.');
+
+  const balance = await creditBalance(email, CREDIT_PRODUCT);
+  if (balance < 1) throw new Error('No Analyze Fit report credits available. Purchase a report ($79) at ai4-product-purchasing.ai4businesses.org/analyze-fit to continue.');
+  await consumeCredit(email, CREDIT_PRODUCT, opportunity.id);
+
+  const token = randomBytes(32).toString('base64url');
+  const expiresAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
+  let request;
+  try {
+    const requestRows = await db('natcorp_service_requests', 'POST', '', [{
+      opportunity_id: opportunity.id,
+      business_profile_id: session.business_profile_id,
+      service_type: 'ANALYZE_FIT',
+      status: 'active',
+      metadata: {
+        source: 'self_serve_dashboard',
+        business_name: session.business_name || null,
+        contact_email: email,
+        opportunity_title: opportunity.title,
+        opportunity_reference: opportunity.pdas_record_id || opportunity.id,
+        analyze_fit_access_hash: sha256(token),
+        analyze_fit_access_expires_at: expiresAt,
+      },
+    }], 'return=representation');
+    request = requestRows?.[0];
+    if (!request) throw new Error('Analyze Fit request could not be created.');
+  } catch (error) {
+    await refundCredit(email, CREDIT_PRODUCT, opportunity.id, 'refund_setup_failed');
+    throw error;
+  }
+
+  const run = { run_id: null };
+  try {
+    // natcorp_analyze_fit_runs.intake_id is NOT NULL -- self-serve has no
+    // outreach-driven intake to build a real one from (that already
+    // happened during Website Discovery / Verify Profile), so this is a
+    // minimal bookkeeping row satisfying the FK, not a re-run of DNA build.
+    const intakeRows = await db('natcorp_business_intakes', 'POST', '', [{
+      intake_kind: 'opportunity',
+      opportunity_id: opportunity.id,
+      business_profile_id: session.business_profile_id,
+      status: 'self_serve_confirmed',
+      contact_email: email,
+      intake_payload: { source: 'self_serve_dashboard' },
+      submitted_at: nowIso(),
+    }], 'return=representation');
+    const intake = intakeRows?.[0];
+    if (!intake) throw new Error('Analyze Fit intake could not be recorded.');
+
+    const runRows = await db('natcorp_analyze_fit_runs', 'POST', '', [{
+      intake_id: intake.intake_id,
+      opportunity_id: opportunity.id,
+      business_profile_id: session.business_profile_id,
+      status: 'running',
+      started_at: nowIso(),
+    }], 'return=representation');
+    const createdRun = runRows?.[0];
+    if (!createdRun) throw new Error('Analyze Fit run could not be created.');
+    run.run_id = createdRun.run_id;
+
+    const contractDna = await rpc('natcorp_get_contract_dna', { p_opportunity_id: opportunity.id });
+    const context = { opportunity, contract_dna: Array.isArray(contractDna) ? (contractDna[0] || null) : contractDna };
+
+    const result = await runAnalysis(context, intake);
+    const analysis = result.analysis;
+    const completedRows = await db('natcorp_analyze_fit_runs', 'PATCH', `?run_id=eq.${encodeURIComponent(run.run_id)}`, {
+      status: 'completed', provider: result.provider, model: result.model,
+      score: analysis.score, recommendation: analysis.recommendation, analysis,
+      completed_at: nowIso(), updated_at: nowIso(),
+    }, 'return=representation');
+    const completed = completedRows?.[0] || { ...createdRun, status: 'completed', analysis };
+
+    const contentHash = sha256(JSON.stringify({ opportunity_id: opportunity.id, business_profile_id: session.business_profile_id, analysis }));
+    const reportRows = await db('natcorp_analyze_fit_reports', 'POST', '', [{
+      analyze_fit_run_id: completed.run_id,
+      opportunity_id: opportunity.id,
+      business_profile_id: session.business_profile_id,
+      report_version: 'NATCORP-SELFSERVE-ANALYZE-FIT-v1',
+      file_name: `${cleanFilename(session.business_name || 'Business')}-${cleanFilename(opportunity.pdas_record_id || opportunity.title)}-Analyze-Fit.html`,
+      content_hash: contentHash,
+      generated_at: nowIso(),
+    }], 'return=representation');
+
+    await db('natcorp_service_requests', 'PATCH', `?request_id=eq.${encodeURIComponent(request.request_id)}`, {
+      status: 'closed',
+      metadata: {
+        ...(request.metadata || {}),
+        analyze_fit_run_id: completed.run_id,
+        analyze_fit_report_id: reportRows?.[0]?.report_id || null,
+        analyzed_at: nowIso(),
+      },
+    }, 'return=minimal');
+
+    return {
+      score: analysis.score,
+      recommendation: analysis.recommendation,
+      report_url: `/analyze-fit-report?request=${encodeURIComponent(request.request_id)}&token=${encodeURIComponent(token)}`,
+    };
+  } catch (error) {
+    if (run.run_id) {
+      await db('natcorp_analyze_fit_runs', 'PATCH', `?run_id=eq.${encodeURIComponent(run.run_id)}`, {
+        status: 'failed', error_message: safe(error?.message, 1200), completed_at: nowIso(), updated_at: nowIso(),
+      }, 'return=minimal').catch(() => {});
+    }
+    await refundCredit(email, CREDIT_PRODUCT, opportunity.id, 'refund_analysis_failed');
+    throw error;
+  }
+}
+
 export default async function handler(req) {
   if (!sameOrigin(req)) return json(403, { ok: false, error: 'Same-origin NAT-CORP access required.' });
   try {
@@ -410,9 +553,18 @@ export default async function handler(req) {
     }
     if (req.method !== 'POST') return json(405, { ok: false, error: 'GET or POST only.' });
     const body = await req.json();
+    const action = safe(body.action, 80).toLowerCase();
+
+    if (action === 'self_serve_analyze') {
+      const opportunityId = safe(body.opportunity_id, 80);
+      if (!opportunityId) return json(400, { ok: false, error: 'opportunity_id is required.' });
+      const { session, opportunity } = await loadSelfServeContext(req, opportunityId);
+      const result = await selfServeAnalyze(session, opportunity);
+      return json(200, { ok: true, result });
+    }
+
     const request = await loadRequest(safe(body.request_id, 80), safe(body.token, 300));
     const context = await loadContext(request);
-    const action = safe(body.action, 80).toLowerCase();
     if (action === 'submit_and_analyze') return json(200, { ok: true, result: await submitAndAnalyze(request, context, body.profile || {}) });
     return json(400, { ok: false, error: 'Unsupported Analyze Fit action.' });
   } catch (error) {

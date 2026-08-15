@@ -171,6 +171,14 @@ export function isMissingCanonicalRelation(status, bodyText = '') {
 export function publicOpportunity(row) {
   return {
     id: row.opportunity_id || row.source_record_id || row.pdas_record_id || row.id,
+    // internal_id is ALWAYS the real state_contract_opportunities.id UUID,
+    // unlike id above (which prefers the external source_record_id when
+    // present). Added 2026-08-15 -- purely additive, existing consumers of
+    // `id` are unaffected -- because contract_package_documents and every
+    // other opportunity-keyed table are keyed on the real UUID, and the
+    // self-serve Analyze Fit / package-documents endpoints need it, not
+    // whatever string the source publisher happens to call the bid.
+    internal_id: row.id || null,
     solicitation_number: row.solicitation_number || row.source_record_id || '',
     title: row.title || '',
     description: row.description || null,
