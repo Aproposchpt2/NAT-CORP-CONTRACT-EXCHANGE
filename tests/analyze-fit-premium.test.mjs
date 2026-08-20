@@ -62,10 +62,13 @@ assert.ok(files.publicSite.includes('A Shared Commitment to Economic Opportunity
 
 // Approved business-first intake contract. Intake must finish quickly and hand off
 // to the activity landing; it must not hold the browser open for website discovery.
-for(const id of ['contactName','businessName','businessEmail','website','visitorEmail']){
+// visitorEmail is optional server-side (capability-profile.mjs) but was deliberately
+// dropped from the frontend form by "Reduce Nat-Corp to the universal four-field
+// intake" (62147a8) -- not expected on the page.
+for(const id of ['contactName','businessName','businessEmail','website']){
   assert.match(files.intake,new RegExp(`id="${id}"`),`Intake missing approved field ${id}`);
 }
-for(const retired of ['entityType','contactTitle','phone','dba','modeGrid']){
+for(const retired of ['entityType','contactTitle','phone','dba','modeGrid','visitorEmail']){
   assert.doesNotMatch(files.intake,new RegExp(`id="${retired}"`),`Retired questionnaire field returned: ${retired}`);
 }
 assert.ok(files.intake.includes('/api/capability-profile'),'Intake must use the server-side capability-profile endpoint.');

@@ -15,8 +15,11 @@ test('customer-facing flow does not use browser profile storage or URL profile h
 
 test('intake contains only approved business identity fields', () => {
   const text = read('welcome.html');
-  for (const id of ['contactName','businessName','businessEmail','website','visitorEmail']) assert.match(text, new RegExp(`id="${id}"`));
-  for (const retired of ['entityType','contactTitle','phone','dba','modeGrid']) assert.doesNotMatch(text, new RegExp(`id="${retired}"`));
+  // visitorEmail is optional server-side (capability-profile.mjs) but was
+  // deliberately dropped from the frontend form by "Reduce Nat-Corp to the
+  // universal four-field intake" (62147a8) -- not expected on the page.
+  for (const id of ['contactName','businessName','businessEmail','website']) assert.match(text, new RegExp(`id="${id}"`));
+  for (const retired of ['entityType','contactTitle','phone','dba','modeGrid','visitorEmail']) assert.doesNotMatch(text, new RegExp(`id="${retired}"`));
 });
 
 test('intake stops after server session creation and redirects to profile build landing', () => {
