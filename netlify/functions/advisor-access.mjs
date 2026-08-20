@@ -15,7 +15,10 @@ export default async function handler(req) {
 
   let payload;
   try { payload = await req.json(); } catch { return json(400, { ok: false, error: 'Invalid JSON.' }); }
-  const supplied = String(payload?.code ?? '').trim();
+  // Case-insensitive: a code like "AGUNLV" reads like something a reviewer
+  // could easily type in lowercase or mixed case, which would otherwise
+  // fail with no hint why.
+  const supplied = String(payload?.code ?? '').trim().toUpperCase();
 
   const expiresRaw = env('ADVISOR_CODE_EXPIRES');
   if (expiresRaw) {
@@ -25,7 +28,7 @@ export default async function handler(req) {
     }
   }
 
-  if (supplied !== required) return json(401, { ok: false, error: 'Incorrect access code.' });
+  if (supplied !== required.trim().toUpperCase()) return json(401, { ok: false, error: 'Incorrect access code.' });
   return json(200, { ok: true });
 }
 
