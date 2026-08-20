@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Advisor Access | National Corporate Contract Exchange</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--navy:#07142f;--ink:#f7f9ff;--muted:#a9b6cc;--line:rgba(255,255,255,.14);--panel:rgba(255,255,255,.065);--gold:#d8b55f;--danger:#ff9aa5}*{box-sizing:border-box}body{margin:0;min-height:100vh;font:400 16px/1.55 Arial,sans-serif;color:var(--ink);background:radial-gradient(circle at 12% 4%,rgba(71,126,211,.32),transparent 28%),linear-gradient(150deg,#113573 0%,var(--navy) 52%,#020713 100%)}button,input{font:inherit}.shell{width:min(520px,calc(100% - 28px));margin:auto;padding:18px 0 58px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}.glass{background:var(--panel);border:1px solid var(--line);box-shadow:0 28px 80px rgba(0,0,0,.28);backdrop-filter:blur(18px)}.brand{text-align:center;margin-bottom:22px;font:400 1.08rem Georgia,serif}.brand small{display:block;color:var(--muted);font:700 .58rem Arial;letter-spacing:.15em;text-transform:uppercase;margin-top:4px}.panel{border-radius:22px;padding:32px}.eyebrow{font-size:.67rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);text-align:center}h1{font-family:Georgia,serif;font-weight:400;font-size:1.9rem;margin:10px 0 8px;text-align:center}.sub{color:var(--muted);text-align:center;max-width:420px;margin:0 auto 26px;font-size:.92rem}.field{display:flex;flex-direction:column;gap:7px}label{font-size:.62rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#a9b8d0}input{width:100%;border:1px solid var(--line);border-radius:10px;background:#081936;color:#fff;padding:.92rem 1rem;outline:none;letter-spacing:.06em}input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(216,181,95,.12)}.msg{min-height:24px;color:var(--danger);font-size:.84rem;margin-top:14px;text-align:center}.actions{margin-top:22px}.btn{width:100%;border:0;border-radius:10px;padding:.95rem 1.2rem;cursor:pointer;font-weight:800;letter-spacing:.07em;text-transform:uppercase;font-size:.78rem}.primary{background:linear-gradient(135deg,#f7f8fa,var(--gold));color:#0d2149}.btn:disabled{opacity:.55;cursor:not-allowed}
+</style>
+</head>
+<body>
+<div class="shell">
+<div class="brand">National Corporate Contract Exchange<small>Advisor Access</small></div>
+<main class="panel glass">
+<div class="eyebrow">Reviewer Entry</div>
+<h1>Advisor Access</h1>
+<p class="sub">Enter your access code to continue to the business intake. Have your client's business name, website, and contact email ready.</p>
+<form id="gateForm" novalidate>
+<div class="field">
+<label for="code">Access Code</label>
+<input id="code" required autocomplete="off" placeholder="Enter code">
+</div>
+<div class="msg" id="message" aria-live="polite"></div>
+<div class="actions"><button class="btn primary" id="submitButton" type="submit">Continue</button></div>
+</form>
+</main>
+</div>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),form=$('gateForm'),button=$('submitButton'),message=$('message'),code=$('code');
+form.addEventListener('submit',async event=>{
+  event.preventDefault();message.textContent='';
+  const value=code.value.trim();
+  if(!value){message.textContent='Enter your access code.';return}
+  button.disabled=true;button.textContent='CHECKING…';
+  try{
+    const response=await fetch('/api/advisor-access',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:value})});
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok||!result.ok)throw new Error(result.error||'That code is not valid.');
+    location.assign('/welcome.html')
+  }catch(error){
+    message.textContent=error.message;button.disabled=false;button.textContent='Continue'
+  }
+})
+})();
+</script>
+</body>
+</html>
