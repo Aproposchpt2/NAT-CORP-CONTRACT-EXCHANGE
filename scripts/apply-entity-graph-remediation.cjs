@@ -4,6 +4,9 @@ const fs = require('fs');
 const file = 'index.html';
 let html = fs.readFileSync(file, 'utf8');
 
+// One authoritative Analyze Fit public price representation.
+html = html.replace(/\$79(?=\s*one-time)/gi, '$79.00');
+
 const match = html.match(/<script\s+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/i);
 if (!match) throw new Error('NAT-CORP entity remediation: JSON-LD block not found.');
 
@@ -28,6 +31,8 @@ html = html.replace(match[0], replacement);
 
 if (!html.includes(corporateId)) throw new Error('NAT-CORP entity remediation: corporate parent @id missing.');
 if (!html.includes('"alternateName":"NAT-CORP"')) throw new Error('NAT-CORP entity remediation: alternateName missing.');
+if (!html.includes('$79.00 one-time')) throw new Error('NAT-CORP entity remediation: Analyze Fit $79.00 visible price missing.');
+if (/\$79(?=\s*one-time)/i.test(html)) throw new Error('NAT-CORP entity remediation: shorthand Analyze Fit $79 price remains.');
 
 fs.writeFileSync(file, html, 'utf8');
-console.log('[natcorp-entity-graph] PASS — NAT-CORP is linked to the corporate APROPOS entity.');
+console.log('[natcorp-entity-graph] PASS — NAT-CORP entity graph and Analyze Fit $79.00 pricing are consistent.');
