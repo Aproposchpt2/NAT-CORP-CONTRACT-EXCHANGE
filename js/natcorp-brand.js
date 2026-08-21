@@ -34,8 +34,8 @@
       var host=document.querySelector('.nav-right,.topbar,.nav');
       if(host){
         var a=document.createElement('a');
-        a.href='https://ngcc.aproposgroupllc.com';
-        a.textContent='Federal Contractors →';
+        a.href='https://federalcontractorportal.aproposgroupllc.com';
+        a.textContent='Registered Federal Contractors Portal →';
         a.setAttribute('data-ngcc-link','true');
         a.style.cssText='font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.68);text-decoration:none;margin-left:10px';
         host.appendChild(a);
