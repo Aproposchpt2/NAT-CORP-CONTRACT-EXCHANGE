@@ -48,3 +48,4 @@ if ((html.match(/rel="preload" as="image" href="\/headquarters\.webp"/g) || []).
 
 fs.writeFileSync(file, html, 'utf8');
 console.log('[natcorp-entity-graph] PASS — entity graph, Analyze Fit $79.00 pricing, and high-priority hero preload are consistent.');
+require('./apply-nonblocking-fonts.cjs');
