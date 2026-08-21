@@ -1,5 +1,5 @@
 [build]
-  command = "node scripts/apply-entity-graph-remediation.cjs"
+  command = "node scripts/apply-entity-graph-remediation.cjs && node scripts/apply-live-property-allowlist.cjs"
   publish = "."
   functions = "netlify/functions"
 
@@ -79,9 +79,6 @@
     Cache-Control = "no-store"
 
 # Opportunity-to-Fulfillment authoritative operator route.
-# The v2 operator is the deployment shell; it loads the complete
-# Step 1-8 workflow from opportunity-fulfillment.html and adds
-# the controlled 30-record inventory pagination.
 [[headers]]
   for = "/opportunity-fulfillment"
   [headers.values]
