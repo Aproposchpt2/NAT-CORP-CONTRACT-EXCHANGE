@@ -1,5 +1,5 @@
 [build]
-  command = "node scripts/apply-entity-graph-remediation.cjs && node scripts/apply-live-property-allowlist.cjs"
+  command = "node scripts/apply-entity-graph-remediation.cjs && node scripts/apply-live-property-allowlist.cjs && node scripts/validate-sled-authority-wave1.cjs"
   publish = "."
   functions = "netlify/functions"
 
@@ -78,7 +78,6 @@
   [headers.values]
     Cache-Control = "no-store"
 
-# Opportunity-to-Fulfillment authoritative operator route.
 [[headers]]
   for = "/opportunity-fulfillment"
   [headers.values]
@@ -94,7 +93,6 @@
   [headers.values]
     Cache-Control = "no-store, no-cache, must-revalidate, max-age=0"
 
-# Required journey: Start -> Intake -> Business Intake -> Dashboard.
 [[redirects]]
   from = "/start"
   to = "/intake"
