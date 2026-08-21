@@ -1,4 +1,5 @@
 [build]
+  command = "node scripts/apply-entity-graph-remediation.cjs"
   publish = "."
   functions = "netlify/functions"
 
