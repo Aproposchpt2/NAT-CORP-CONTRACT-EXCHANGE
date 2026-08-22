@@ -1,5 +1,5 @@
 [build]
-  command = "node scripts/apply-entity-graph-remediation.cjs && node scripts/apply-live-property-allowlist.cjs && node scripts/validate-sled-authority-wave1.cjs"
+  command = "node scripts/apply-entity-graph-remediation.cjs && node scripts/apply-live-property-allowlist.cjs && node scripts/validate-sled-authority-wave1.cjs && node scripts/apply-natcorp-ga4.cjs && node scripts/validate-natcorp-ga4.cjs"
   publish = "."
   functions = "netlify/functions"
 
@@ -16,7 +16,7 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
-    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self'; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: https://*.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; upgrade-insecure-requests"
 
 [[headers]]
   for = "/intake"
