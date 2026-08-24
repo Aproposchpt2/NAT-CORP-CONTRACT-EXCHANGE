@@ -9,6 +9,7 @@ import {
   hasMeaningfulOpportunityEvidence,
   hasSubstantiveRequirements,
   isMissingCanonicalRelation,
+  normalizeContractDisplayTitle,
   publicOpportunity,
 } from '../netlify/functions/_shared/aoie-state-local.mjs';
 
@@ -159,6 +160,26 @@ test('public results preserve registry and classification evidence', () => {
   assert.deepEqual(row.nigp_codes, ['28500']);
   assert.equal(row.publisher_evidence.registry_verified, true);
   assert.equal(row.procurement_platform_evidence.platform_name, 'Bonfire');
+});
+
+test('normalizes only exact repeated full contract titles', () => {
+  assert.equal(
+    normalizeContractDisplayTitle('Risk Management and Insurance Consulting Services Risk Management and Insurance Consulting Services'),
+    'Risk Management and Insurance Consulting Services',
+  );
+  assert.equal(
+    normalizeContractDisplayTitle('As-Needed On-Call Contract Planning Services As-Needed On-Call Contract Planning Services'),
+    'As-Needed On-Call Contract Planning Services',
+  );
+  assert.equal(normalizeContractDisplayTitle('Police Police Equipment Maintenance'), 'Police Police Equipment Maintenance');
+  assert.equal(normalizeContractDisplayTitle('Planning Services Planning Support'), 'Planning Services Planning Support');
+});
+
+test('public opportunity output uses the safe display title without mutating its source row', () => {
+  const source = { opportunity_id: 'TITLE-1', title: 'Transportation Services Transportation Services' };
+  const output = publicOpportunity(source);
+  assert.equal(output.title, 'Transportation Services');
+  assert.equal(source.title, 'Transportation Services Transportation Services');
 });
 
 console.log('AOIE state/local source-contract fixture suite complete.');

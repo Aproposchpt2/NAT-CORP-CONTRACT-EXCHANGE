@@ -5,6 +5,27 @@ export const DIRECT_TABLE = 'state_contract_opportunities';
 const GENERIC_ORG_WORDS = new Set(['the','of','and','state','city','county','department','dept','office','division','authority','district','government','public']);
 const asArray = (value) => Array.isArray(value) ? value : [];
 
+// Presentation boundary guard for malformed source titles. Only collapse a
+// title when its complete token sequence is repeated exactly. Partial or
+// ambiguous repetition is preserved, and the authoritative source row is not
+// mutated.
+export function normalizeContractDisplayTitle(value) {
+  const source = String(value ?? '');
+  const trimmed = source.trim();
+  if (!trimmed) return source;
+
+  const tokens = [...trimmed.matchAll(/\S+/g)];
+  if (tokens.length < 2 || tokens.length % 2 !== 0) return source;
+
+  const half = tokens.length / 2;
+  for (let index = 0; index < half; index += 1) {
+    if (tokens[index][0].toLocaleLowerCase() !== tokens[index + half][0].toLocaleLowerCase()) return source;
+  }
+
+  const firstHalfEnd = tokens[half - 1].index + tokens[half - 1][0].length;
+  return trimmed.slice(0, firstHalfEnd);
+}
+
 export function normalizeRegistryName(value) {
   return String(value || '')
     .toLowerCase()
@@ -180,7 +201,7 @@ export function publicOpportunity(row) {
     // whatever string the source publisher happens to call the bid.
     internal_id: row.id || null,
     solicitation_number: row.solicitation_number || row.source_record_id || '',
-    title: row.title || '',
+    title: normalizeContractDisplayTitle(row.title || ''),
     // Full description can be up to ~900KB on a real record (confirmed live) -- sending that
     // per matching opportunity is most of why the 2026-08-15 504 fix still left a 12.6MB / 17s
     // response. Capped to what's useful for client-side search/display; the real, full text is
