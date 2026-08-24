@@ -28,7 +28,7 @@ h1,h2,h3,.brand strong,.mock-head strong{font-family:Georgia,"Times New Roman",s
 .brand strong{font-size:18px;color:#fff}
 .brand small{font:700 10px/1.3 Arial,sans-serif;letter-spacing:.14em;color:var(--gold)}
 .links{gap:26px}
-.links a{font:700 15px/1.2 Arial,sans-serif;letter-spacing:.02em;text-transform:none;color:#eef3ff}
+.links a{font:400 16px/1.2 Georgia,"Times New Roman",serif;letter-spacing:0;text-transform:none;color:#eef3ff}
 .links a:hover{color:var(--gold)}
 .access-strip{border-top:1px solid rgba(255,255,255,.08);background:linear-gradient(90deg,rgba(15,42,106,.46),rgba(7,26,60,.92))}
 .access-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 0}
@@ -36,11 +36,12 @@ h1,h2,h3,.brand strong,.mock-head strong{font-family:Georgia,"Times New Roman",s
 .access-label strong{font:400 18px Georgia,serif;color:#fff}
 .access-label span{color:var(--gold);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
 .access-actions{display:flex;align-items:center;gap:12px}
-.btn{border-radius:6px;font-family:Arial,Helvetica,sans-serif;font-weight:700;box-shadow:none}
-.access-member{min-width:176px;min-height:46px;border:1px solid rgba(213,174,85,.6);background:var(--sapphire);color:var(--gold-light);font-size:14px;letter-spacing:.04em}
-.advisor-dominant{min-width:230px;min-height:52px;background:var(--gold);color:var(--navy);border:1px solid var(--gold);font-size:15px;letter-spacing:.06em;box-shadow:0 0 0 3px rgba(213,174,85,.08)}
-.advisor-dominant:hover{background:var(--gold-bright);color:var(--navy)}
-.hero{background:linear-gradient(90deg,rgba(7,26,60,.9) 0%,rgba(7,26,60,.76) 48%,rgba(15,42,106,.34) 100%),url('/headquarters.webp') bottom/cover no-repeat}
+.btn{border-radius:6px;font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:0;box-shadow:none}
+.access-member{min-width:176px;min-height:46px;border:1px solid rgba(213,174,85,.6);background:var(--sapphire);color:var(--gold-light);font-size:15px;letter-spacing:0}
+.advisor-dominant{min-width:230px;min-height:52px;background:var(--sapphire);color:var(--gold-light);border:1px solid rgba(213,174,85,.6);font-size:16px;letter-spacing:0;box-shadow:none}
+.advisor-dominant:hover,.access-member:hover{background:#0b255d;color:var(--gold-bright);border-color:var(--gold)}
+.hero{background:linear-gradient(90deg,rgba(7,26,60,.58) 0%,rgba(7,26,60,.40) 48%,rgba(15,42,106,.16) 100%),url('/headquarters.webp') center 68%/cover no-repeat}
+.hero-inner{text-shadow:0 1px 2px rgba(0,0,0,.45)}
 .eyebrow,.tag,.section-kicker{color:var(--gold)}
 .hero h1{font-family:Georgia,"Times New Roman",serif;font-weight:400}
 .hero p,.section p,.mission-copy,.journey-card p,.showcase-item,.compare-panel li{font-family:Arial,Helvetica,sans-serif}
@@ -68,24 +69,24 @@ body.natcorp-auth-page .sub{color:var(--muted)}
 body.natcorp-auth-page label{font:700 10px Arial,sans-serif;letter-spacing:.11em;text-transform:uppercase;color:rgba(255,255,255,.58)}
 body.natcorp-auth-page input{border:1px solid var(--line);border-radius:6px;background:rgba(255,255,255,.05);color:#fff;padding:10px}
 body.natcorp-auth-page input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(213,174,85,.16)}
-body.natcorp-auth-page .btn{border-radius:6px;padding:11px 14px;background:#fff;color:var(--sapphire);font-weight:700}
-body.natcorp-auth-page.advisor-auth .btn.primary{background:var(--gold);color:var(--navy);min-height:48px;font-size:14px}
+body.natcorp-auth-page .btn{border-radius:6px;padding:11px 14px;background:#fff;color:var(--sapphire);font-family:Georgia,"Times New Roman",serif;font-weight:400}
+body.natcorp-auth-page.advisor-auth .btn.primary{background:var(--sapphire);color:var(--gold-light);border:1px solid rgba(213,174,85,.6);min-height:48px;font-size:15px}
 body.natcorp-auth-page .back{color:var(--gold-light)}
 
 @media(max-width:900px){
   .topbar .container{width:calc(100% - 28px);padding-left:0}
   .nav{align-items:flex-start;flex-direction:column}
   .links{width:100%;gap:16px;flex-wrap:wrap}
-  .links a{font-size:14px}
+  .links a{font-size:15px}
   .access-inner{align-items:stretch;flex-direction:column}
   .access-actions{display:grid;grid-template-columns:1fr 1.2fr}
   .access-member,.advisor-dominant{min-width:0;width:100%}
 }
 @media(max-width:620px){
   .links{gap:14px}
-  .links a{font-size:13px}
+  .links a{font-size:14px}
   .access-label{display:none}
   .access-actions{grid-template-columns:1fr}
   .access-member,.advisor-dominant{min-height:48px}
-  .hero{padding-top:4rem}
+  .hero{padding-top:4rem;background-position:center 62%}
 }
