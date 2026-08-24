@@ -88,7 +88,7 @@ assert.ok(files.profileBuild.includes('Review My Business Profile'),'Profile Bui
 assert.ok(files.profileReview.includes('Profile Is Correct'),'Profile Review must expose the confirmation gate.');
 assert.ok(files.profileReview.includes('Edit Profile'),'Profile Review must allow correction of derived website data.');
 assert.ok(files.profileReview.includes("action:'confirm'"),'Profile Review must persist explicit user confirmation.');
-assert.ok(files.profileReview.includes("location.assign('/dashboard')"),'Verified profile must continue to the dashboard.');
+assert.ok(files.profileReview.includes("location.assign('/dashboard#contract-scope')"),'Verified profile must continue directly to the contract scope band.');
 assert.ok(files.legacyBusinessIntake.includes('/profile-review.html'),'Retired Business DNA route must redirect into the verified profile flow.');
 
 // Dashboard is server-profile-backed and capability-first across inventory.
@@ -100,6 +100,10 @@ assert.ok(/<option value="CA">\s*California\s*<\/option>/.test(files.dashboard),
 assert.ok(/<option value="AZ">\s*Arizona\s*<\/option>/.test(files.dashboard),'Dashboard must expose Arizona.');
 assert.ok(/<option value="NV">\s*Nevada\s*<\/option>/.test(files.dashboard),'Dashboard must expose Nevada.');
 assert.ok(files.dashboard.includes("['CA','AZ','NV'].includes(scope)"),'Dashboard state options must drive the presentation filter.');
+assert.ok(files.dashboard.includes('id="contract-scope"'),'Dashboard must expose the contract scope band as the post-submit destination.');
+assert.ok(files.dashboard.includes('id="reviewProfileButton"'),'Dashboard must expose profile review from the contract scope band.');
+assert.ok(files.dashboard.includes('function openProfile()'),'Dashboard must render profile review inside the side drawer.');
+assert.ok(!files.dashboard.includes('id="typeFilter"'),'The retired Type control must not remain in the scope band.');
 assert.ok(!files.dashboard.includes('All selected states'),'Legacy selected-state geography must remain retired.');
 assert.ok(files.dashboard.includes("scope:'all'"),'Dashboard must request capability matching across all current APIE states first.');
 

@@ -135,12 +135,14 @@ async function fetchRegistry(url, key, states) {
     select: 'platform_id,platform_name,technology_vendor,public_search_url,vendor_registration_url,authentication_required,platform_status,last_verified_at',
     platform_status: 'eq.active', limit: '5000',
   });
-  const [publisherRows, publisherPlatforms, platformRows] = await Promise.all([
+  const registryResults = await Promise.allSettled([
     fetchJsonRows(url, key, 'pdas_publishers', publishers),
     fetchJsonRows(url, key, 'pdas_publisher_platforms', mappings),
     fetchJsonRows(url, key, 'pdas_procurement_platforms', platforms),
   ]);
-  return { publishers: publisherRows, publisherPlatforms, platforms: platformRows };
+  const rows = registryResults.map((result) => result.status === 'fulfilled' ? result.value : []);
+  const errors = registryResults.flatMap((result) => result.status === 'rejected' ? [String(result.reason?.message || result.reason)] : []);
+  return { publishers: rows[0], publisherPlatforms: rows[1], platforms: rows[2], degraded: errors.length > 0, errors };
 }
 
 async function resolveProfile(req, payload, authMode) {
@@ -219,6 +221,7 @@ export default async function handler(req) {
         legacy_natcorp_qa_release_filter_applied: false, retrieved_at: nowIso,
       },
       registry: {
+        degraded: registry.degraded,
         publishers_loaded: registry.publishers.length,
         publisher_platform_mappings_loaded: registry.publisherPlatforms.length,
         procurement_platforms_loaded: registry.platforms.length,

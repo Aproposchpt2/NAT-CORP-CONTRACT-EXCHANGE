@@ -59,7 +59,7 @@ test('profile verification is a formal gate before dashboard', () => {
   assert.match(text, /Profile Is Correct/);
   assert.match(text, /Edit Profile/);
   assert.match(text, /action:'confirm'/);
-  assert.match(text, /location\.assign\('\/dashboard'\)/);
+  assert.match(text, /location\.assign\('\/dashboard#contract-scope'\)/);
 });
 
 test('dashboard exposes All States, Resident State, California, Arizona, and Nevada geography views', () => {
@@ -84,6 +84,17 @@ test('intake supports paste-friendly fields and supplies a secure website prefix
   assert.doesNotMatch(text, /onpaste=|addEventListener\(['"]paste|clipboardData/);
 });
 
+test('contract scope owns profile review in a drawer and removes the Type control', () => {
+  const text = read('aois-dashboard-preview.html');
+  assert.match(text, /id="contract-scope"/);
+  assert.match(text, /id="reviewProfileButton"[^>]*>Review your profile<\/button>/);
+  assert.match(text, /function openProfile\(\)/);
+  assert.match(text, /drawerMode='profile'/);
+  assert.match(text, /scrollIntoView\(\{block:'start',behavior:'smooth'\}\)/);
+  assert.doesNotMatch(text, /id="typeFilter"|for="typeFilter"/);
+  assert.doesNotMatch(text, /href="\/profile-review\.html">Review Profile/);
+});
+
 test('server profile flow uses HttpOnly session cookie and verified profile authority', () => {
   const session = read('netlify/functions/_shared/natcorp-profile-session.mjs');
   const endpoint = read('netlify/functions/capability-profile.mjs');
@@ -98,6 +109,12 @@ test('direct APIE fallback uses package and match-readiness gates instead of leg
   assert.match(text, /requirements_extraction_status: 'eq\.COMPLETE'/);
   assert.match(text, /match_readiness_status: 'eq\.MATCH_READY'/);
   assert.doesNotMatch(text, /filterReleaseReadyOpportunities/);
+});
+
+test('optional registry enrichment cannot fail the complete AOIE evaluation', () => {
+  const text = read('netlify/functions/aoie-state-shadow.mjs');
+  assert.match(text, /Promise\.allSettled/);
+  assert.match(text, /degraded: errors\.length > 0/);
 });
 
 test('same-origin browser callers cannot inject an unverified request profile', () => {
