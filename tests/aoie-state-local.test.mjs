@@ -188,6 +188,36 @@ test('a specific multi-word keyword phrase match is trusted alone, unlike a bare
   assert.equal(result.evidence_corroborated, true, JSON.stringify(result));
 });
 
+test('a thin or corrupted description does not hide a contract that has real extracted requirements', () => {
+  // Confirmed live 2026-08-24: a real CA opportunity (LA County VSAP voting-
+  // system enhancements) had a 111-character CORRUPTED description field
+  // (unrendered scraper template code), while requirements.scope_of_work --
+  // populated separately by APIE's package-acquisition pipeline from 20
+  // real acquired documents -- held 13.7KB of genuine scope text. The
+  // matcher was reading only `description`, so a contract with abundant
+  // real, already-extracted content was invisible to every business
+  // profile. A repo-wide check found this affects roughly half of all CA
+  // "ready" candidates (49 of 98), not an isolated case.
+  const techProfile = expandBusinessProfile({
+    business_name: 'Apropos Test Technologies LLC',
+    keywords: ['voting system software', 'election technology support'],
+    service_states: ['CA'],
+  });
+  const result = scoreStateLocalMatch(techProfile, {
+    title: 'Voting Solutions Enhancements and Support Services',
+    description: 'File Attachment {{amend.AmendDate}} {{amend.AmendDesc}} {{amend.AttFileName}}',
+    state_code: 'CA',
+    response_deadline: future,
+    requirements: {
+      scope_of_work: [
+        'The Contractor shall provide voting system software enhancements and ongoing election technology support for the County voting solution.',
+      ],
+    },
+  });
+  assert.notEqual(result.match_status, 'Not Recommended', JSON.stringify(result));
+  assert.ok(result.explanation.matched_keywords.length > 0, JSON.stringify(result));
+});
+
 test('declared capacity prevents over-sized opportunity recommendations', () => {
   const result = scoreStateLocalMatch(profile, {
     title: 'Statewide Cybersecurity Operations Center',
