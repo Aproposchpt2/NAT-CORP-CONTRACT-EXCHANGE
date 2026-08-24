@@ -52,6 +52,8 @@ h1,h2,h3,.brand strong,.mock-head strong{font-family:Georgia,"Times New Roman",s
 .journey-card.featured,.compare-panel.featured{background:rgba(15,42,106,.42)}
 .gold-rule{background:linear-gradient(90deg,var(--gold),rgba(213,174,85,.12))}
 .primary{background:#fff;color:var(--sapphire);border:0;box-shadow:none}
+.hero .primary{background:var(--sapphire);color:#fff;border:1px solid rgba(213,174,85,.6);box-shadow:none}
+.hero .primary:hover{background:#0b255d;color:#fff;border-color:var(--gold)}
 .secondary{background:transparent;color:#fff;border:1px solid var(--line)}
 .cta-actions .primary{background:var(--gold);color:var(--navy)}
 footer{background:#050f25}
