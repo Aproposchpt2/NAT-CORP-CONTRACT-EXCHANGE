@@ -164,6 +164,30 @@ test('a single incidental capability-family collision alone is not recommended w
   assert.ok(result.signal_scores.concept_alignment > 0, 'the concept collision should still be detected internally, just not enough alone');
 });
 
+test('a specific multi-word keyword phrase match is trusted alone, unlike a bare generic word', () => {
+  // Confirmed live 2026-08-24 against the real CA inventory: a telecom
+  // services master agreement offering "UC Cloud VoIP Services" / "Cloud
+  // Contact Center Services" was wrongly suppressed for a business whose
+  // declared capability is literally "unified communications & contact-
+  // center systems" -- the ONLY signal was one specific keyword phrase
+  // match, no codes on either side, so the blanket "any lone weak signal
+  // needs corroboration" rule (correctly protecting against bare single
+  // generic words like "debt") was also catching genuinely precise matches.
+  const commsProfile = expandBusinessProfile({
+    business_name: 'Apropos Test Technologies LLC',
+    keywords: ['contact center services', 'unified communications'],
+    service_states: ['CA'],
+  });
+  const result = scoreStateLocalMatch(commsProfile, {
+    title: 'Telecommunications Services Master Agreement',
+    description: 'Service Categories: Data Network Services, Secure Web Gateway Services, UC Cloud VoIP Services, Cloud Contact Center Services, SMS Outbound Text Message Solution.',
+    state_code: 'CA',
+    response_deadline: future,
+  });
+  assert.notEqual(result.match_status, 'Not Recommended', JSON.stringify(result));
+  assert.equal(result.evidence_corroborated, true, JSON.stringify(result));
+});
+
 test('declared capacity prevents over-sized opportunity recommendations', () => {
   const result = scoreStateLocalMatch(profile, {
     title: 'Statewide Cybersecurity Operations Center',
