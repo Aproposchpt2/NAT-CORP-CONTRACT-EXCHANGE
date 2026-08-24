@@ -95,6 +95,15 @@ test('contract scope owns profile review in a drawer and removes the Type contro
   assert.doesNotMatch(text, /href="\/profile-review\.html">Review Profile/);
 });
 
+test('public dashboard does not expose internal matching and inventory cards', () => {
+  const text = read('aois-dashboard-preview.html');
+  for (const internalLabel of ['engineStatus','engineCopy','residentState','sourceStatus','Matching scope','Profile source','Inventory source','Geographic rule']) {
+    assert.doesNotMatch(text, new RegExp(internalLabel));
+  }
+  assert.match(text, /<main class="layout"><section class="panel glass">/);
+  assert.doesNotMatch(text, /<main class="layout">[\s\S]*?<aside>/);
+});
+
 test('server profile flow uses HttpOnly session cookie and verified profile authority', () => {
   const session = read('netlify/functions/_shared/natcorp-profile-session.mjs');
   const endpoint = read('netlify/functions/capability-profile.mjs');
