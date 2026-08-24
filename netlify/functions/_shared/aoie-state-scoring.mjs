@@ -36,26 +36,29 @@ export function scoreStateLocalMatch(profile,opportunity,options={}){
   // corroboration. Require a second independent weak signal, or one exact
   // code match (inherently precise on its own), before treating a contract
   // as evidence-worthy enough to recommend.
-  // Not every keyword match is equally trustworthy. A bare single generic
-  // word ("debt", "procurement") collides with unrelated contracts constantly
-  // -- confirmed live 2026-08-24 against real CA inventory: "debt" alone
-  // matched a municipal BOND-financing RFP for a business whose actual
-  // capability is unrelated consumer debt advisory, and "procurement" alone
-  // matched an unrelated contract purely because that word appeared in an
-  // administrative Q&A addendum. A specific multi-word phrase match is a
-  // different, far more precise class of evidence -- also confirmed live the
-  // same day: "UC Cloud VoIP Services" / "Cloud Contact Center Services"
-  // matching the profile's own literal keyword "contact center services" is
-  // a genuine, correct fit for a business whose stated capability is
-  // "unified communications & contact-center systems," not a coincidence --
-  // and it was being wrongly suppressed for lack of corroboration under the
-  // same blanket rule that correctly suppresses the generic single-word
-  // cases. A specific phrase match now counts as strong evidence on its own,
-  // same as an exact code match; single generic-word keyword matches still
-  // require corroboration.
-  const specificKeywordMatch=keywordMatches.some((keyword)=>keyword.trim().includes(' '));
-  const strongEvidence=(exactUnspsc.length>0?1:0)+(exactCommodity.length>0?1:0)+(specificKeywordMatch?1:0);
-  const weakEvidence=((unspscFamily.length+commodityFamily.length)>0?1:0)+(keywordMatches.length>0&&!specificKeywordMatch?1:0)+(matchedConcepts.length>0?1:0);
+  // REVERTED 2026-08-24: briefly trusted a "specific" multi-word keyword
+  // phrase match alone (containing a space), on the theory that phrases like
+  // "contact center services" are precise while bare single words like
+  // "debt" are not. That theory was wrong in practice. Confirmed live the
+  // same day, against the real CA inventory, with the requirements-text fix
+  // now feeding much more real document text into matching: the two-word
+  // phrase "information technology" -- which DOES contain a space, so it
+  // passed as "specific" -- turned out to be one of the most generic phrases
+  // possible in government contracting. It matched a teleradiology
+  // contract, a project-management RFSQ, and two unrelated interpreter/
+  // translation-services contracts purely because it appears in standard
+  // HIPAA/HITECH compliance boilerplate ("Health Information Technology for
+  // Economic and Clinical Health Act") and county data-security clauses
+  // present in nearly every contract -- not because any of those contracts
+  // are actually about information technology. "Contains a space" is not a
+  // reliable proxy for semantic specificity. Reverted to requiring a second
+  // independent signal for every keyword-only match, accepting the known,
+  // smaller cost that a genuinely specific single-signal phrase match (like
+  // the telecom/contact-center case this was built for) goes back to needing
+  // corroboration too, since there's no cheap, reliable way yet to tell that
+  // case apart from the "information technology" case.
+  const strongEvidence=(exactUnspsc.length>0?1:0)+(exactCommodity.length>0?1:0);
+  const weakEvidence=((unspscFamily.length+commodityFamily.length)>0?1:0)+(keywordMatches.length>0?1:0)+(matchedConcepts.length>0?1:0);
   const corroborated=strongEvidence>=1||weakEvidence>=2;
   const fit=hard?0:Math.min(100,raw),confidence=evidence>=3?'HIGH':evidence===2?'MODERATE':evidence===1?'LOW':'VERY LOW',status=hard?'Not Recommended':!corroborated?'Not Recommended':fit>=80?'Strong Match':fit>=65?'Good Match':fit>=50?'Review':fit>=35?'Monitor':'Not Recommended';
   return{engine_version:ENGINE_VERSION,ontology_version:ONTOLOGY_VERSION,scoring_version:SCORING_VERSION,fit_score:fit,confidence,match_status:status,hard_disqualifier:hard,evidence_corroborated:corroborated,signal_scores:scores,explanation:{why_matched:reasons,verify_before_pursuit:unique(verify),matched_keywords:keywordMatches,matched_concepts:matchedConcepts.map((x)=>x.id),exact_unspsc:exactUnspsc,exact_commodity_codes:exactCommodity,related_code_families:unique([...unspscFamily,...commodityFamily]),required_certifications:features.required_certifications,required_licenses:features.required_licenses}};

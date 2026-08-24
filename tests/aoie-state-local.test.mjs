@@ -164,28 +164,35 @@ test('a single incidental capability-family collision alone is not recommended w
   assert.ok(result.signal_scores.concept_alignment > 0, 'the concept collision should still be detected internally, just not enough alone');
 });
 
-test('a specific multi-word keyword phrase match is trusted alone, unlike a bare generic word', () => {
-  // Confirmed live 2026-08-24 against the real CA inventory: a telecom
-  // services master agreement offering "UC Cloud VoIP Services" / "Cloud
-  // Contact Center Services" was wrongly suppressed for a business whose
-  // declared capability is literally "unified communications & contact-
-  // center systems" -- the ONLY signal was one specific keyword phrase
-  // match, no codes on either side, so the blanket "any lone weak signal
-  // needs corroboration" rule (correctly protecting against bare single
-  // generic words like "debt") was also catching genuinely precise matches.
+test('a lone keyword match still requires corroboration, even a multi-word phrase (known, accepted trade-off)', () => {
+  // "Contains a space" was tried and reverted as a specificity proxy the
+  // same day it was added. It correctly let through a genuine telecom/
+  // contact-center match, but the SAME rule also let through "information
+  // technology" -- a two-word phrase that turned out to be one of the most
+  // generic phrases in government contracting (it's HIPAA/HITECH compliance
+  // boilerplate, present in nearly every county contract's confidentiality
+  // clause) -- surfacing four new false positives against unrelated
+  // teleradiology, project-management, and interpreter-services contracts.
+  // Net effect was worse, not better. This test documents the accepted
+  // trade-off: this genuinely relevant telecom match goes back to being
+  // suppressed for lack of corroboration, same as the false positives it
+  // can't currently be distinguished from. If someone re-attempts a
+  // phrase-specificity heuristic here, this is the exact case it needs to
+  // handle correctly on both sides before it ships.
   const commsProfile = expandBusinessProfile({
     business_name: 'Apropos Test Technologies LLC',
-    keywords: ['contact center services', 'unified communications'],
+    keywords: ['contact center services'],
     service_states: ['CA'],
   });
   const result = scoreStateLocalMatch(commsProfile, {
-    title: 'Telecommunications Services Master Agreement',
+    title: 'Enterprise Services Master Agreement',
     description: 'Service Categories: Data Network Services, Secure Web Gateway Services, UC Cloud VoIP Services, Cloud Contact Center Services, SMS Outbound Text Message Solution.',
     state_code: 'CA',
     response_deadline: future,
   });
-  assert.notEqual(result.match_status, 'Not Recommended', JSON.stringify(result));
-  assert.equal(result.evidence_corroborated, true, JSON.stringify(result));
+  assert.equal(result.match_status, 'Not Recommended', JSON.stringify(result));
+  assert.equal(result.evidence_corroborated, false, JSON.stringify(result));
+  assert.equal(result.signal_scores.concept_alignment, 0, 'this case must exercise exactly one signal (keyword only), not an incidental second concept match, or it is not testing what it claims to');
 });
 
 test('a thin or corrupted description does not hide a contract that has real extracted requirements', () => {
