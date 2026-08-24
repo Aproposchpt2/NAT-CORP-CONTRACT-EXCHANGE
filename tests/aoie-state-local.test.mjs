@@ -133,6 +133,37 @@ test('explicit contractor license requirement is flagged as a hard mismatch', ()
   assert.equal(result.hard_disqualifier, 'LICENSE_REQUIREMENT_MISMATCH');
 });
 
+test('a single incidental capability-family collision alone is not recommended without corroboration', () => {
+  // Confirmed live 2026-08-24 against a real business profile (Apropos Group
+  // LLC): a software/AI government-tech company's own broad "other computer
+  // related services" NAICS code (541519) legitimately falls under BOTH the
+  // information_technology and cybersecurity_network ontology buckets, so it
+  // gets tagged "cybersecurity_network" even though it does no literal
+  // cyber/network-security work. A completely unrelated opportunity
+  // (polygraph testing) that happens to carry a government commodity/UNSPSC
+  // code from the same generic "security" family then collides on that same
+  // bucket ID, with zero keyword overlap and zero declared-code overlap --
+  // and was still surfaced as a 40% "Monitor" match with one vague reason
+  // line. This must now be suppressed for lack of corroboration.
+  const techProfile = expandBusinessProfile({
+    business_name: 'Apropos Test Technologies LLC',
+    keywords: ['software development', 'ai voice systems', 'crm'],
+    core_competencies: ['procurement opportunity matching'],
+    naics_codes: ['541512', '541519'],
+    service_states: ['CA'],
+  });
+  const result = scoreStateLocalMatch(techProfile, {
+    title: 'Polygraph Examination Services',
+    description: 'Provide polygraph examination and investigative support services for county personnel screening.',
+    state_code: 'CA',
+    unspsc_codes: ['46152400'],
+    response_deadline: future,
+  });
+  assert.equal(result.match_status, 'Not Recommended', JSON.stringify(result));
+  assert.equal(result.evidence_corroborated, false, JSON.stringify(result));
+  assert.ok(result.signal_scores.concept_alignment > 0, 'the concept collision should still be detected internally, just not enough alone');
+});
+
 test('declared capacity prevents over-sized opportunity recommendations', () => {
   const result = scoreStateLocalMatch(profile, {
     title: 'Statewide Cybersecurity Operations Center',

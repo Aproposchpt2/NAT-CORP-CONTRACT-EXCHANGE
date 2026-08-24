@@ -21,6 +21,24 @@ export function scoreStateLocalMatch(profile,opportunity,options={}){
   const missingLicenses=features.required_licenses.filter((x)=>!hasLicense(profile,x)),matchedLicenses=features.required_licenses.filter((x)=>hasLicense(profile,x));if(matchedLicenses.length){scores.license=weights.license;reasons.push(`License evidence aligns with the solicitation: ${matchedLicenses.join(', ')}.`);}if(missingLicenses.length){if(!hard&&/must possess|required license|license required|licensed contractor|licensed professional/.test(features.normalized_text))hard='LICENSE_REQUIREMENT_MISMATCH';verify.push(`Verify mandatory licenses: ${missingLicenses.join(', ')}.`);}
   if(features.estimated_value_max!=null&&profile.max_contract_value!=null){if(features.estimated_value_max>profile.max_contract_value){if(!hard)hard='CAPACITY_EXCEEDED';verify.push(`Estimated value ${features.estimated_value_max} exceeds declared capacity ${profile.max_contract_value}.`);}else{scores.capacity=weights.capacity;reasons.push('Estimated contract value is within the declared capacity.');}}else verify.push('Confirm project value, staffing capacity, bonding, insurance, and delivery requirements.');
   if(!features.required_certifications.length)verify.push('Confirm all bidder eligibility, preference, and certification requirements.');if(!features.required_licenses.length)verify.push('Confirm all professional, contractor, and trade-license requirements.');verify.push('Review the complete solicitation, amendments, attachments, and submission instructions before pursuit.');
-  const raw=Object.values(scores).reduce((sum,value)=>sum+value,0),evidence=[exactUnspsc.length,exactCommodity.length,unspscFamily.length+commodityFamily.length,keywordMatches.length,matchedConcepts.length].filter((x)=>x>0).length,fit=hard?0:Math.min(100,raw),confidence=evidence>=3?'HIGH':evidence===2?'MODERATE':evidence===1?'LOW':'VERY LOW',status=hard?'Not Recommended':fit>=80?'Strong Match':fit>=65?'Good Match':fit>=50?'Review':fit>=35?'Monitor':'Not Recommended';
-  return{engine_version:ENGINE_VERSION,ontology_version:ONTOLOGY_VERSION,scoring_version:SCORING_VERSION,fit_score:fit,confidence,match_status:status,hard_disqualifier:hard,signal_scores:scores,explanation:{why_matched:reasons,verify_before_pursuit:unique(verify),matched_keywords:keywordMatches,matched_concepts:matchedConcepts.map((x)=>x.id),exact_unspsc:exactUnspsc,exact_commodity_codes:exactCommodity,related_code_families:unique([...unspscFamily,...commodityFamily]),required_certifications:features.required_certifications,required_licenses:features.required_licenses}};
+  const raw=Object.values(scores).reduce((sum,value)=>sum+value,0),evidence=[exactUnspsc.length,exactCommodity.length,unspscFamily.length+commodityFamily.length,keywordMatches.length,matchedConcepts.length].filter((x)=>x>0).length;
+  // A single incidental weak signal -- one generic keyword (e.g. "debt"
+  // matching a municipal debt-financing RFP for a business that does
+  // unrelated consumer debt advisory), or one capability-family collision
+  // (e.g. "cybersecurity_network" firing on a polygraph-services contract
+  // because its government commodity code shares a prefix with the
+  // business's own broad "other computer services" NAICS code) -- is not
+  // reliable evidence a contract is actually relevant on its own. Confirmed
+  // live 2026-08-24 against a real business profile (Apropos Group LLC):
+  // every reviewed false positive (medical-equipment maintenance, polygraph
+  // examination services, graffiti removal, portable radios, all scored
+  // "Monitor" or "Review") had exactly one weak signal and zero
+  // corroboration. Require a second independent weak signal, or one exact
+  // code match (inherently precise on its own), before treating a contract
+  // as evidence-worthy enough to recommend.
+  const strongEvidence=(exactUnspsc.length>0?1:0)+(exactCommodity.length>0?1:0);
+  const weakEvidence=((unspscFamily.length+commodityFamily.length)>0?1:0)+(keywordMatches.length>0?1:0)+(matchedConcepts.length>0?1:0);
+  const corroborated=strongEvidence>=1||weakEvidence>=2;
+  const fit=hard?0:Math.min(100,raw),confidence=evidence>=3?'HIGH':evidence===2?'MODERATE':evidence===1?'LOW':'VERY LOW',status=hard?'Not Recommended':!corroborated?'Not Recommended':fit>=80?'Strong Match':fit>=65?'Good Match':fit>=50?'Review':fit>=35?'Monitor':'Not Recommended';
+  return{engine_version:ENGINE_VERSION,ontology_version:ONTOLOGY_VERSION,scoring_version:SCORING_VERSION,fit_score:fit,confidence,match_status:status,hard_disqualifier:hard,evidence_corroborated:corroborated,signal_scores:scores,explanation:{why_matched:reasons,verify_before_pursuit:unique(verify),matched_keywords:keywordMatches,matched_concepts:matchedConcepts.map((x)=>x.id),exact_unspsc:exactUnspsc,exact_commodity_codes:exactCommodity,related_code_families:unique([...unspscFamily,...commodityFamily]),required_certifications:features.required_certifications,required_licenses:features.required_licenses}};
 }
