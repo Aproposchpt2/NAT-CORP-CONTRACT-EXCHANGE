@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const file = 'index.html';
+const brandedCssFile = 'natcorp-apropos.css';
 let html = fs.readFileSync(file, 'utf8');
 
 // One authoritative Analyze Fit public price representation.
@@ -29,11 +30,19 @@ org.parentOrganization = {
 const replacement = `<script type="application/ld+json">${JSON.stringify(data)}</script>`;
 html = html.replace(match[0], replacement);
 
-// Phase 2B performance: expose the CSS hero to the preload scanner immediately.
+// Phase 2B performance: expose the homepage hero to the preload scanner immediately.
+// The APROPOS homepage treatment now keeps presentation CSS in natcorp-apropos.css,
+// so validate the authoritative hero reference across both the document and stylesheet.
 const heroHref = '/headquarters.webp';
 const heroPreload = `<link rel="preload" as="image" href="${heroHref}" type="image/webp" fetchpriority="high">`;
-if (!html.includes(`url('${heroHref}')`) && !html.includes(`url("${heroHref}")`) && !html.includes(`url(${heroHref})`)) {
-  throw new Error('NAT-CORP performance remediation: active homepage hero reference not found.');
+const brandedCss = fs.existsSync(brandedCssFile) ? fs.readFileSync(brandedCssFile, 'utf8') : '';
+const heroReferenceFound = [html, brandedCss].some(source =>
+  source.includes(`url('${heroHref}')`) ||
+  source.includes(`url("${heroHref}")`) ||
+  source.includes(`url(${heroHref})`)
+);
+if (!heroReferenceFound) {
+  throw new Error('NAT-CORP performance remediation: active homepage hero reference not found in index.html or natcorp-apropos.css.');
 }
 if (!html.includes(heroPreload)) {
   if (!/<\/head>/i.test(html)) throw new Error('NAT-CORP performance remediation: closing head tag not found.');
@@ -47,5 +56,5 @@ if (/\$79(?=\s*one-time)/i.test(html)) throw new Error('NAT-CORP entity remediat
 if ((html.match(/rel="preload" as="image" href="\/headquarters\.webp"/g) || []).length !== 1) throw new Error('NAT-CORP performance remediation: hero preload must appear exactly once.');
 
 fs.writeFileSync(file, html, 'utf8');
-console.log('[natcorp-entity-graph] PASS — entity graph, Analyze Fit $79.00 pricing, and high-priority hero preload are consistent.');
+console.log('[natcorp-entity-graph] PASS — entity graph, Analyze Fit $79.00 pricing, APROPOS external hero CSS, and high-priority hero preload are consistent.');
 require('./apply-nonblocking-fonts.cjs');
