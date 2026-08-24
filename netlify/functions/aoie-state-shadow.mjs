@@ -48,15 +48,30 @@ export default async function handler(req) {
     if (!profile.legal_name) return json(400, { error: 'A business name is required.' });
     if (!evidence) return json(400, { error: 'The verified profile does not contain enough capability evidence to search contracts.' });
 
-    const inventoryStates = await availableStates(url, key);
     const requestedStates = normalizeStates(payload.states);
     const scope = String(payload.scope || (requestedStates.length ? 'selected' : 'all')).toLowerCase();
     const residentState = String(payload.resident_state || resolved.profile.resident_state || resolved.session?.resident_state || '').trim().toUpperCase();
-    let states = inventoryStates;
-    if (scope === 'resident') {
-      if (!/^[A-Z]{2}$/.test(residentState)) return json(400, { error: 'Resident state is unavailable. Verify it in the Business Capability Profile first.' });
-      states = [residentState];
-    } else if (requestedStates.length && scope !== 'all') states = requestedStates;
+
+    // A poll tick (the dashboard checking judging progress every few seconds
+    // while aoie-llm-relevance-run works through candidates) reuses the exact
+    // state scope its own initial, non-poll call already resolved -- state
+    // inventory doesn't change mid-judge, so re-running availableStates() on
+    // every tick is pure waste. Added 2026-08-24 after a real Supabase
+    // call-volume scare (1.8M calls/month on a different project) made this
+    // worth trimming before it became this project's problem too.
+    const isPoll = payload.poll === true && requestedStates.length > 0;
+    let inventoryStates, states;
+    if (isPoll) {
+      inventoryStates = requestedStates;
+      states = requestedStates;
+    } else {
+      inventoryStates = await availableStates(url, key);
+      states = inventoryStates;
+      if (scope === 'resident') {
+        if (!/^[A-Z]{2}$/.test(residentState)) return json(400, { error: 'Resident state is unavailable. Verify it in the Business Capability Profile first.' });
+        states = [residentState];
+      } else if (requestedStates.length && scope !== 'all') states = requestedStates;
+    }
 
     if (!states.length) return json(200, { ok: true, mode: 'shadow', scope, resident_state: residentState || null, states: [], profile, candidate_count: 0, result_count: 0, results: [], summary: {}, data_source: { relation: `public.${DIRECT_TABLE}`, mode: 'empty-inventory', retrieved_at: new Date().toISOString() } });
 
@@ -64,10 +79,19 @@ export default async function handler(req) {
     const resultLimit = Math.max(1, Math.min(500, Number(payload.limit ?? 250) || 250));
     const nowIso = new Date().toISOString();
     const fingerprint = profileFingerprint(resolved.profile);
-    const [source, registry, job, verdicts] = await Promise.all([
-      candidateRows(url, key, states, nowIso), fetchRegistry(url, key, states),
-      latestJobFor(fingerprint, states), relevantVerdicts(fingerprint),
-    ]);
+    const [job, verdicts] = await Promise.all([latestJobFor(fingerprint, states), relevantVerdicts(fingerprint)]);
+
+    // Same reasoning as above: while a poll tick has nothing relevant yet
+    // (still judging, verdicts empty), there is nothing for the candidate
+    // pool + registry fetch to join against -- skip both (4 Supabase calls)
+    // until the first relevant verdict actually lands.
+    let source, registry;
+    if (!isPoll || verdicts.length) {
+      [source, registry] = await Promise.all([candidateRows(url, key, states, nowIso), fetchRegistry(url, key, states)]);
+    } else {
+      source = { rows: [], relation: DIRECT_TABLE, mode: 'poll-skipped-no-verdicts-yet', canonical_view_available: false, direct_table_fallback_used: false };
+      registry = { publishers: [], publisherPlatforms: [], platforms: [], degraded: false, errors: [] };
+    }
     const index = buildRegistryIndex(registry);
     const candidates = source.rows.map((row) => enrichOpportunity(row, index, source.relation));
     const candidateById = new Map(candidates.map((row) => [row.id, row]));
