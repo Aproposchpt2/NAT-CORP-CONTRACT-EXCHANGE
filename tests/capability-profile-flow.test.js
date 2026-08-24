@@ -62,11 +62,26 @@ test('profile verification is a formal gate before dashboard', () => {
   assert.match(text, /location\.assign\('\/dashboard'\)/);
 });
 
-test('dashboard exposes only All States and Resident State geography views', () => {
+test('dashboard exposes All States, Resident State, California, Arizona, and Nevada geography views', () => {
   const text = read('aois-dashboard-preview.html');
-  assert.match(text, /<option value="all">All States<\/option>/);
-  assert.match(text, /<option value="resident">Resident State<\/option>/);
+  assert.match(text, /<option value="all">\s*All States\s*<\/option>/);
+  assert.match(text, /<option value="resident">\s*Resident State\s*<\/option>/);
+  assert.match(text, /<option value="CA">\s*California\s*<\/option>/);
+  assert.match(text, /<option value="AZ">\s*Arizona\s*<\/option>/);
+  assert.match(text, /<option value="NV">\s*Nevada\s*<\/option>/);
+  assert.match(text, /\['CA','AZ','NV'\]\.includes\(scope\)/);
   assert.doesNotMatch(text, /All selected states/);
+});
+
+test('intake supports paste-friendly fields and supplies a secure website prefix', () => {
+  const text = read('welcome.html');
+  for (const id of ['contactName','businessName','businessEmail','website']) {
+    assert.match(text, new RegExp(`id="${id}"[^>]*name="${id}"`));
+  }
+  assert.match(text, /class="url-prefix"[^>]*>https:\/\//);
+  assert.match(text, /websiteUrl\(\$\('website'\)\.value\)/);
+  assert.match(text, /-webkit-user-select:text;user-select:text/);
+  assert.doesNotMatch(text, /onpaste=|addEventListener\(['"]paste|clipboardData/);
 });
 
 test('server profile flow uses HttpOnly session cookie and verified profile authority', () => {

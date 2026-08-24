@@ -94,8 +94,12 @@ assert.ok(files.legacyBusinessIntake.includes('/profile-review.html'),'Retired B
 // Dashboard is server-profile-backed and capability-first across inventory.
 assert.ok(files.dashboard.includes('/api/capability-profile'),'Dashboard must load the verified server-side Business Capability Profile.');
 assert.ok(files.dashboard.includes('/api/aoie-state-shadow'),'Dashboard must use the live AOIE endpoint.');
-assert.ok(files.dashboard.includes('<option value="all">All States</option>'),'Dashboard must expose All States.');
-assert.ok(files.dashboard.includes('<option value="resident">Resident State</option>'),'Dashboard must expose Resident State.');
+assert.ok(/<option value="all">\s*All States\s*<\/option>/.test(files.dashboard),'Dashboard must expose All States.');
+assert.ok(/<option value="resident">\s*Resident State\s*<\/option>/.test(files.dashboard),'Dashboard must expose Resident State.');
+assert.ok(/<option value="CA">\s*California\s*<\/option>/.test(files.dashboard),'Dashboard must expose California.');
+assert.ok(/<option value="AZ">\s*Arizona\s*<\/option>/.test(files.dashboard),'Dashboard must expose Arizona.');
+assert.ok(/<option value="NV">\s*Nevada\s*<\/option>/.test(files.dashboard),'Dashboard must expose Nevada.');
+assert.ok(files.dashboard.includes("['CA','AZ','NV'].includes(scope)"),'Dashboard state options must drive the presentation filter.');
 assert.ok(!files.dashboard.includes('All selected states'),'Legacy selected-state geography must remain retired.');
 assert.ok(files.dashboard.includes("scope:'all'"),'Dashboard must request capability matching across all current APIE states first.');
 
