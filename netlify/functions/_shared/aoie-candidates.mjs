@@ -64,6 +64,16 @@ export function directQuery(states, nowIso) {
   });
 }
 
+// Timeouts here were 20000/15000/15000 until 2026-08-25, when the LLM
+// judging background worker (aoie-llm-relevance-run-background.mjs)
+// repeatedly failed with "The operation was aborted due to timeout" at
+// ~20.2-20.4s -- exactly fetchPaged's old 20000ms ceiling -- even though
+// the identical query completed quickly seconds later when called
+// synchronously from aoie-state-shadow.mjs. Background functions appear
+// to have slower/colder outbound networking on this account than
+// regular request-serving functions; raised across the board since the
+// background worker has minutes of budget and the common case (a fast
+// successful response) is unaffected either way.
 export async function fetchPaged(url, key, relation, states, nowIso, canonical) {
   const rows = [];
   for (let from = 0; ; from += PAGE_SIZE) {
@@ -71,7 +81,7 @@ export async function fetchPaged(url, key, relation, states, nowIso, canonical) 
       ? buildCandidateQuery({ states, nowIso, canonical: true, from, pageSize: PAGE_SIZE })
       : { query: directQuery(states, nowIso), range: `${from}-${from + PAGE_SIZE - 1}` };
     const response = await fetch(`${url}/rest/v1/${relation}?${built.query}`, {
-      headers: dbHeaders(key, { Range: built.range }), signal: AbortSignal.timeout(20000),
+      headers: dbHeaders(key, { Range: built.range }), signal: AbortSignal.timeout(60000),
     });
     if (!response.ok) {
       const body = await response.text().catch(() => '');
@@ -90,7 +100,7 @@ export async function availableStates(url, key) {
   const states = new Set();
   for (let from = 0; ; from += PAGE_SIZE) {
     const response = await fetch(`${url}/rest/v1/${DIRECT_TABLE}?select=state_code&order=state_code.asc`, {
-      headers: dbHeaders(key, { Range: `${from}-${from + PAGE_SIZE - 1}` }), signal: AbortSignal.timeout(15000),
+      headers: dbHeaders(key, { Range: `${from}-${from + PAGE_SIZE - 1}` }), signal: AbortSignal.timeout(45000),
     });
     if (!response.ok) throw new Error(`State inventory query failed: ${response.status}`);
     const page = await response.json();
@@ -118,7 +128,7 @@ export async function candidateRows(url, key, states, nowIso) {
 }
 
 export async function fetchJsonRows(url, key, relation, query) {
-  const response = await fetch(`${url}/rest/v1/${relation}?${query}`, { headers: dbHeaders(key), signal: AbortSignal.timeout(15000) });
+  const response = await fetch(`${url}/rest/v1/${relation}?${query}`, { headers: dbHeaders(key), signal: AbortSignal.timeout(45000) });
   if (!response.ok) throw new Error(`${relation} registry query failed: ${response.status}`);
   const rows = await response.json();
   return Array.isArray(rows) ? rows : [];
