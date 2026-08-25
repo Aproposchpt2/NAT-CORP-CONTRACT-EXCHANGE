@@ -93,7 +93,27 @@ async function judgeJob(job, apiKey) {
   // candidate, so concurrent writers within a batch never race each other
   // updating the same job row -- only one PATCH happens per batch, after
   // every promise in it has settled.
-  const CONCURRENCY = 5;
+  // First attempt at concurrency was CONCURRENCY=5 with no retry --
+  // confirmed live 2026-08-25 this was a real regression, not just faster:
+  // a 98-candidate run completed with only 42 judged, down from 95/98 on
+  // the old strictly-sequential path. Most likely a rate limit on the
+  // Opus API getting hit by 5 concurrent requests with no backoff. Lower
+  // concurrency plus a retry gives most of the speed gain back without
+  // trading away the reliability this whole system exists for.
+  const CONCURRENCY = 2;
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  async function judgeWithRetry(params, attempts = 3) {
+    let lastError;
+    for (let i = 0; i < attempts; i++) {
+      try {
+        return await judgeRelevance(params);
+      } catch (error) {
+        lastError = error;
+        if (i < attempts - 1) await sleep(2000 * (i + 1));
+      }
+    }
+    throw lastError;
+  }
   let judged = 0;
   let relevant = 0;
   for (let i = 0; i < candidates.length; i += CONCURRENCY) {
@@ -110,7 +130,7 @@ async function judgeJob(job, apiKey) {
       if (cached && opportunity.updated_at && new Date(cached.opportunity_updated_at) >= new Date(opportunity.updated_at)) {
         return cached;
       }
-      const verdict = await judgeRelevance({ apiKey, model: MODEL(), profile: job.profile_snapshot, opportunity });
+      const verdict = await judgeWithRetry({ apiKey, model: MODEL(), profile: job.profile_snapshot, opportunity });
       await writeVerdict(job, opportunity, verdict);
       return verdict;
     }));
