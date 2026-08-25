@@ -18,6 +18,29 @@ import {
 import { buildRegistryIndex, enrichOpportunity } from './_shared/aoie-state-local.mjs';
 import { judgeRelevance, profileFingerprint } from './_shared/aoie-llm-relevance.mjs';
 
+// Retries a Postgres-side "canceling statement due to statement timeout"
+// (error 57014) or a transient network failure -- confirmed live
+// 2026-08-25: the initial candidate/registry fetch failed this way,
+// distinct from and in addition to the client-side AbortSignal timeouts
+// already fixed in aoie-candidates.mjs. This is the database itself
+// killing a slow query, which a longer client-side timeout can't fix --
+// a short retry is the pragmatic mitigation for what looks like
+// occasional load-dependent query-planner variance, not a deterministic
+// bug in the query itself (the same query succeeds the great majority of
+// the time, including from the interactive aoie-state-shadow.mjs path).
+async function withRetry(fn, attempts = 3, baseDelayMs = 3000) {
+  let lastError;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error;
+      if (i < attempts - 1) await new Promise((resolve) => setTimeout(resolve, baseDelayMs * (i + 1)));
+    }
+  }
+  throw lastError;
+}
+
 const MODEL = () => env('AOIE_LLM_RELEVANCE_MODEL') || 'claude-opus-5';
 
 async function resolveStates(url, key, payload) {
@@ -97,10 +120,10 @@ async function judgeJob(job, apiKey) {
   const url = env('SUPABASE_URL').replace(/\/$/, '');
   const key = env('SUPABASE_SERVICE_ROLE_KEY') || env('SUPABASE_SERVICE_KEY');
   const nowIsoValue = new Date().toISOString();
-  const [source, registry] = await Promise.all([
+  const [source, registry] = await withRetry(() => Promise.all([
     candidateRows(url, key, job.states, nowIsoValue),
     fetchRegistry(url, key, job.states),
-  ]);
+  ]));
   const index = buildRegistryIndex(registry);
   const candidates = source.rows.map((row) => enrichOpportunity(row, index, source.relation));
 
