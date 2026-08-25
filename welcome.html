@@ -39,9 +39,17 @@ input{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 </div>
 <script>
 (()=>{'use strict';
-const $=id=>document.getElementById(id),form=$('intakeForm'),button=$('submitButton'),message=$('message'),handoff=$('handoff');
+const $=id=>document.getElementById(id),form=$('intakeForm'),button=$('submitButton'),message=$('message'),handoff=$('handoff'),website=$('website');
 const emailOk=value=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 const websiteUrl=value=>`https://${String(value||'').trim().replace(/^https?:\/\//i,'').replace(/^\/+/,'')}`;
+// Pasting a full URL copied from a browser address bar (the natural thing
+// to paste here) includes its own https:// -- since the field already
+// shows a separate "https://" prefix chip, an unstripped paste displays
+// as "https://https://example.com", which reads as broken. Strip a
+// leading protocol/slashes live on every input (covers typing and paste
+// alike, since paste fires an input event too) so the field always shows
+// just the clean domain, matching the fixed prefix beside it.
+website.addEventListener('input',()=>{const cleaned=website.value.replace(/^\s*https?:\/\//i,'').replace(/^\/+/,'');if(cleaned!==website.value)website.value=cleaned;});
 async function api(payload){const response=await fetch('/api/capability-profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.error||'Nat-Corp could not complete this step.');return result}
 form.addEventListener('submit',async event=>{event.preventDefault();message.textContent='';const payload={action:'start',contact_name:$('contactName').value.trim(),business_name:$('businessName').value.trim(),business_email:$('businessEmail').value.trim().toLowerCase(),website:websiteUrl($('website').value)};if(payload.contact_name.length<2){message.textContent='Enter your name.';return}if(payload.business_name.length<2){message.textContent='Enter the business name.';return}if(!emailOk(payload.business_email)){message.textContent='Enter a valid business email.';return}let parsed;try{parsed=new URL(payload.website)}catch{message.textContent='Enter a valid business website name.';return}if(parsed.protocol!=='https:'||!parsed.hostname||!parsed.hostname.includes('.')){message.textContent='Enter a valid business website name.';return}payload.website=parsed.href;button.disabled=true;try{await api(payload);handoff.classList.add('on');location.assign('/profile-building.html')}catch(error){message.textContent=error.message;button.disabled=false}})})();
 </script>
