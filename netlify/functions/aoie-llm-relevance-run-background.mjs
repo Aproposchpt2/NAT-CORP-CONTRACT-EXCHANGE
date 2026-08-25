@@ -81,10 +81,24 @@ async function judgeJob(job, apiKey) {
     total_candidates: candidates.length, updated_at: nowIso(),
   }, 'return=minimal');
 
+  // Judging candidates one at a time (one Claude call each, ~5-10s apiece)
+  // made a 98-candidate job take ~12 minutes real-world (confirmed live
+  // 2026-08-25: Apropos Group LLC, 98 candidates, completed_at - started_at
+  // ~= 12 min) -- long enough that the dashboard's own poll loop (capped
+  // at 40 attempts * 6s = 4 min) gave up and stopped refreshing long
+  // before the job actually finished, leaving the page stuck on stale
+  // content with no error shown. Judging in concurrency-limited batches
+  // instead of strictly sequentially cuts real time roughly in proportion
+  // to the batch size. Progress is written once per BATCH, not once per
+  // candidate, so concurrent writers within a batch never race each other
+  // updating the same job row -- only one PATCH happens per batch, after
+  // every promise in it has settled.
+  const CONCURRENCY = 5;
   let judged = 0;
   let relevant = 0;
-  for (const opportunity of candidates) {
-    try {
+  for (let i = 0; i < candidates.length; i += CONCURRENCY) {
+    const batch = candidates.slice(i, i + CONCURRENCY);
+    const outcomes = await Promise.allSettled(batch.map(async (opportunity) => {
       // The canonical view (aoie_opportunity_candidates_v1) does not exist yet in
       // this project -- confirmed 2026-08-24 -- so every candidate today comes
       // through the direct-table fallback, which does carry updated_at (verified:
@@ -93,21 +107,25 @@ async function judgeJob(job, apiKey) {
       // comparison below evaluates false and the candidate is simply re-judged
       // instead of a stale/incorrect verdict silently being trusted.
       const cached = await cachedVerdict(opportunity.id, job.profile_fingerprint);
-      let verdict;
       if (cached && opportunity.updated_at && new Date(cached.opportunity_updated_at) >= new Date(opportunity.updated_at)) {
-        verdict = cached;
-      } else {
-        verdict = await judgeRelevance({ apiKey, model: MODEL(), profile: job.profile_snapshot, opportunity });
-        await writeVerdict(job, opportunity, verdict);
+        return cached;
       }
-      judged += 1;
-      if (verdict.relevant) relevant += 1;
-    } catch (error) {
-      // One bad contract (a malformed model response, a transient API error)
-      // must not abort the whole job -- log and keep judging the rest, the
-      // same way the shared candidate scoring never lets one row's
-      // enrichment failure take down the batch.
-      console.error('[aoie-llm-relevance-run] judgment failed for opportunity', opportunity.id, error);
+      const verdict = await judgeRelevance({ apiKey, model: MODEL(), profile: job.profile_snapshot, opportunity });
+      await writeVerdict(job, opportunity, verdict);
+      return verdict;
+    }));
+    for (let j = 0; j < outcomes.length; j++) {
+      const outcome = outcomes[j];
+      if (outcome.status === 'fulfilled') {
+        judged += 1;
+        if (outcome.value.relevant) relevant += 1;
+      } else {
+        // One bad contract (a malformed model response, a transient API
+        // error) must not abort the whole job -- log and keep judging the
+        // rest, the same way the shared candidate scoring never lets one
+        // row's enrichment failure take down the batch.
+        console.error('[aoie-llm-relevance-run] judgment failed for opportunity', batch[j].id, outcome.reason);
+      }
     }
     await db('aoie_llm_relevance_jobs', 'PATCH', `?id=eq.${encodeURIComponent(job.id)}`, {
       judged_candidates: judged, relevant_count: relevant, updated_at: nowIso(),
