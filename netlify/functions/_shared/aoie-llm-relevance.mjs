@@ -96,12 +96,21 @@ async function openaiMessage({ apiKey, model, prompt, fetchImpl = fetch, timeout
       body: JSON.stringify({
         model,
         store: false,
-        reasoning: { effort: 'medium' },
+        // effort:'low' + a generous max_output_tokens -- matches
+        // capability-profile.mjs's discoverWebsite() call, the only other
+        // proven-working GPT-5 Responses-API call in this repo. Learned
+        // live 2026-08-25: at effort:'medium' with max_output_tokens:1200,
+        // every single candidate silently failed -- reasoning tokens count
+        // against the same output budget on GPT-5 reasoning models, so a
+        // higher effort at a tight budget can consume the whole thing on
+        // hidden reasoning and leave nothing for the actual visible JSON,
+        // which then fails extractJsonObject() with no output text at all.
+        reasoning: { effort: 'low' },
         input: [
           { role: 'system', content: 'You are a meticulous government procurement analyst. Return one valid JSON object and never invent contract content that was not provided.' },
           { role: 'user', content: prompt },
         ],
-        max_output_tokens: 1200,
+        max_output_tokens: 3500,
       }),
       signal: controller.signal,
     });
