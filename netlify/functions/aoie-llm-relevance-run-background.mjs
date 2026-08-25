@@ -32,13 +32,40 @@ async function resolveStates(url, key, payload) {
   return inventoryStates;
 }
 
-async function existingActiveJob(fingerprint, states) {
+// Every dashboard load calls the trigger endpoint -- confirmed live
+// 2026-08-25 this was creating a brand-new ~98-candidate job on EVERY
+// single reload, even when a COMPLETED job for the exact same profile
+// already existed. That's real repeat API cost, and it meant the
+// dashboard's "reviewed N, found none" completed message almost never
+// actually surfaced -- a fresh reload immediately buried the completed
+// job under a newer QUEUED one before the user could see it. Now checks
+// QUEUED/RUNNING/COMPLETED (not just the in-flight statuses) -- only a
+// FAILED (or nonexistent) prior job allows a fresh one to be created.
+// Freshness windows, not "forever": a COMPLETED job older than this is
+// treated as stale so the profile eventually gets re-checked against
+// newly-added contracts, not frozen on a result from hours ago. A
+// QUEUED/RUNNING job that hasn't updated_at in a while is treated as
+// dead (e.g. an invocation that silently hung) rather than blocking new
+// attempts indefinitely -- confirmed live 2026-08-25 a job could get
+// stuck at 0 progress with no error and no further updates.
+const COMPLETED_FRESH_MS = 6 * 60 * 60 * 1000; // 6 hours
+const IN_FLIGHT_STALE_MS = 30 * 60 * 1000; // 30 minutes with no progress update = treat as dead
+
+async function existingUsableJob(fingerprint, states) {
   const rows = await db(
     'aoie_llm_relevance_jobs', 'GET',
-    `?profile_fingerprint=eq.${encodeURIComponent(fingerprint)}&status=in.(QUEUED,RUNNING)&order=created_at.desc&limit=5&select=*`,
+    `?profile_fingerprint=eq.${encodeURIComponent(fingerprint)}&status=in.(QUEUED,RUNNING,COMPLETED)&order=created_at.desc&limit=5&select=*`,
   );
   const sortedStates = [...states].sort().join(',');
-  return (rows || []).find((row) => [...(row.states || [])].sort().join(',') === sortedStates) || null;
+  const match = (rows || []).find((row) => [...(row.states || [])].sort().join(',') === sortedStates);
+  if (!match) return null;
+  const now = Date.now();
+  if (match.status === 'COMPLETED') {
+    const age = now - new Date(match.completed_at || match.updated_at).getTime();
+    return age <= COMPLETED_FRESH_MS ? match : null;
+  }
+  const sinceUpdate = now - new Date(match.updated_at || match.created_at).getTime();
+  return sinceUpdate <= IN_FLIGHT_STALE_MS ? match : null;
 }
 
 async function cachedVerdict(opportunityId, fingerprint) {
@@ -179,8 +206,8 @@ export default async function handler(req) {
   if (!states.length) return;
 
   const fingerprint = profileFingerprint(resolved.profile);
-  const existing = await existingActiveJob(fingerprint, states);
-  if (existing) return; // already queued or in flight for this exact profile+states -- don't duplicate work
+  const existing = await existingUsableJob(fingerprint, states);
+  if (existing) return; // already queued, in flight, or already completed for this exact profile+states -- don't duplicate work
 
   const created = await db('aoie_llm_relevance_jobs', 'POST', '', [{
     profile_fingerprint: fingerprint,
