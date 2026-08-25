@@ -164,6 +164,7 @@ async function judgeJob(job, apiKey) {
   }
   let judged = 0;
   let relevant = 0;
+  let lastFailureMessage = null;
   for (let i = 0; i < candidates.length; i += CONCURRENCY) {
     const batch = candidates.slice(i, i + CONCURRENCY);
     const outcomes = await Promise.allSettled(batch.map(async (opportunity) => {
@@ -193,11 +194,27 @@ async function judgeJob(job, apiKey) {
         // rest, the same way the shared candidate scoring never lets one
         // row's enrichment failure take down the batch.
         console.error('[aoie-llm-relevance-run] judgment failed for opportunity', batch[j].id, outcome.reason);
+        lastFailureMessage = outcome.reason instanceof Error ? outcome.reason.message : String(outcome.reason);
       }
     }
     await db('aoie_llm_relevance_jobs', 'PATCH', `?id=eq.${encodeURIComponent(job.id)}`, {
       judged_candidates: judged, relevant_count: relevant, updated_at: nowIso(),
     }, 'return=minimal').catch(() => {});
+  }
+
+  // A job that never successfully judged a single candidate is not a real
+  // completion -- "reviewed N, found none" would be a lie, not an honest
+  // zero. Confirmed live 2026-08-25: exactly this happened (a run
+  // completed with 0/98 judged while every candidate silently failed).
+  // Report it as FAILED instead so the dashboard shows the honest "could
+  // not finish" state, not a false confident zero.
+  if (judged === 0 && candidates.length > 0) {
+    await db('aoie_llm_relevance_jobs', 'PATCH', `?id=eq.${encodeURIComponent(job.id)}`, {
+      status: 'FAILED',
+      error_message: `All ${candidates.length} candidates failed judgment -- last error: ${String(lastFailureMessage || 'unknown').slice(0, 1000)}`,
+      updated_at: nowIso(),
+    }, 'return=minimal');
+    return;
   }
 
   await db('aoie_llm_relevance_jobs', 'PATCH', `?id=eq.${encodeURIComponent(job.id)}`, {
