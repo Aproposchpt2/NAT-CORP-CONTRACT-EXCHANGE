@@ -44,14 +44,17 @@ export default async function handler(req) {
   if (!matched) return json(401, { ok: false, error: 'Incorrect access code.' });
   if (isExpired(matched.expiresRaw)) return json(401, { ok: false, error: 'This access code has expired.' });
 
-  // Agency-login.html's 3-field form supplies name/agency_name; advisor-
-  // login.html's single-field form doesn't, so this only ever logs
-  // agency-flow redemptions -- Albert's team's usage is untracked here,
-  // same as before. A logging failure must never block a valid login.
+  // Agency-login.html's combined form supplies name/agency_name (and, since
+  // 2026-08-25, business_name -- the form now does Universal Intake in the
+  // same submit); advisor-login.html's single-field form supplies neither,
+  // so this only ever logs agency-flow redemptions -- Albert's team's usage
+  // is untracked here, same as before. A logging failure must never block
+  // a valid login.
   const name = String(payload?.name ?? '').trim();
   const agencyName = String(payload?.agency_name ?? '').trim();
+  const businessName = String(payload?.business_name ?? '').trim();
   if (name && agencyName) {
-    await db('natcorp_agency_pilot_logins', 'POST', '', [{ name, agency_name: agencyName, code_used: supplied }], 'return=minimal').catch((error) => {
+    await db('natcorp_agency_pilot_logins', 'POST', '', [{ name, agency_name: agencyName, code_used: supplied, business_name: businessName || null }], 'return=minimal').catch((error) => {
       console.error('[advisor-access] agency login-tracking insert failed', error);
     });
   }
