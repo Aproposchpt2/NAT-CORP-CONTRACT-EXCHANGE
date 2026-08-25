@@ -6,7 +6,8 @@
 // return 202 immediately and let it run past the normal timeout): a POST
 // here creates (or resumes) a judging job for the caller's verified
 // business profile, then judges every MATCH_READY candidate contract in
-// the requested states against it, one Claude call per contract, writing
+// the requested states against it, one OpenAI call per contract (moved
+// off Anthropic 2026-08-25, see _shared/aoie-llm-relevance.mjs), writing
 // each verdict to aoie_llm_relevance_verdicts and updating
 // aoie_llm_relevance_jobs progress as it goes so the dashboard's "Standby
 // while we gather your matched contracts" message can show real progress
@@ -41,7 +42,7 @@ async function withRetry(fn, attempts = 3, baseDelayMs = 3000) {
   throw lastError;
 }
 
-const MODEL = () => env('AOIE_LLM_RELEVANCE_MODEL') || 'claude-opus-5';
+const MODEL = () => env('AOIE_LLM_RELEVANCE_MODEL') || 'gpt-5-mini';
 
 async function resolveStates(url, key, payload) {
   const inventoryStates = await availableStates(url, key);
@@ -148,6 +149,12 @@ async function judgeJob(job, apiKey) {
   // pacing (stay under it), not concurrency -- worth revisiting with
   // proper per-minute throttling if speed becomes a priority again, not
   // by re-adding concurrency and hoping retries paper over it.
+  //
+  // The above was diagnosed against Anthropic's Opus rate limit
+  // specifically. Kept at 1 after the 2026-08-25 move to OpenAI too --
+  // OpenAI's own per-minute limits haven't been characterized yet, and
+  // there's no reason to assume CONCURRENCY>1 is safe there until it's
+  // actually been tested.
   const CONCURRENCY = 1;
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   async function judgeWithRetry(params, attempts = 3) {
@@ -227,8 +234,8 @@ export default async function handler(req) {
   if (req.method !== 'POST') return;
   const auth = authenticate(req);
   if (!auth) return;
-  const apiKey = env('ANTHROPIC_API_KEY');
-  if (!apiKey) { console.error('[aoie-llm-relevance-run] ANTHROPIC_API_KEY is not configured.'); return; }
+  const apiKey = env('OPENAI_API_KEY');
+  if (!apiKey) { console.error('[aoie-llm-relevance-run] OPENAI_API_KEY is not configured.'); return; }
 
   const url = env('SUPABASE_URL').replace(/\/$/, '');
   const key = env('SUPABASE_SERVICE_ROLE_KEY') || env('SUPABASE_SERVICE_KEY');

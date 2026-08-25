@@ -2,12 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { judgeRelevance, profileFingerprint } from '../netlify/functions/_shared/aoie-llm-relevance.mjs';
 
+// Mocks the OpenAI Responses API shape (moved off Anthropic 2026-08-25 --
+// see _shared/aoie-llm-relevance.mjs for why).
 function fakeFetch(responseBody) {
   return async () => ({
     ok: true,
     status: 200,
     async text() {
-      return JSON.stringify({ content: [{ type: 'text', text: JSON.stringify(responseBody) }] });
+      return JSON.stringify({ output_text: JSON.stringify(responseBody) });
     },
   });
 }

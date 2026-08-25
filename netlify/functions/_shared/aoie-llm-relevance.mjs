@@ -7,10 +7,19 @@
 // relates to X" from "the word X appears somewhere in this document" -- a
 // regulatory-act citation or a standard confidentiality clause reads
 // identically to a real subject-matter match to a keyword matcher. This
-// module asks Claude to actually read the business profile against the
+// module asks the model to actually read the business profile against the
 // contract's real, extracted scope of work and reason about genuine fit,
 // citing specific evidence -- the same way a human procurement analyst
 // would, not pattern-matching strings.
+//
+// Moved from Anthropic (Claude Opus 5) to OpenAI 2026-08-25 -- Jeff's
+// Anthropic account kept running out of API credits mid-judging (two real
+// job failures the same night: one all-96-candidates-failed on a 400
+// "credit balance too low", one earlier still stuck at 0 judged), while
+// OPENAI_API_KEY on this same project was already funded and already
+// proven working (capability-profile.mjs's website-discovery step uses it
+// successfully). Judgment prompt/criteria/output shape are unchanged --
+// only the vendor call and response parsing changed.
 
 import { createHash } from 'node:crypto';
 
@@ -74,21 +83,25 @@ function extractJsonObject(text = '') {
   return JSON.parse(cleaned.slice(first, last + 1));
 }
 
-async function claudeMessage({ apiKey, model, prompt, fetchImpl = fetch, timeoutMs = 90000 }) {
+async function openaiMessage({ apiKey, model, prompt, fetchImpl = fetch, timeoutMs = 90000 }) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(new Error('RELEVANCE_JUDGMENT_TIMEOUT')), timeoutMs);
   try {
-    const response = await fetchImpl('https://api.anthropic.com/v1/messages', {
+    const response = await fetchImpl('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
+        authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         model,
-        max_tokens: 1200,
-        messages: [{ role: 'user', content: prompt }],
+        store: false,
+        reasoning: { effort: 'medium' },
+        input: [
+          { role: 'system', content: 'You are a meticulous government procurement analyst. Return one valid JSON object and never invent contract content that was not provided.' },
+          { role: 'user', content: prompt },
+        ],
+        max_output_tokens: 1200,
       }),
       signal: controller.signal,
     });
@@ -101,9 +114,13 @@ async function claudeMessage({ apiKey, model, prompt, fetchImpl = fetch, timeout
 }
 
 function responseText(message) {
+  if (typeof message?.output_text === 'string') return message.output_text;
   const parts = [];
-  for (const block of message?.content || []) {
-    if (block?.type === 'text' && block?.text) parts.push(block.text);
+  for (const item of message?.output || []) {
+    if (item?.type !== 'message') continue;
+    for (const content of item.content || []) {
+      if (content?.type === 'output_text' && content.text) parts.push(content.text);
+    }
   }
   return parts.join('\n');
 }
@@ -131,8 +148,8 @@ function normalizeVerdict(parsed) {
   };
 }
 
-export async function judgeRelevance({ apiKey, model = 'claude-opus-5', profile, opportunity, fetchImpl }) {
-  if (!apiKey) throw new Error('ANTHROPIC_API_KEY_REQUIRED');
+export async function judgeRelevance({ apiKey, model = 'gpt-5-mini', profile, opportunity, fetchImpl }) {
+  if (!apiKey) throw new Error('OPENAI_API_KEY_REQUIRED');
   const reqText = requirementsText(opportunity.requirements);
   const hasRealContent = reqText.length >= 100 || String(opportunity.description || '').length >= 300;
 
@@ -163,7 +180,7 @@ Return ONLY a single JSON object, no markdown, no commentary, in exactly this sh
   "concerns": ["any real gaps or risks worth flagging before pursuit, or empty array"]
 }`;
 
-  const result = await claudeMessage({ apiKey, model, prompt, fetchImpl });
+  const result = await openaiMessage({ apiKey, model, prompt, fetchImpl });
   const parsed = extractJsonObject(responseText(result));
   return { ...normalizeVerdict(parsed), model, judged_at: new Date().toISOString() };
 }
