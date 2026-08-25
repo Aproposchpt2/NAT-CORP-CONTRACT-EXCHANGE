@@ -131,26 +131,24 @@ async function judgeJob(job, apiKey) {
     total_candidates: candidates.length, updated_at: nowIso(),
   }, 'return=minimal');
 
-  // Judging candidates one at a time (one Claude call each, ~5-10s apiece)
-  // made a 98-candidate job take ~12 minutes real-world (confirmed live
-  // 2026-08-25: Apropos Group LLC, 98 candidates, completed_at - started_at
-  // ~= 12 min) -- long enough that the dashboard's own poll loop (capped
-  // at 40 attempts * 6s = 4 min) gave up and stopped refreshing long
-  // before the job actually finished, leaving the page stuck on stale
-  // content with no error shown. Judging in concurrency-limited batches
-  // instead of strictly sequentially cuts real time roughly in proportion
-  // to the batch size. Progress is written once per BATCH, not once per
-  // candidate, so concurrent writers within a batch never race each other
-  // updating the same job row -- only one PATCH happens per batch, after
-  // every promise in it has settled.
-  // First attempt at concurrency was CONCURRENCY=5 with no retry --
-  // confirmed live 2026-08-25 this was a real regression, not just faster:
-  // a 98-candidate run completed with only 42 judged, down from 95/98 on
-  // the old strictly-sequential path. Most likely a rate limit on the
-  // Opus API getting hit by 5 concurrent requests with no backoff. Lower
-  // concurrency plus a retry gives most of the speed gain back without
-  // trading away the reliability this whole system exists for.
-  const CONCURRENCY = 2;
+  // Concurrency history, all confirmed live 2026-08-25 against the same
+  // 98-candidate Apropos Group LLC run:
+  //   - Strictly sequential (original): 95/98 judged. Reliable, slow (~12
+  //     min) -- long enough that the dashboard's poll loop used to give up
+  //     before the job finished (separately fixed: poll cap raised, and a
+  //     "still working" fallback added so it can no longer go silent).
+  //   - CONCURRENCY=5, no retry: only 42/98 judged. A clear regression.
+  //   - CONCURRENCY=2 + 3-attempt retry (2s/4s backoff): STILL only 42/98
+  //     on one run, then 0/98 on the very next run. Retrying within a few
+  //     seconds doesn't help if the real constraint is a PER-MINUTE rate
+  //     limit on the Opus model -- a short backoff never actually clears
+  //     it, so retries just fail the same way again.
+  // Sequential is the only configuration that has actually proven
+  // reliable tonight. Reverted to it. The real fix for a rate limit is
+  // pacing (stay under it), not concurrency -- worth revisiting with
+  // proper per-minute throttling if speed becomes a priority again, not
+  // by re-adding concurrency and hoping retries paper over it.
+  const CONCURRENCY = 1;
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   async function judgeWithRetry(params, attempts = 3) {
     let lastError;
