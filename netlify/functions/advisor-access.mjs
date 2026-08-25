@@ -1,4 +1,4 @@
-import { env, json, sameOrigin } from './_shared/natcorp-db.mjs';
+import { db, env, json, sameOrigin } from './_shared/natcorp-db.mjs';
 
 // Gates the "ADVISOR LOGIN" entry point (advisor-login.html) and the
 // agency-outreach entry point (agency-login.html) with shared promo codes,
@@ -43,6 +43,18 @@ export default async function handler(req) {
   const matched = entries.find((entry) => entry.code.trim().toUpperCase() === supplied);
   if (!matched) return json(401, { ok: false, error: 'Incorrect access code.' });
   if (isExpired(matched.expiresRaw)) return json(401, { ok: false, error: 'This access code has expired.' });
+
+  // Agency-login.html's 3-field form supplies name/agency_name; advisor-
+  // login.html's single-field form doesn't, so this only ever logs
+  // agency-flow redemptions -- Albert's team's usage is untracked here,
+  // same as before. A logging failure must never block a valid login.
+  const name = String(payload?.name ?? '').trim();
+  const agencyName = String(payload?.agency_name ?? '').trim();
+  if (name && agencyName) {
+    await db('natcorp_agency_pilot_logins', 'POST', '', [{ name, agency_name: agencyName, code_used: supplied }], 'return=minimal').catch((error) => {
+      console.error('[advisor-access] agency login-tracking insert failed', error);
+    });
+  }
 
   return json(200, { ok: true });
 }
