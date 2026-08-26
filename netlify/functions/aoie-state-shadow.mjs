@@ -5,7 +5,7 @@ import {
 import { db, env } from './_shared/natcorp-db.mjs';
 import {
   authenticate, availableStates, candidateRows, fetchRegistry,
-  normalizeStates, resolveProfile,
+  normalizeOwnerIntakeId, normalizeStates, resolveOwnerAuthority, resolveProfile,
 } from './_shared/aoie-candidates.mjs';
 import { profileFingerprint, RELEVANCE_ENGINE_VERSION } from './_shared/aoie-llm-relevance.mjs';
 
@@ -20,18 +20,32 @@ export function exactStateSetMatch(storedStates, requestedStates) {
   return stored.every((state, index) => state === requested[index]);
 }
 
-async function latestJobFor(fingerprint, states) {
-  const rows = await db(
-    'aoie_llm_relevance_jobs', 'GET',
-    `?profile_fingerprint=eq.${encodeURIComponent(fingerprint)}&order=created_at.desc&limit=10&select=*`,
-  );
-  return (rows || []).find((row) => exactStateSetMatch(row.states, states)) || null;
+export function jobAuthorityMatches(job, { ownerIntakeId, fingerprint, states }) {
+  const owner = normalizeOwnerIntakeId(ownerIntakeId);
+  if (!owner || normalizeOwnerIntakeId(job?.owner_intake_id) !== owner) return false;
+  if (!fingerprint || String(job?.profile_fingerprint || '') !== String(fingerprint)) return false;
+  return exactStateSetMatch(job?.states, states);
 }
 
-async function relevantVerdicts(fingerprint) {
+async function latestJobFor(ownerIntakeId, fingerprint, states) {
+  const rows = await db(
+    'aoie_llm_relevance_jobs', 'GET',
+    `?owner_intake_id=eq.${encodeURIComponent(ownerIntakeId)}&profile_fingerprint=eq.${encodeURIComponent(fingerprint)}&order=created_at.desc&limit=10&select=*`,
+  );
+  return (rows || []).find((row) => jobAuthorityMatches(row, { ownerIntakeId, fingerprint, states })) || null;
+}
+
+async function relevantVerdictsForJob(job) {
+  if (!job?.id || !normalizeOwnerIntakeId(job?.owner_intake_id)) return [];
+  const links = await db(
+    'aoie_llm_relevance_job_verdicts', 'GET',
+    `?job_id=eq.${encodeURIComponent(job.id)}&select=verdict_id`,
+  );
+  const ids = [...new Set((links || []).map((row) => String(row?.verdict_id || '').trim()).filter(Boolean))];
+  if (!ids.length) return [];
   const rows = await db(
     'aoie_llm_relevance_verdicts', 'GET',
-    `?profile_fingerprint=eq.${encodeURIComponent(fingerprint)}&relevant=eq.true&select=*`,
+    `?id=in.(${ids.map((id) => encodeURIComponent(id)).join(',')})&relevant=eq.true&select=*`,
   );
   return rows || [];
 }
@@ -49,6 +63,14 @@ export default async function handler(req) {
 
     const resolved = await resolveProfile(req, payload || {}, auth.mode);
     if (!resolved.profile) return json(401, { error: 'A verified Business Capability Profile is required.' });
+    const ownerAuthority = resolveOwnerAuthority(resolved, payload || {}, auth.mode);
+    if (!ownerAuthority) {
+      return json(auth.mode === 'internal' ? 400 : 401, {
+        error: auth.mode === 'internal'
+          ? 'Internal matching requires an explicit trusted owner_intake_id.'
+          : 'A verified customer profile instance is required.',
+      });
+    }
     const profile = expandBusinessProfile({ ...resolved.profile, service_states: [] });
     const evidence = profile.keywords.length || profile.naics_codes.length || profile.unspsc_codes.length || profile.commodity_codes.length || profile.concepts.length;
     if (!profile.legal_name) return json(400, { error: 'A business name is required.' });
@@ -78,7 +100,8 @@ export default async function handler(req) {
     const resultLimit = Math.max(1, Math.min(500, Number(payload.limit ?? 250) || 250));
     const nowIso = new Date().toISOString();
     const fingerprint = profileFingerprint(resolved.profile);
-    const [job, verdicts] = await Promise.all([latestJobFor(fingerprint, states), relevantVerdicts(fingerprint)]);
+    const job = await latestJobFor(ownerAuthority.owner_intake_id, fingerprint, states);
+    const verdicts = await relevantVerdictsForJob(job);
 
     let source, registry;
     if (!isPoll || verdicts.length) {
@@ -117,10 +140,9 @@ export default async function handler(req) {
     }, {});
 
     // CRITICAL CUSTOMER-TRUTH CONTROL:
-    // If the background trigger has not yet created a durable job row for this
-    // exact normalized geographic state set, report a synthetic QUEUED state
-    // rather than borrowing completion truth from another scope. The dashboard
-    // treats QUEUED/RUNNING as active and keeps polling.
+    // If no durable job exists for this exact owner + semantic profile +
+    // normalized geographic state set, report QUEUED. Semantic cache rows or
+    // legacy ownerless jobs can never establish customer completion authority.
     const judging = {
       status: job?.status || 'QUEUED',
       total_candidates: job?.total_candidates ?? candidates.length,
