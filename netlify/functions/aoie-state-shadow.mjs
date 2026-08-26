@@ -13,13 +13,19 @@ const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8', 'Cache
 const json = (status, body) => new Response(JSON.stringify(body), { status, headers: JSON_HEADERS });
 const LLM_ENGINE_VERSION = RELEVANCE_ENGINE_VERSION;
 
+export function exactStateSetMatch(storedStates, requestedStates) {
+  const stored = normalizeStates(storedStates).sort();
+  const requested = normalizeStates(requestedStates).sort();
+  if (!requested.length || stored.length !== requested.length) return false;
+  return stored.every((state, index) => state === requested[index]);
+}
+
 async function latestJobFor(fingerprint, states) {
   const rows = await db(
     'aoie_llm_relevance_jobs', 'GET',
     `?profile_fingerprint=eq.${encodeURIComponent(fingerprint)}&order=created_at.desc&limit=10&select=*`,
   );
-  const sortedStates = [...states].sort().join(',');
-  return (rows || []).find((row) => [...(row.states || [])].sort().join(',') === sortedStates) || (rows || [])[0] || null;
+  return (rows || []).find((row) => exactStateSetMatch(row.states, states)) || null;
 }
 
 async function relevantVerdicts(fingerprint) {
@@ -111,10 +117,10 @@ export default async function handler(req) {
     }, {});
 
     // CRITICAL CUSTOMER-TRUTH CONTROL:
-    // If the background trigger has not yet created a durable job row, report a
-    // synthetic QUEUED state rather than NOT_STARTED. The current dashboard treats
-    // QUEUED/RUNNING as active and keeps polling, which prevents an absent/slow job
-    // start from being rendered as a definitive zero-match conclusion.
+    // If the background trigger has not yet created a durable job row for this
+    // exact normalized geographic state set, report a synthetic QUEUED state
+    // rather than borrowing completion truth from another scope. The dashboard
+    // treats QUEUED/RUNNING as active and keeps polling.
     const judging = {
       status: job?.status || 'QUEUED',
       total_candidates: job?.total_candidates ?? candidates.length,
