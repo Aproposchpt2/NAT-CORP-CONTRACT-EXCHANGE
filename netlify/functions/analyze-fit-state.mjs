@@ -1,3 +1,5 @@
+import { loadProfileSession } from './_shared/natcorp-profile-session.mjs';
+
 const JSON_HEADERS={"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store"};
 const json=(status,body)=>new Response(JSON.stringify(body),{status,headers:JSON_HEADERS});
 const env=(name)=>globalThis.Netlify?.env?.get(name)||process.env[name]||'';
@@ -98,8 +100,13 @@ async function openAI(prompt,key){
 export default async function handler(req){
   if(req.method!=='POST')return json(405,{ok:false,error:'POST only'});
   if(!sameOrigin(req))return json(403,{ok:false,error:'Same-origin NAT-CORP access required.'});
+  const session=await loadProfileSession(req);
+  if(!session||session.discovery_status!=='verified'||!Object.keys(session.verified_profile||{}).length){
+    return json(401,{ok:false,error:'A verified Business Capability Profile is required.'});
+  }
   let body;try{body=await req.json()}catch{return json(400,{ok:false,error:'Invalid JSON request.'})}
-  const bid=body.bid||{},profile=body.profile||{};
+  const bid=body.bid||{};
+  const profile=session.verified_profile;
   if(!bid.title)return json(400,{ok:false,error:'Opportunity title required.'});
   const prompt=promptFor(bid,profile);
   const openAIKey=env('OPENAI_API_KEY');
