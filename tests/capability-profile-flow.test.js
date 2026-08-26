@@ -15,9 +15,6 @@ test('customer-facing flow does not use browser profile storage or URL profile h
 
 test('intake contains only approved business identity fields', () => {
   const text = read('welcome.html');
-  // visitorEmail is optional server-side (capability-profile.mjs) but was
-  // deliberately dropped from the frontend form by "Reduce Nat-Corp to the
-  // universal four-field intake" (62147a8) -- not expected on the page.
   for (const id of ['contactName','businessName','businessEmail','website']) assert.match(text, new RegExp(`id="${id}"`));
   for (const retired of ['entityType','contactTitle','phone','dba','modeGrid','visitorEmail']) assert.doesNotMatch(text, new RegExp(`id="${retired}"`));
 });
@@ -113,7 +110,7 @@ test('server profile flow uses HttpOnly session cookie and verified profile auth
 });
 
 test('direct APIE fallback uses package and match-readiness gates instead of legacy Nat-Corp QA labels', () => {
-  const text = read('netlify/functions/aoie-state-shadow.mjs');
+  const text = read('netlify/functions/_shared/aoie-candidates.mjs');
   assert.match(text, /package_status: 'eq\.PACKAGE_COMPLETE'/);
   assert.match(text, /requirements_extraction_status: 'eq\.COMPLETE'/);
   assert.match(text, /match_readiness_status: 'eq\.MATCH_READY'/);
@@ -121,13 +118,13 @@ test('direct APIE fallback uses package and match-readiness gates instead of leg
 });
 
 test('optional registry enrichment cannot fail the complete AOIE evaluation', () => {
-  const text = read('netlify/functions/aoie-state-shadow.mjs');
+  const text = read('netlify/functions/_shared/aoie-candidates.mjs');
   assert.match(text, /Promise\.allSettled/);
   assert.match(text, /degraded: errors\.length > 0/);
 });
 
 test('same-origin browser callers cannot inject an unverified request profile', () => {
-  const text = read('netlify/functions/aoie-state-shadow.mjs');
+  const text = read('netlify/functions/_shared/aoie-candidates.mjs');
   assert.match(text, /authMode === 'internal' && payload\?\.profile/);
   assert.match(text, /source: 'verified-session'/);
 });
