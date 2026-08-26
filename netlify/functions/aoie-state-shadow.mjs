@@ -7,11 +7,11 @@ import {
   authenticate, availableStates, candidateRows, fetchRegistry,
   normalizeStates, resolveProfile,
 } from './_shared/aoie-candidates.mjs';
-import { profileFingerprint } from './_shared/aoie-llm-relevance.mjs';
+import { profileFingerprint, RELEVANCE_ENGINE_VERSION } from './_shared/aoie-llm-relevance.mjs';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' };
 const json = (status, body) => new Response(JSON.stringify(body), { status, headers: JSON_HEADERS });
-const LLM_ENGINE_VERSION = 'aoie_llm_relevance_v1';
+const LLM_ENGINE_VERSION = RELEVANCE_ENGINE_VERSION;
 
 async function latestJobFor(fingerprint, states) {
   const rows = await db(
@@ -52,13 +52,6 @@ export default async function handler(req) {
     const scope = String(payload.scope || (requestedStates.length ? 'selected' : 'all')).toLowerCase();
     const residentState = String(payload.resident_state || resolved.profile.resident_state || resolved.session?.resident_state || '').trim().toUpperCase();
 
-    // A poll tick (the dashboard checking judging progress every few seconds
-    // while aoie-llm-relevance-run works through candidates) reuses the exact
-    // state scope its own initial, non-poll call already resolved -- state
-    // inventory doesn't change mid-judge, so re-running availableStates() on
-    // every tick is pure waste. Added 2026-08-24 after a real Supabase
-    // call-volume scare (1.8M calls/month on a different project) made this
-    // worth trimming before it became this project's problem too.
     const isPoll = payload.poll === true && requestedStates.length > 0;
     let inventoryStates, states;
     if (isPoll) {
@@ -81,10 +74,6 @@ export default async function handler(req) {
     const fingerprint = profileFingerprint(resolved.profile);
     const [job, verdicts] = await Promise.all([latestJobFor(fingerprint, states), relevantVerdicts(fingerprint)]);
 
-    // Same reasoning as above: while a poll tick has nothing relevant yet
-    // (still judging, verdicts empty), there is nothing for the candidate
-    // pool + registry fetch to join against -- skip both (4 Supabase calls)
-    // until the first relevant verdict actually lands.
     let source, registry;
     if (!isPoll || verdicts.length) {
       [source, registry] = await Promise.all([candidateRows(url, key, states, nowIso), fetchRegistry(url, key, states)]);
@@ -96,12 +85,6 @@ export default async function handler(req) {
     const candidates = source.rows.map((row) => enrichOpportunity(row, index, source.relation));
     const candidateById = new Map(candidates.map((row) => [row.id, row]));
 
-    // Relevance is decided ONLY by cached LLM judgments (aoie_llm_relevance_verdicts) --
-    // the keyword/ontology engine (aoie-state-scoring.mjs) was retired from this decision
-    // path 2026-08-24 after repeatedly failing Jeff's manual real-data cross-check. A
-    // candidate with no verdict yet simply isn't shown until aoie-llm-relevance-run has
-    // judged it; the `judging` block below tells the dashboard whether that's still in
-    // progress so it can show real progress instead of a false "no matches" state.
     const scored = verdicts
       .map((verdict) => {
         const row = candidateById.get(verdict.opportunity_id);
@@ -126,14 +109,21 @@ export default async function handler(req) {
       acc[row.aoie.match_status] = (acc[row.aoie.match_status] || 0) + 1;
       return acc;
     }, {});
+
+    // CRITICAL CUSTOMER-TRUTH CONTROL:
+    // If the background trigger has not yet created a durable job row, report a
+    // synthetic QUEUED state rather than NOT_STARTED. The current dashboard treats
+    // QUEUED/RUNNING as active and keeps polling, which prevents an absent/slow job
+    // start from being rendered as a definitive zero-match conclusion.
     const judging = {
-      status: job?.status || 'NOT_STARTED',
+      status: job?.status || 'QUEUED',
       total_candidates: job?.total_candidates ?? candidates.length,
       judged_candidates: job?.judged_candidates ?? 0,
       relevant_count: job?.relevant_count ?? 0,
       started_at: job?.started_at || null,
       completed_at: job?.completed_at || null,
       error_message: job?.error_message || null,
+      durable_job_created: Boolean(job),
     };
 
     return json(200, {
