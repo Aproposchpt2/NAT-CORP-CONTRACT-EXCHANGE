@@ -3,7 +3,8 @@
 // caller's verified business profile and judges MATCH_READY candidates.
 import { db, env, nowIso } from './_shared/natcorp-db.mjs';
 import {
-  authenticate, availableStates, candidateRows, fetchRegistry, normalizeStates, resolveProfile,
+  authenticate, availableStates, candidateRows, fetchRegistry, normalizeStates,
+  resolveOwnerAuthority, resolveProfile,
 } from './_shared/aoie-candidates.mjs';
 import { buildRegistryIndex, enrichOpportunity } from './_shared/aoie-state-local.mjs';
 import { judgeRelevance, profileFingerprint } from './_shared/aoie-llm-relevance.mjs';
@@ -37,10 +38,10 @@ async function resolveStates(url, key, payload) {
 const COMPLETED_FRESH_MS = 6 * 60 * 60 * 1000;
 const IN_FLIGHT_STALE_MS = 30 * 60 * 1000;
 
-async function existingUsableJob(fingerprint, states) {
+async function existingUsableJob(ownerIntakeId, fingerprint, states) {
   const rows = await db(
     'aoie_llm_relevance_jobs', 'GET',
-    `?profile_fingerprint=eq.${encodeURIComponent(fingerprint)}&status=in.(QUEUED,RUNNING,COMPLETED)&order=created_at.desc&limit=5&select=*`,
+    `?owner_intake_id=eq.${encodeURIComponent(ownerIntakeId)}&profile_fingerprint=eq.${encodeURIComponent(fingerprint)}&status=in.(QUEUED,RUNNING,COMPLETED)&order=created_at.desc&limit=5&select=*`,
   );
   const sortedStates = [...states].sort().join(',');
   const match = (rows || []).find((row) => [...(row.states || [])].sort().join(',') === sortedStates);
@@ -48,7 +49,8 @@ async function existingUsableJob(fingerprint, states) {
   const now = Date.now();
   if (match.status === 'COMPLETED') {
     // A completed job is reusable only when it truthfully judged every candidate.
-    // Historical partial jobs must never suppress a corrective retry.
+    // Historical partial jobs and ownerless jobs must never suppress a retry.
+    if (!match.owner_intake_id) return null;
     if (Number(match.judged_candidates || 0) !== Number(match.total_candidates || 0)) return null;
     const age = now - new Date(match.completed_at || match.updated_at).getTime();
     return age <= COMPLETED_FRESH_MS ? match : null;
@@ -57,6 +59,8 @@ async function existingUsableJob(fingerprint, states) {
   return sinceUpdate <= IN_FLIGHT_STALE_MS ? match : null;
 }
 
+// Semantic verdicts remain an internal computation cache. They are not
+// customer-authoritative until linked to a specific owner-bound matching job.
 async function cachedVerdict(opportunityId, fingerprint) {
   const rows = await db(
     'aoie_llm_relevance_verdicts', 'GET',
@@ -66,7 +70,7 @@ async function cachedVerdict(opportunityId, fingerprint) {
 }
 
 async function writeVerdict(job, opportunity, verdict) {
-  await db('aoie_llm_relevance_verdicts', 'POST', '', [{
+  const rows = await db('aoie_llm_relevance_verdicts', 'POST', '', [{
     opportunity_id: opportunity.id,
     profile_fingerprint: job.profile_fingerprint,
     business_name: job.business_name,
@@ -79,10 +83,23 @@ async function writeVerdict(job, opportunity, verdict) {
     model: verdict.model,
     opportunity_updated_at: opportunity.updated_at || nowIso(),
     judged_at: verdict.judged_at,
+  }], 'resolution=merge-duplicates,return=representation');
+  return rows?.[0] || null;
+}
+
+async function linkVerdictToJob(job, verdict) {
+  if (!job?.id || !job?.owner_intake_id || !verdict?.id || !verdict?.opportunity_id) {
+    throw new Error('OWNER_BOUND_VERDICT_LINK_REQUIRED');
+  }
+  await db('aoie_llm_relevance_job_verdicts', 'POST', '', [{
+    job_id: job.id,
+    verdict_id: verdict.id,
+    opportunity_id: verdict.opportunity_id,
   }], 'resolution=merge-duplicates,return=minimal');
 }
 
 async function judgeJob(job, apiKey) {
+  if (!job?.owner_intake_id) throw new Error('OWNER_AUTHORITY_REQUIRED');
   const url = env('SUPABASE_URL').replace(/\/$/, '');
   const key = env('SUPABASE_SERVICE_ROLE_KEY') || env('SUPABASE_SERVICE_KEY');
   const nowIsoValue = new Date().toISOString();
@@ -98,7 +115,8 @@ async function judgeJob(job, apiKey) {
   }, 'return=minimal');
 
   // Sequential processing remains the validated reliability setting. Cached
-  // successful verdicts make a subsequent retry process only missing/stale rows.
+  // semantic verdicts may be reused computationally, but every reused or newly
+  // written verdict is linked to this owner-bound job before it counts.
   const CONCURRENCY = 1;
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   async function judgeWithRetry(params, attempts = 3) {
@@ -120,10 +138,15 @@ async function judgeJob(job, apiKey) {
     const batch = candidates.slice(i, i + CONCURRENCY);
     const outcomes = await Promise.allSettled(batch.map(async (opportunity) => {
       const cached = await cachedVerdict(opportunity.id, job.profile_fingerprint);
-      if (cached && opportunity.updated_at && new Date(cached.opportunity_updated_at) >= new Date(opportunity.updated_at)) return cached;
+      if (cached && opportunity.updated_at && new Date(cached.opportunity_updated_at) >= new Date(opportunity.updated_at)) {
+        await linkVerdictToJob(job, cached);
+        return cached;
+      }
       const verdict = await judgeWithRetry({ apiKey, model: MODEL(), profile: job.profile_snapshot, opportunity });
-      await writeVerdict(job, opportunity, verdict);
-      return verdict;
+      const persisted = await writeVerdict(job, opportunity, verdict);
+      if (!persisted) throw new Error('SEMANTIC_VERDICT_WRITE_FAILED');
+      await linkVerdictToJob(job, persisted);
+      return persisted;
     }));
 
     for (let j = 0; j < outcomes.length; j++) {
@@ -144,9 +167,6 @@ async function judgeJob(job, apiKey) {
   if (judged !== candidates.length) {
     const failedCount = Math.max(0, candidates.length - judged);
     await db('aoie_llm_relevance_jobs', 'PATCH', `?id=eq.${encodeURIComponent(job.id)}`, {
-      // FAILED is deliberate: the current customer dashboard already treats it as
-      // non-final and a reload can safely create a retry job. Cached successful
-      // verdicts mean the retry only spends model calls on missing/stale candidates.
       status: 'FAILED',
       error_message: `Partial contract review: ${judged}/${candidates.length} candidates judged; ${failedCount} require retry. Last error: ${String(lastFailureMessage || 'unknown').slice(0, 800)}`,
       judged_candidates: judged,
@@ -177,15 +197,21 @@ export default async function handler(req) {
   try { payload = await req.json(); } catch { payload = {}; }
   const resolved = await resolveProfile(req, payload || {}, auth.mode);
   if (!resolved.profile) return;
+  const ownerAuthority = resolveOwnerAuthority(resolved, payload || {}, auth.mode);
+  if (!ownerAuthority) {
+    console.error('[aoie-llm-relevance-run] Owner authority is required; internal calls must provide owner_intake_id.');
+    return;
+  }
 
   const states = await resolveStates(url, key, payload || {});
   if (!states.length) return;
 
   const fingerprint = profileFingerprint(resolved.profile);
-  const existing = await existingUsableJob(fingerprint, states);
+  const existing = await existingUsableJob(ownerAuthority.owner_intake_id, fingerprint, states);
   if (existing) return;
 
   const created = await db('aoie_llm_relevance_jobs', 'POST', '', [{
+    owner_intake_id: ownerAuthority.owner_intake_id,
     profile_fingerprint: fingerprint,
     business_name: resolved.profile.business_name || null,
     states,
@@ -196,7 +222,7 @@ export default async function handler(req) {
   if (!job) return;
 
   const claimed = await db(
-    'aoie_llm_relevance_jobs', 'PATCH', `?id=eq.${encodeURIComponent(job.id)}&status=eq.QUEUED`,
+    'aoie_llm_relevance_jobs', 'PATCH', `?id=eq.${encodeURIComponent(job.id)}&owner_intake_id=eq.${encodeURIComponent(ownerAuthority.owner_intake_id)}&status=eq.QUEUED`,
     { status: 'RUNNING', started_at: nowIso(), updated_at: nowIso() }, 'return=representation',
   );
   const running = claimed?.[0];
@@ -206,7 +232,7 @@ export default async function handler(req) {
   catch (error) {
     const message = error instanceof Error ? error.message : 'OpenAI relevance judging failed.';
     console.error('[aoie-llm-relevance-run]', error);
-    await db('aoie_llm_relevance_jobs', 'PATCH', `?id=eq.${encodeURIComponent(running.id)}`, {
+    await db('aoie_llm_relevance_jobs', 'PATCH', `?id=eq.${encodeURIComponent(running.id)}&owner_intake_id=eq.${encodeURIComponent(ownerAuthority.owner_intake_id)}`, {
       status: 'FAILED', error_message: String(message).slice(0, 1200), updated_at: nowIso(),
     }, 'return=minimal').catch(() => {});
   }
