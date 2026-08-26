@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { profileFingerprint, judgeRelevance, RELEVANCE_ENGINE_VERSION } from '../netlify/functions/_shared/aoie-llm-relevance.mjs';
+import { exactStateSetMatch } from '../netlify/functions/aoie-state-shadow.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
@@ -64,6 +65,22 @@ test('missing durable relevance job is queued rather than reported as a zero-mat
   const endpoint = read('netlify/functions/aoie-state-shadow.mjs');
   assert.match(endpoint, /status: job\?\.status \|\| 'QUEUED'/);
   assert.match(endpoint, /durable_job_created: Boolean\(job\)/);
+  assert.doesNotMatch(endpoint, /\|\| \(rows \|\| \[\]\)\[0\] \|\| null/);
+});
+
+test('geographic job authority requires an exact normalized state set', () => {
+  assert.equal(exactStateSetMatch(['CA', 'AZ', 'NV'], ['NV', 'CA', 'AZ']), true);
+  assert.equal(exactStateSetMatch(['CA'], ['AZ', 'CA', 'NV']), false);
+  assert.equal(exactStateSetMatch(['CA'], ['CA', 'NV']), false);
+  assert.equal(exactStateSetMatch(['CA', 'NV'], ['CA']), false);
+  assert.equal(exactStateSetMatch(['CA'], ['NV']), false);
+  assert.equal(exactStateSetMatch(['ca', 'AZ', 'NV', 'CA'], ['NV', 'CA', 'AZ']), true);
+});
+
+test('invalid or empty geographic scope cannot inherit completion truth', () => {
+  assert.equal(exactStateSetMatch(['CA'], []), false);
+  assert.equal(exactStateSetMatch(['CA'], ['not-a-state']), false);
+  assert.equal(exactStateSetMatch([], []), false);
 });
 
 test('browser profile injection remains forbidden while internal controlled profile input remains supported', () => {
