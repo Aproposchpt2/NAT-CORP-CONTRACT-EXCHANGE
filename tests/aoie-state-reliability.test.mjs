@@ -4,10 +4,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { profileFingerprint, judgeRelevance, RELEVANCE_ENGINE_VERSION } from '../netlify/functions/_shared/aoie-llm-relevance.mjs';
-import { exactStateSetMatch } from '../netlify/functions/aoie-state-shadow.mjs';
+import { resolveOwnerAuthority } from '../netlify/functions/_shared/aoie-candidates.mjs';
+import { exactStateSetMatch, jobAuthorityMatches } from '../netlify/functions/aoie-state-shadow.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
+
+const OWNER_A = '11111111-1111-4111-8111-111111111111';
+const OWNER_B = '22222222-2222-4222-8222-222222222222';
+const FINGERPRINT = 'same-semantic-profile';
 
 test('semantic profile fingerprint is order-stable but changes for material semantic edits', () => {
   const base = {
@@ -83,12 +88,74 @@ test('invalid or empty geographic scope cannot inherit completion truth', () => 
   assert.equal(exactStateSetMatch([], []), false);
 });
 
+test('same semantic profile and states remain isolated across different owners', () => {
+  const ownerAJob = { owner_intake_id: OWNER_A, profile_fingerprint: FINGERPRINT, states: ['AZ', 'CA', 'NV'] };
+  assert.equal(jobAuthorityMatches(ownerAJob, { ownerIntakeId: OWNER_B, fingerprint: FINGERPRINT, states: ['NV', 'CA', 'AZ'] }), false);
+});
+
+test('same owner same profile and same normalized states may reuse an authoritative job', () => {
+  const job = { owner_intake_id: OWNER_A, profile_fingerprint: FINGERPRINT, states: ['AZ', 'CA', 'NV'] };
+  assert.equal(jobAuthorityMatches(job, { ownerIntakeId: OWNER_A, fingerprint: FINGERPRINT, states: ['NV', 'AZ', 'CA'] }), true);
+});
+
+test('same owner with changed profile fingerprint cannot reuse old job authority', () => {
+  const job = { owner_intake_id: OWNER_A, profile_fingerprint: FINGERPRINT, states: ['AZ', 'CA', 'NV'] };
+  assert.equal(jobAuthorityMatches(job, { ownerIntakeId: OWNER_A, fingerprint: 'changed-profile', states: ['AZ', 'CA', 'NV'] }), false);
+});
+
+test('same owner with different geography cannot reuse old job authority', () => {
+  const job = { owner_intake_id: OWNER_A, profile_fingerprint: FINGERPRINT, states: ['CA'] };
+  assert.equal(jobAuthorityMatches(job, { ownerIntakeId: OWNER_A, fingerprint: FINGERPRINT, states: ['CA', 'NV'] }), false);
+});
+
+test('different owner and profile remain fully isolated and legacy ownerless jobs are non-authoritative', () => {
+  const job = { owner_intake_id: OWNER_A, profile_fingerprint: 'owner-a-profile', states: ['CA'] };
+  assert.equal(jobAuthorityMatches(job, { ownerIntakeId: OWNER_B, fingerprint: 'owner-b-profile', states: ['CA'] }), false);
+  assert.equal(jobAuthorityMatches({ profile_fingerprint: FINGERPRINT, states: ['CA'] }, { ownerIntakeId: OWNER_A, fingerprint: FINGERPRINT, states: ['CA'] }), false);
+});
+
+test('semantic cache is reusable computation but customer verdict presentation is job-bound', () => {
+  const worker = read('netlify/functions/aoie-llm-relevance-run-background.mjs');
+  const endpoint = read('netlify/functions/aoie-state-shadow.mjs');
+  assert.match(worker, /cachedVerdict\(opportunity\.id, job\.profile_fingerprint\)/);
+  assert.match(worker, /linkVerdictToJob\(job, cached\)/);
+  assert.match(worker, /linkVerdictToJob\(job, persisted\)/);
+  assert.match(endpoint, /aoie_llm_relevance_job_verdicts/);
+  assert.match(endpoint, /job_id=eq\./);
+  assert.doesNotMatch(endpoint, /relevantVerdicts\(fingerprint\)/);
+});
+
+test('internal mode requires explicit trusted owner authority while browser authority comes from verified session', () => {
+  const internalResolved = { profile: { business_name: 'Example Co' }, session: null };
+  assert.equal(resolveOwnerAuthority(internalResolved, {}, 'internal'), null);
+  assert.deepEqual(resolveOwnerAuthority(internalResolved, { owner_intake_id: OWNER_A }, 'internal'), {
+    owner_intake_id: OWNER_A,
+    source: 'trusted-internal-request',
+  });
+  const customerResolved = { session: { intake_id: OWNER_B } };
+  assert.deepEqual(resolveOwnerAuthority(customerResolved, {}, 'anonymous-same-origin'), {
+    owner_intake_id: OWNER_B,
+    source: 'verified-session',
+  });
+});
+
+test('owner authority migration is additive, preserves legacy jobs, and protects the server-only link table', () => {
+  const migration = read('supabase/migrations/20260826192000_aoie_llm_relevance_owner_authority.sql');
+  assert.match(migration, /add column if not exists owner_intake_id uuid/);
+  assert.match(migration, /references public\.natcorp_business_intakes\(intake_id\)/);
+  assert.match(migration, /aoie_llm_relevance_job_verdicts/);
+  assert.match(migration, /enable row level security/);
+  assert.match(migration, /revoke all .* anon, authenticated/);
+  assert.doesNotMatch(migration, /delete from public\.aoie_llm_relevance_jobs/i);
+});
+
 test('browser profile injection remains forbidden while internal controlled profile input remains supported', () => {
   const candidates = read('netlify/functions/_shared/aoie-candidates.mjs');
   assert.match(candidates, /authMode === 'internal' && payload\?\.profile/);
   assert.match(candidates, /loadProfileSession\(req\)/);
   assert.match(candidates, /session\.discovery_status !== 'verified'/);
   assert.match(candidates, /source: 'verified-session'/);
+  assert.match(candidates, /payload\?\.owner_intake_id/);
 });
 
 test('OpenAI-only runtime guard blocks Anthropic configuration', async () => {
