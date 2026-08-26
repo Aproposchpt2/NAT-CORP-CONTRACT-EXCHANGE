@@ -36,6 +36,24 @@ export function normalizeStates(value) {
   return [...new Set(raw.map((v) => String(v || '').trim().toUpperCase()).filter((v) => /^[A-Z]{2}$/.test(v)))];
 }
 
+export function normalizeOwnerIntakeId(value) {
+  const raw = String(value || '').trim().toLowerCase();
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(raw) ? raw : '';
+}
+
+// Customer ownership is never inferred from mutable semantic content. Normal
+// browser requests inherit authority only from the verified server-side intake
+// session. Trusted internal callers must explicitly name the intake instance
+// they are operating for; a profile alone is not customer authority.
+export function resolveOwnerAuthority(resolved, payload = {}, authMode = '') {
+  if (authMode === 'internal') {
+    const ownerIntakeId = normalizeOwnerIntakeId(payload?.owner_intake_id);
+    return ownerIntakeId ? { owner_intake_id: ownerIntakeId, source: 'trusted-internal-request' } : null;
+  }
+  const ownerIntakeId = normalizeOwnerIntakeId(resolved?.session?.intake_id);
+  return ownerIntakeId ? { owner_intake_id: ownerIntakeId, source: 'verified-session' } : null;
+}
+
 const DIRECT_SELECT = [
   'id','pdas_record_id','state_code','jurisdiction_type','jurisdiction_name','issuing_organization','issuing_department',
   'source_platform','source_record_id','source_url','official_source_url','vendor_registration_url','solicitation_number','title',
