@@ -70,33 +70,7 @@ function profileText(profile){
 }
 
 function promptFor(bid,profile){
-  return `You are the APROPOS GROUP LLC executive state-and-local procurement analyst. Produce a decision-grade Executive Opportunity Assessment answering one question: Should this business pursue this opportunity?
-
-This is a state or local government procurement opportunity. Do not import federal-only requirements unless they are explicitly present in the opportunity data. Distinguish verified evidence, reported business information, assumptions, unknowns, and required validation. Never invent licenses, certifications, past performance, pricing, eligibility, or solicitation terms.
-
-BUSINESS PROFILE
-${profileText(profile)}
-
-OPPORTUNITY AND AOIE MATCH EVIDENCE
-${opportunityText(bid)}
-
-ANALYSIS RULES
-1. AOIE is preliminary matching evidence, not the final bid/no-bid decision. Use its score and reasons as one input.
-2. Capability alignment must be tied to actual selected services, classifications, or opportunity language.
-3. Missing information is UNKNOWN or VERIFY, not automatically a failure.
-4. A confirmed scope mismatch, expired deadline, mandatory eligibility failure, or material delivery gap may support NO-GO.
-5. Use GO only when the available evidence supports a credible pursuit and no material disqualifier is visible.
-6. Use CONDITIONAL when the opportunity is relevant but major requirements, evidence, eligibility, staffing, pricing, or schedule questions remain.
-7. Build an evidence ledger, risk register, executive observations, decision conditions, and time-phased action plan.
-8. Source notes must state what information was available and what still requires the official solicitation.
-9. Keep each item concise, specific, and suitable for an executive report.
-
-SCORING GUIDANCE
-GO: 75-100
-CONDITIONAL: 45-74
-NO-GO: 0-44
-
-Return only the structured JSON required by the schema.`;
+  return `You are the APROPOS GROUP LLC executive state-and-local procurement analyst. Produce a decision-grade Executive Opportunity Assessment answering one question: Should this business pursue this opportunity?\n\nThis is a state or local government procurement opportunity. Do not import federal-only requirements unless they are explicitly present in the opportunity data. Distinguish verified evidence, reported business information, assumptions, unknowns, and required validation. Never invent licenses, certifications, past performance, pricing, eligibility, or solicitation terms.\n\nBUSINESS PROFILE\n${profileText(profile)}\n\nOPPORTUNITY AND AOIE MATCH EVIDENCE\n${opportunityText(bid)}\n\nANALYSIS RULES\n1. AOIE is preliminary matching evidence, not the final bid/no-bid decision. Use its score and reasons as one input.\n2. Capability alignment must be tied to actual selected services, classifications, or opportunity language.\n3. Missing information is UNKNOWN or VERIFY, not automatically a failure.\n4. A confirmed scope mismatch, expired deadline, mandatory eligibility failure, or material delivery gap may support NO-GO.\n5. Use GO only when the available evidence supports a credible pursuit and no material disqualifier is visible.\n6. Use CONDITIONAL when the opportunity is relevant but major requirements, evidence, eligibility, staffing, pricing, or schedule questions remain.\n7. Build an evidence ledger, risk register, executive observations, decision conditions, and time-phased action plan.\n8. Source notes must state what information was available and what still requires the official solicitation.\n9. Keep each item concise, specific, and suitable for an executive report.\n\nSCORING GUIDANCE\nGO: 75-100\nCONDITIONAL: 45-74\nNO-GO: 0-44\n\nReturn only the structured JSON required by the schema.`;
 }
 
 function normalize(value){
@@ -121,19 +95,6 @@ async function openAI(prompt,key){
   return normalize(JSON.parse(text));
 }
 
-async function anthropic(prompt,key){
-  const response=await fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',headers:{'x-api-key':key,'anthropic-version':'2023-06-01','Content-Type':'application/json'},
-    body:JSON.stringify({model:env('ANTHROPIC_MODEL')||'claude-3-5-haiku-latest',max_tokens:5000,temperature:0.1,messages:[{role:'user',content:`${prompt}\n\nReturn one valid JSON object containing every required field in the requested structure.`}]})
-  });
-  if(!response.ok)throw new Error(`Anthropic ${response.status}: ${(await response.text().catch(()=>'' )).slice(0,300)}`);
-  const data=await response.json();
-  const text=data.content?.map(x=>x.text||'').join('')||'';
-  const match=text.match(/\{[\s\S]*\}/);
-  if(!match)throw new Error('Anthropic returned an invalid assessment.');
-  return normalize(JSON.parse(match[0]));
-}
-
 export default async function handler(req){
   if(req.method!=='POST')return json(405,{ok:false,error:'POST only'});
   if(!sameOrigin(req))return json(403,{ok:false,error:'Same-origin NAT-CORP access required.'});
@@ -141,12 +102,14 @@ export default async function handler(req){
   const bid=body.bid||{},profile=body.profile||{};
   if(!bid.title)return json(400,{ok:false,error:'Opportunity title required.'});
   const prompt=promptFor(bid,profile);
-  const errors=[];
   const openAIKey=env('OPENAI_API_KEY');
-  const anthropicKey=env('ANTHROPIC_API_KEY');
-  if(openAIKey){try{return json(200,{ok:true,provider:'openai',report_standard:'APROPOS-EOA-11P-STATE-LOCAL-v1',analysis:await openAI(prompt,openAIKey)})}catch(error){console.error('[analyze-fit-state] OpenAI',error);errors.push(error.message)}}
-  if(anthropicKey){try{return json(200,{ok:true,provider:'anthropic',report_standard:'APROPOS-EOA-11P-STATE-LOCAL-v1',analysis:await anthropic(prompt,anthropicKey)})}catch(error){console.error('[analyze-fit-state] Anthropic',error);errors.push(error.message)}}
-  return json(openAIKey||anthropicKey?502:503,{ok:false,error:openAIKey||anthropicKey?'The assessment providers could not complete the report.':'AI assessment is not configured.',diagnostic:errors.join(' | ').slice(0,700)});
+  if(!openAIKey)return json(503,{ok:false,error:'OpenAI assessment is not configured.'});
+  try{
+    return json(200,{ok:true,provider:'openai',report_standard:'APROPOS-EOA-11P-STATE-LOCAL-v1',analysis:await openAI(prompt,openAIKey)});
+  }catch(error){
+    console.error('[analyze-fit-state] OpenAI',error);
+    return json(502,{ok:false,error:'The OpenAI assessment could not complete the report.',diagnostic:String(error?.message||error).slice(0,700)});
+  }
 }
 
 export const config={
