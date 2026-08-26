@@ -1,5 +1,6 @@
 name: AOIE State Local Tests
 
+# PR #75 exact-head validation trigger after geographic job-authority correction.
 on:
   push:
     branches:
