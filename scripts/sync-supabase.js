@@ -20,9 +20,10 @@ const REQUESTED_JOB_ID = process.env.PDAS_SOURCE_JOB_ID || '';
 const CALEPROCURE_VENDOR_URL = 'https://www.caleprocure.ca.gov/pages/bidder-vendor.aspx';
 
 const SOURCES = {
-  'CA-PLANETBIDS': { file: 'bids.json', listKey: 'bids', map: fromPlanetBids },
-  'CA-CALEPROCURE': { file: 'caleprocure.json', listKey: 'opportunities', map: fromCalEprocure },
-  'CA-OBAS': { file: 'obas.json', listKey: 'opportunities', map: null },
+  'CA-PLANETBIDS': { file: 'bids.json', listKey: 'bids', map: fromPlanetBids, state: 'CA' },
+  'CA-CALEPROCURE': { file: 'caleprocure.json', listKey: 'opportunities', map: fromCalEprocure, state: 'CA' },
+  'CA-OBAS': { file: 'obas.json', listKey: 'opportunities', map: null, state: 'CA' },
+  'NV-NEVADAEPRO': { file: 'nevadaepro.json', listKey: 'opportunities', map: fromNevadaEpro, state: 'NV' },
 };
 
 function sbHeaders(extra) {
@@ -198,6 +199,73 @@ function fromCalEprocure(o) {
     qa_notes: qaNotes.length ? qaNotes.join('; ') : null,
     raw_source_payload: o,
     legacy_source_record_id: eventId,
+  };
+}
+
+function nevadaQuality(o) {
+  let score = 50;
+  if (o.close_date) score += 15;
+  if (o.scope) score += 15;
+  if (o.contact_email || o.contact_phone) score += 10;
+  if ((o.attachments || []).length) score += 10;
+  return Math.min(score, 100);
+}
+
+function fromNevadaEpro(o) {
+  const docId = String(o.doc_id || '').trim();
+  if (!docId) return null;
+
+  const now = new Date().toISOString();
+  const deadline = o.close_date || null;
+  const normalizedStatus = normalizeStatus(o.status, deadline);
+  const sourceUrl = o.detail_url || null;
+  const quality = nevadaQuality(o);
+  const sourceFingerprint = hashJson({ state_code: 'NV', source_platform: 'nevadaepro', source_record_id: docId });
+  const contentFingerprint = hashJson({
+    title: o.title, organization: o.organization, status: normalizedStatus, deadline, scope: o.scope || null,
+  });
+
+  const qaNotes = [];
+  if (!deadline) qaNotes.push('response_deadline did not parse from source bid_opening_date value');
+  if (!o.detail_fetched) qaNotes.push('list-only record; bid detail not yet verified');
+
+  return {
+    state_code: 'NV',
+    jurisdiction_type: 'state',
+    jurisdiction_name: 'Nevada',
+    issuing_organization: o.organization || 'Nevada state agency',
+    issuing_department: o.contact_org || o.organization || null,
+    source_platform: 'nevadaepro',
+    source_record_id: docId,
+    source_url: sourceUrl,
+    official_source_url: sourceUrl,
+    vendor_registration_url: 'https://nevadaepro.com/bso/external/publicVendorProfile.sda',
+    solicitation_number: docId,
+    title: o.title,
+    description: o.scope || null,
+    procurement_type: inferProcurementType(null, o.title, o.scope),
+    notice_type: null,
+    status: normalizedStatus,
+    response_deadline: deadline,
+    place_of_performance_state: 'NV',
+    contact_name: o.buyer || null,
+    contact_email: o.contact_email || null,
+    contact_phone: o.contact_phone || null,
+    document_urls: (o.attachments || []).map(a => ({ file_nbr: a.file_nbr, name: a.name || null })),
+    classifications: { contract_number: o.contract_number || null, alternate_id: o.alternate_id || null },
+    source_fingerprint: sourceFingerprint,
+    content_fingerprint: contentFingerprint,
+    is_latest_version: true,
+    first_seen_at: toIso(o.first_seen_at) || now,
+    last_seen_at: toIso(o.last_seen_at) || now,
+    last_verified_at: o.detail_fetched ? (toIso(o.last_detail_fetched_at) || now) : null,
+    closed_at: normalizedStatus === 'closed' ? deadline : null,
+    acquisition_method: 'official_public_periscope_nevadaepro_portal',
+    extraction_confidence: o.detail_fetched ? 0.95 : 0.6,
+    data_quality_score: quality,
+    qa_status: quality >= 85 ? 'auto_ingested' : (quality >= 65 ? 'review_required' : 'incomplete'),
+    qa_notes: qaNotes.length ? qaNotes.join('; ') : null,
+    raw_source_payload: o,
   };
 }
 
@@ -449,14 +517,17 @@ async function main() {
   const jobIds = REQUESTED_JOB_ID ? [REQUESTED_JOB_ID] : Object.keys(SOURCES);
   let totalOk = 0;
   let totalFailed = 0;
+  const statesTouched = new Set();
   for (const jobId of jobIds) {
     const result = await syncOne(jobId);
     totalOk += result.ok;
     totalFailed += result.failed;
+    if (SOURCES[jobId] && SOURCES[jobId].state) statesTouched.add(SOURCES[jobId].state);
   }
 
-  const closed = await closeExpired('CA');
-  console.log('[sync-supabase] total: ' + totalOk + ' upserted, ' + totalFailed + ' failed/deferred; ' + closed + ' expired CA row(s) closed.');
+  let totalClosed = 0;
+  for (const state of statesTouched) totalClosed += await closeExpired(state);
+  console.log('[sync-supabase] total: ' + totalOk + ' upserted, ' + totalFailed + ' failed/deferred; ' + totalClosed + ' expired row(s) closed across ' + Array.from(statesTouched).join(',') + '.');
 }
 
 if (require.main === module) {
@@ -468,6 +539,7 @@ if (require.main === module) {
 
 module.exports = {
   fromCalEprocure,
+  fromNevadaEpro,
   normalizeRow,
   sourceRows,
   inferProcurementType,

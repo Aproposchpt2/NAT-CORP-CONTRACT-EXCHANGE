@@ -166,7 +166,12 @@ function normalizeStatus(sourceStatus, responseDeadline) {
   if (raw.includes('award')) return 'awarded';
   const deadline = responseDeadline ? Date.parse(responseDeadline) : NaN;
   if (!Number.isNaN(deadline) && deadline < Date.now()) return 'closed';
-  if (raw.includes('post') || raw.includes('open') || !raw) return 'open';
+  // 'sent' is NevadaEPro's status text for an active, open-for-bid
+  // solicitation (its equivalent of Cal eProcure's 'posted') -- without this,
+  // every NV record fell through to a literal status:'sent', which matches
+  // none of the status='open' gates used downstream (the APIE lifecycle
+  // trigger, candidate-matching queries), so it would silently never surface.
+  if (raw.includes('post') || raw.includes('open') || raw.includes('sent') || !raw) return 'open';
   return raw.replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '') || 'open';
 }
 
