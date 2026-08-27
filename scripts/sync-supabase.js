@@ -377,21 +377,43 @@ async function migrateLegacyCalEprocureIds(rows) {
   return migrated;
 }
 
+/* PostgREST requires every object in one bulk POST to expose the same key
+   set -- normalizeRow() drops undefined/null fields per row (so incomplete
+   source data can't erase previously verified values), which means two rows
+   in the same source easily end up with different key sets (e.g. one has a
+   contact_email, another doesn't). Discovered live 2026-08-27 running the
+   real NevadaEPro job for the first time: PostgREST rejected the whole batch
+   with 'All object keys must match' -- the exact same failure class already
+   silently breaking CA-PLANETBIDS's scheduled runs. Grouping by key set
+   before each POST (same fix sync-supabase-grouped.js already uses for
+   CALEPROCURE) fixes both. */
+function groupRowsByKeySet(rows) {
+  const groups = new Map();
+  rows.forEach(row => {
+    const key = Object.keys(row).sort().join('|');
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(row);
+  });
+  return Array.from(groups.values());
+}
+
 async function upsertBatch(rows) {
   if (!rows.length) return { ok: 0, failed: 0, error: null };
   let ok = 0;
   let failed = 0;
   let lastError = null;
-  for (let index = 0; index < rows.length; index += BATCH_SIZE) {
-    const chunk = rows.slice(index, index + BATCH_SIZE);
-    try {
-      await request(TABLE, 'POST', '?on_conflict=source_platform,source_record_id', chunk,
-        'resolution=merge-duplicates,return=minimal');
-      ok += chunk.length;
-    } catch (error) {
-      lastError = error.message;
-      console.log('[sync-supabase] batch upsert FAILED:', error.message);
-      failed += chunk.length;
+  for (const group of groupRowsByKeySet(rows)) {
+    for (let index = 0; index < group.length; index += BATCH_SIZE) {
+      const chunk = group.slice(index, index + BATCH_SIZE);
+      try {
+        await request(TABLE, 'POST', '?on_conflict=source_platform,source_record_id', chunk,
+          'resolution=merge-duplicates,return=minimal');
+        ok += chunk.length;
+      } catch (error) {
+        lastError = error.message;
+        console.log('[sync-supabase] batch upsert FAILED:', error.message);
+        failed += chunk.length;
+      }
     }
   }
   return { ok, failed, error: lastError };
