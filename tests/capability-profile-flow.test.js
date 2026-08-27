@@ -113,21 +113,28 @@ test('server profile flow uses HttpOnly session cookie and verified profile auth
 });
 
 test('direct APIE fallback uses package and match-readiness gates instead of legacy Nat-Corp QA labels', () => {
-  const text = read('netlify/functions/aoie-state-shadow.mjs');
-  assert.match(text, /package_status: 'eq\.PACKAGE_COMPLETE'/);
-  assert.match(text, /requirements_extraction_status: 'eq\.COMPLETE'/);
-  assert.match(text, /match_readiness_status: 'eq\.MATCH_READY'/);
-  assert.doesNotMatch(text, /filterReleaseReadyOpportunities/);
+  // candidateRows() (the gate logic) was extracted from aoie-state-shadow.mjs
+  // into the shared aoie-candidates.mjs module -- check both: the gates
+  // themselves live in the shared file, the legacy-name ban still applies to
+  // the endpoint that must not reintroduce it.
+  const shared = read('netlify/functions/_shared/aoie-candidates.mjs');
+  const endpoint = read('netlify/functions/aoie-state-shadow.mjs');
+  assert.match(shared, /package_status: 'eq\.PACKAGE_COMPLETE'/);
+  assert.match(shared, /requirements_extraction_status: 'eq\.COMPLETE'/);
+  assert.match(shared, /match_readiness_status: 'eq\.MATCH_READY'/);
+  assert.doesNotMatch(endpoint, /filterReleaseReadyOpportunities/);
 });
 
 test('optional registry enrichment cannot fail the complete AOIE evaluation', () => {
-  const text = read('netlify/functions/aoie-state-shadow.mjs');
+  // fetchRegistry() moved to the shared module in the same refactor.
+  const text = read('netlify/functions/_shared/aoie-candidates.mjs');
   assert.match(text, /Promise\.allSettled/);
   assert.match(text, /degraded: errors\.length > 0/);
 });
 
 test('same-origin browser callers cannot inject an unverified request profile', () => {
-  const text = read('netlify/functions/aoie-state-shadow.mjs');
+  // resolveProfile() moved to the shared module in the same refactor.
+  const text = read('netlify/functions/_shared/aoie-candidates.mjs');
   assert.match(text, /authMode === 'internal' && payload\?\.profile/);
   assert.match(text, /source: 'verified-session'/);
 });
