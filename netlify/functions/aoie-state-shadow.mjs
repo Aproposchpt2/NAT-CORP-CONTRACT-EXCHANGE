@@ -41,17 +41,7 @@ export default async function handler(req) {
     let payload;
     try { payload = await req.json(); } catch { return json(400, { error: 'Invalid JSON.' }); }
 
-    const resolved = await resolveProfile(req, payload || {}, auth.mode);
-    if (!resolved.profile) return json(401, { error: 'A verified Business Capability Profile is required.' });
-    const profile = expandBusinessProfile({ ...resolved.profile, service_states: [] });
-    const evidence = profile.keywords.length || profile.naics_codes.length || profile.unspsc_codes.length || profile.commodity_codes.length || profile.concepts.length;
-    if (!profile.legal_name) return json(400, { error: 'A business name is required.' });
-    if (!evidence) return json(400, { error: 'The verified profile does not contain enough capability evidence to search contracts.' });
-
     const requestedStates = normalizeStates(payload.states);
-    const scope = String(payload.scope || (requestedStates.length ? 'selected' : 'all')).toLowerCase();
-    const residentState = String(payload.resident_state || resolved.profile.resident_state || resolved.session?.resident_state || '').trim().toUpperCase();
-
     // A poll tick (the dashboard checking judging progress every few seconds
     // while aoie-llm-relevance-run works through candidates) reuses the exact
     // state scope its own initial, non-poll call already resolved -- state
@@ -60,12 +50,35 @@ export default async function handler(req) {
     // call-volume scare (1.8M calls/month on a different project) made this
     // worth trimming before it became this project's problem too.
     const isPoll = payload.poll === true && requestedStates.length > 0;
+
+    // resolveProfile() and availableStates() share no dependency on each
+    // other -- they were running back-to-back for no reason, one full
+    // sequential network round trip apiece. Run them concurrently instead.
+    // (availableStates() is skipped outright for a poll tick, same as
+    // before -- states are already known, see the comment above.) Confirmed
+    // live 2026-08-28: this endpoint's own SQL runs in single-digit
+    // milliseconds (EXPLAIN ANALYZE), so an 8-11s response was entirely
+    // this kind of unnecessary stage-by-stage network round-tripping, not
+    // a slow query -- per Jeff: "The site rendering contracts so slow."
+    const [resolved, inventoryStatesResult] = await Promise.all([
+      resolveProfile(req, payload || {}, auth.mode),
+      isPoll ? Promise.resolve(null) : availableStates(url, key),
+    ]);
+    if (!resolved.profile) return json(401, { error: 'A verified Business Capability Profile is required.' });
+    const profile = expandBusinessProfile({ ...resolved.profile, service_states: [] });
+    const evidence = profile.keywords.length || profile.naics_codes.length || profile.unspsc_codes.length || profile.commodity_codes.length || profile.concepts.length;
+    if (!profile.legal_name) return json(400, { error: 'A business name is required.' });
+    if (!evidence) return json(400, { error: 'The verified profile does not contain enough capability evidence to search contracts.' });
+
+    const scope = String(payload.scope || (requestedStates.length ? 'selected' : 'all')).toLowerCase();
+    const residentState = String(payload.resident_state || resolved.profile.resident_state || resolved.session?.resident_state || '').trim().toUpperCase();
+
     let inventoryStates, states;
     if (isPoll) {
       inventoryStates = requestedStates;
       states = requestedStates;
     } else {
-      inventoryStates = await availableStates(url, key);
+      inventoryStates = inventoryStatesResult;
       states = inventoryStates;
       if (scope === 'resident') {
         if (!/^[A-Z]{2}$/.test(residentState)) return json(400, { error: 'Resident state is unavailable. Verify it in the Business Capability Profile first.' });
@@ -79,18 +92,29 @@ export default async function handler(req) {
     const resultLimit = Math.max(1, Math.min(500, Number(payload.limit ?? 250) || 250));
     const nowIso = new Date().toISOString();
     const fingerprint = profileFingerprint(resolved.profile);
-    const [job, verdicts] = await Promise.all([latestJobFor(fingerprint, states), relevantVerdicts(fingerprint)]);
 
-    // Same reasoning as above: while a poll tick has nothing relevant yet
-    // (still judging, verdicts empty), there is nothing for the candidate
-    // pool + registry fetch to join against -- skip both (4 Supabase calls)
-    // until the first relevant verdict actually lands.
-    let source, registry;
-    if (!isPoll || verdicts.length) {
-      [source, registry] = await Promise.all([candidateRows(url, key, states, nowIso), fetchRegistry(url, key, states)]);
+    // A non-poll request always needs the candidate pool + registry
+    // regardless of verdicts (the old code ran this unconditionally via
+    // `!isPoll || verdicts.length` short-circuiting on `!isPoll`), so
+    // there's no real dependency between it and the job/verdicts lookup --
+    // run all four together instead of two sequential Promise.all stages.
+    // A poll tick keeps the original two-stage shape: skip the 4-call
+    // candidate+registry fetch entirely until the first relevant verdict
+    // actually lands, preserving the call-volume guard noted above.
+    let job, verdicts, source, registry;
+    if (!isPoll) {
+      [job, verdicts, source, registry] = await Promise.all([
+        latestJobFor(fingerprint, states), relevantVerdicts(fingerprint),
+        candidateRows(url, key, states, nowIso), fetchRegistry(url, key, states),
+      ]);
     } else {
-      source = { rows: [], relation: DIRECT_TABLE, mode: 'poll-skipped-no-verdicts-yet' };
-      registry = { publishers: [], publisherPlatforms: [], platforms: [], degraded: false, errors: [] };
+      [job, verdicts] = await Promise.all([latestJobFor(fingerprint, states), relevantVerdicts(fingerprint)]);
+      if (verdicts.length) {
+        [source, registry] = await Promise.all([candidateRows(url, key, states, nowIso), fetchRegistry(url, key, states)]);
+      } else {
+        source = { rows: [], relation: DIRECT_TABLE, mode: 'poll-skipped-no-verdicts-yet' };
+        registry = { publishers: [], publisherPlatforms: [], platforms: [], degraded: false, errors: [] };
+      }
     }
     const index = buildRegistryIndex(registry);
     const candidates = source.rows.map((row) => enrichOpportunity(row, index, source.relation));
