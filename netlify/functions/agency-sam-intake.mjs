@@ -22,7 +22,7 @@
 // registration records" only, matching the public-surface rule already
 // enforced elsewhere in this codebase.
 import { db, env, nowIso, sameOrigin } from './_shared/natcorp-db.mjs';
-import { issueProfileSession, profileSessionCookie, safe } from './_shared/natcorp-profile-session.mjs';
+import { issueProfileSession, normalizeWebsite, profileSessionCookie, safe } from './_shared/natcorp-profile-session.mjs';
 
 const SAM_ENTITY_URL = 'https://api.sam.gov/entity-information/v3/entities';
 const JSON_HEADERS = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' };
@@ -75,7 +75,7 @@ function extractSocioeconomic(entity) {
     .filter(Boolean);
 }
 
-async function persistSamVerifiedProfile(contactName, entity, naics, socioeconomic) {
+async function persistSamVerifiedProfile(contactName, website, entity, naics, socioeconomic) {
   const taxonomyRows = await db('aoie_taxonomy_versions', 'GET', '?select=id&order=created_at.desc&limit=1');
   const taxonomyVersionId = taxonomyRows?.[0]?.id;
   if (!taxonomyVersionId) throw new Error('AOIE taxonomy version is unavailable.');
@@ -91,7 +91,7 @@ async function persistSamVerifiedProfile(contactName, entity, naics, socioeconom
   const profilePayload = {
     legal_business_name: legalName,
     business_description: description,
-    website: null,
+    website: website.website,
     primary_location: { city: addr.city || null, state: addr.stateOrProvinceCode || null, source_url: null },
     service_territory: { scope: 'all_states', resident_state: addr.stateOrProvinceCode || null },
     taxonomy_version_id: taxonomyVersionId,
@@ -128,13 +128,14 @@ async function persistSamVerifiedProfile(contactName, entity, naics, socioeconom
   return { profileId, legalName, city: addr.city || null, state: addr.stateOrProvinceCode || null, uei: reg.ueiSAM || null, cage: reg.cageCode || null };
 }
 
-async function createSessionForProfile(contactName, businessNameSubmitted, profileMeta, naics, socioeconomic) {
+async function createSessionForProfile(contactName, website, businessNameSubmitted, profileMeta, naics, socioeconomic) {
   const issued = issueProfileSession();
   const now = nowIso();
   const verifiedProfile = {
     profile_version: 'natcorp_sam_gov_v1',
     business_name: profileMeta.legalName,
     legal_name: profileMeta.legalName,
+    website: website.website,
     resident_state: profileMeta.state,
     resident_city: profileMeta.city,
     naics_codes: naics.map((n) => n.code),
@@ -150,14 +151,14 @@ async function createSessionForProfile(contactName, businessNameSubmitted, profi
     intake_kind: 'business_profile',
     status: 'dna_complete',
     contact_email: null,
-    intake_payload: { contact_name: contactName, business_name: businessNameSubmitted, source: 'natcorp-agency-sam-intake-v1', started_at: now },
+    intake_payload: { contact_name: contactName, business_name: businessNameSubmitted, website: website.website, source: 'natcorp-agency-sam-intake-v1', started_at: now },
     session_token_hash: issued.token_hash,
     session_expires_at: issued.expires_at,
     contact_name: contactName,
     business_name: profileMeta.legalName,
     business_email: null,
-    website: null,
-    canonical_domain: null,
+    website: website.website,
+    canonical_domain: website.canonical_domain,
     discovery_status: 'verified',
     draft_profile: verifiedProfile,
     discovery_evidence: [],
@@ -175,13 +176,13 @@ async function createSessionForProfile(contactName, businessNameSubmitted, profi
   return { cookie: profileSessionCookie(issued.token) };
 }
 
-async function resolveAndPersist(contactName, businessNameSubmitted, uei) {
+async function resolveAndPersist(contactName, website, businessNameSubmitted, uei) {
   const entity = await fetchEntity(uei);
   if (!entity) throw new Error('That registration could not be retrieved. Try again.');
   const naics = extractNaics(entity);
   const socioeconomic = extractSocioeconomic(entity);
-  const profileMeta = await persistSamVerifiedProfile(contactName, entity, naics, socioeconomic);
-  return createSessionForProfile(contactName, businessNameSubmitted, profileMeta, naics, socioeconomic);
+  const profileMeta = await persistSamVerifiedProfile(contactName, website, entity, naics, socioeconomic);
+  return createSessionForProfile(contactName, website, businessNameSubmitted, profileMeta, naics, socioeconomic);
 }
 
 export default async function handler(req) {
@@ -194,6 +195,9 @@ export default async function handler(req) {
   const businessName = safe(payload?.business_name, 240);
   if (contactName.length < 2) return jsonResponse(400, { ok: false, error: 'Enter the client contact name.' });
   if (businessName.length < 2) return jsonResponse(400, { ok: false, error: 'Enter the business name.' });
+  let website;
+  try { website = normalizeWebsite(payload?.website); }
+  catch (error) { return jsonResponse(400, { ok: false, error: error.message }); }
 
   try {
     if (action === 'lookup') {
@@ -208,13 +212,13 @@ export default async function handler(req) {
       if (candidates.length > 1) {
         return jsonResponse(200, { ok: true, matched: 'multiple', candidates });
       }
-      const { cookie } = await resolveAndPersist(contactName, businessName, candidates[0].uei);
+      const { cookie } = await resolveAndPersist(contactName, website, businessName, candidates[0].uei);
       return jsonResponse(200, { ok: true, matched: 'single' }, { 'set-cookie': cookie });
     }
     if (action === 'select') {
       const uei = safe(payload?.uei, 32);
       if (!uei) return jsonResponse(400, { ok: false, error: 'Missing selection.' });
-      const { cookie } = await resolveAndPersist(contactName, businessName, uei);
+      const { cookie } = await resolveAndPersist(contactName, website, businessName, uei);
       return jsonResponse(200, { ok: true, matched: 'single' }, { 'set-cookie': cookie });
     }
     return jsonResponse(400, { ok: false, error: 'Unknown agency intake action.' });
