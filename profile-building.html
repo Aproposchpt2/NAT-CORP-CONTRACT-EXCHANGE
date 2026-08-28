@@ -43,14 +43,35 @@ const stages=[
  {key:'profile_build',title:'Business profile build',copy:'Building the structured Business Capability Profile for your review.',pct:88},
  {key:'review_ready',title:'Ready for review',copy:'Your profile is ready for verification and editing.',pct:100}
 ];
-let queued=false,timer=null;
+let queued=false,timer=null,autoConfirmed=false;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+// Agency-partner path: profile-building.html?auto=1 (set by agency-login.html).
+// The advisor isn't the business owner reviewing their own capability profile --
+// once discovery is done, skip the manual "Review My Business Profile" step and
+// land straight on the matches dashboard, same accept-defaults action the
+// Confirm button on profile-review.html sends.
+const AUTO_CONFIRM=new URLSearchParams(location.search).get('auto')==='1';
+let autoConfirmAttempts=0;
+async function autoConfirm(){
+  if(autoConfirmed)return;autoConfirmed=true;
+  try{
+    const response=await fetch('/api/capability-profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'confirm',profile:{}})});
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok||!result.ok)throw new Error(result.error||'Nat-Corp could not confirm this business profile.');
+    location.assign('/dashboard#contract-scope');
+  }catch(error){
+    autoConfirmed=false;autoConfirmAttempts++;
+    $('stageMessage').textContent=error.message||'Unable to finish building this profile automatically.';
+    if(autoConfirmAttempts<3)timer=setTimeout(tick,2500);
+    else{$('errorBox').classList.add('on');$('errorMessage').textContent=(error.message||'Nat-Corp could not automatically confirm this profile.')+' Try Review My Business Profile below, or retry.';$('ready').classList.add('on')}
+  }
+}
 function fallbackActivity(session){if(session.discovery_status==='review_ready'||session.discovery_status==='verified')return{stage:'review_ready',percent:100,message:'Your Business Capability Profile is ready for review.',detail:'Review and edit the profile before contract matching.'};if(session.discovery_status==='discovering')return{stage:'agent_search',percent:34,message:'Nat-Corp Agent is searching your business website.',detail:'The search continues in the background.'};return{stage:'intake_received',percent:7,message:'Your intake has been received.',detail:'Preparing to assign the Nat-Corp business-profile Agent.'}}
 function renderStages(activity,failed=false){const current=failed?'failed':activity.stage;let activeIndex=stages.findIndex(s=>s.key===current);if(activeIndex<0)activeIndex=Math.max(0,stages.findIndex(s=>s.pct>=Number(activity.percent||0)));$('activity').innerHTML=stages.map((s,i)=>{let cls='pending',mark=String(i+1);if(!failed&&s.key==='review_ready'&&activity.stage==='review_ready'){cls='complete';mark='✓'}else if(!failed&&i<activeIndex){cls='complete';mark='✓'}else if(!failed&&i===activeIndex){cls='active';mark='•'}else if(failed&&i===Math.max(0,activeIndex)){cls='failed';mark='!'}return `<div class="activity-row ${cls}"><div class="node">${mark}</div><div><h3>${s.title}</h3><p>${s.copy}</p></div></div>`}).join('')}
 function render(session){const activity=session.draft_profile?.activity||fallbackActivity(session);const failed=session.discovery_status==='failed';const pct=failed?Number(activity.percent||10):Math.max(7,Math.min(100,Number(activity.percent||7)));$('businessName').textContent=session.business_name||'Your business';$('businessWebsite').textContent=session.website||'';$('percent').textContent=`${pct}%`;$('fill').style.width=`${pct}%`;$('stageTitle').textContent=failed?'Profile build interrupted':activity.message||'Nat-Corp is building your business profile.';$('stageMessage').textContent=failed?(session.last_error||activity.detail||'The background discovery job could not finish.'):activity.detail||'Your profile is being built from official website evidence.';$('detailTitle').textContent=failed?'The Agent stopped before completion':activity.message||'Business profile activity';$('detailCopy').textContent=activity.detail||'Nat-Corp is processing the next profile stage.';renderStages(activity,failed);$('ready').classList.toggle('on',session.discovery_status==='review_ready'||session.discovery_status==='verified');$('errorBox').classList.toggle('on',failed);$('errorMessage').textContent=session.last_error||activity.detail||'Nat-Corp could not complete this profile build.';$('topStatus').textContent=failed?'Profile build needs attention':(session.discovery_status==='review_ready'||session.discovery_status==='verified'?'Profile ready':'Profile build active');$('pulse').style.animationPlayState=(failed||session.discovery_status==='review_ready'||session.discovery_status==='verified')?'paused':'running';return session.discovery_status}
 async function readSession(){const response=await fetch('/api/capability-profile',{headers:{Accept:'application/json'},cache:'no-store'});const result=await response.json().catch(()=>({}));if(response.status===401){location.replace('/intake');throw new Error('Session expired');}if(!response.ok)throw new Error(result.error||'Nat-Corp could not read profile progress.');return result.session||{}}
 async function queueDiscovery(){if(queued)return;queued=true;const response=await fetch('/api/capability-profile-discover',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});if(response.status!==202&&!response.ok){queued=false;throw new Error('Nat-Corp could not start the business-profile Agent.')}}
-async function tick(){try{const session=await readSession();const status=render(session);if(status==='intake_created'){await queueDiscovery()}if(status==='review_ready'||status==='verified'||status==='failed')return}catch(error){$('stageMessage').textContent=error.message||'Unable to refresh profile progress.'}timer=setTimeout(tick,2500)}
+async function tick(){try{const session=await readSession();const status=render(session);if(status==='intake_created'){await queueDiscovery()}if(status==='verified'){if(AUTO_CONFIRM){location.assign('/dashboard#contract-scope');return}return}if(status==='review_ready'){if(AUTO_CONFIRM){await autoConfirm();return}return}if(status==='failed')return}catch(error){$('stageMessage').textContent=error.message||'Unable to refresh profile progress.'}timer=setTimeout(tick,2500)}
 $('retryButton').addEventListener('click',async()=>{queued=false;$('errorBox').classList.remove('on');try{await queueDiscovery();await sleep(700);tick()}catch(error){$('errorBox').classList.add('on');$('errorMessage').textContent=error.message}});
 tick();
 })();

@@ -67,7 +67,7 @@ form.addEventListener('submit',async event=>{
     const intakeResponse=await fetch('/api/capability-profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'start',contact_name:nameValue,business_name:bizNameValue,business_email:bizEmailValue,website:parsedUrl.href})});
     const intakeResult=await intakeResponse.json().catch(()=>({}));
     if(!intakeResponse.ok||!intakeResult.ok)throw new Error(intakeResult.error||'The business profile could not be started.');
-    location.assign('/profile-building.html')
+    location.assign('/profile-building.html?auto=1')
   }catch(error){
     message.textContent=error.message;button.disabled=false;button.textContent='Continue'
   }
