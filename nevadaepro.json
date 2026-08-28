@@ -1,7 +1,41 @@
 {
-  "fetched_at": "2026-08-27T23:05:18.283Z",
+  "fetched_at": "2026-08-28T23:31:34.330Z",
   "source_url": "https://nevadaepro.com/bso/view/search/external/advancedSearchBid.xhtml?openBids=true",
   "opportunities": [
+    {
+      "doc_id": "69CRC-S3991",
+      "title": "CRCBMI-01 230kV Circuit Breakers",
+      "organization": "Colorado River Commission",
+      "contact_org": "Colorado River Commission",
+      "buyer": "Gina Goodman",
+      "status": "Sent",
+      "contract_number": null,
+      "alternate_id": "CRCBMI-01",
+      "bid_opening_date_raw": "09/24/2026 14:00:00",
+      "close_date": "2026-09-24T21:00:00.000Z",
+      "scope": null,
+      "contact_email": "invoices@crchydro.org",
+      "contact_phone": "(702) 486-2670",
+      "attachments": [
+        {
+          "file_nbr": "19802",
+          "name": "Quote Instructions"
+        },
+        {
+          "file_nbr": "323974",
+          "name": "CRCBMI-01_230kV Power Circuit Breakers_Bid 69CRC-S3991Contract _NATIVE.docx"
+        },
+        {
+          "file_nbr": "323975",
+          "name": "Section 1100 Drawings Bid 69CRC-S3991.pdf"
+        }
+      ],
+      "detail_fetched": true,
+      "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=69CRC-S3991&external=true&parentUrl=close",
+      "first_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
+    },
     {
       "doc_id": "81DMV-S3985",
       "title": "Vehicle Remote Sensing",
@@ -57,8 +91,66 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=81DMV-S3985&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
+    },
+    {
+      "doc_id": "30DOE-S3984",
+      "title": "Administrator, Office of Assessment, Data, and Accountability Management (ADAM)",
+      "organization": "Department of Education",
+      "contact_org": null,
+      "buyer": "Chuy Ampudia",
+      "status": "Sent",
+      "contract_number": null,
+      "alternate_id": null,
+      "bid_opening_date_raw": "10/01/2026 14:00:00",
+      "close_date": "2026-10-01T21:00:00.000Z",
+      "scope": null,
+      "contact_email": "accountingdoe@doe.nv.gov",
+      "contact_phone": "(775) 687-9115",
+      "attachments": [
+        {
+          "file_nbr": "19701",
+          "name": "Quote Instructions"
+        },
+        {
+          "file_nbr": "324297",
+          "name": "30DOE-S3984-request-for-proposals-2026-08-27.docx"
+        },
+        {
+          "file_nbr": "324290",
+          "name": "Terms-and-conditions-for-services~3.pdf"
+        },
+        {
+          "file_nbr": "324291",
+          "name": "30DOE-S3984 Standard-form-contract.docx"
+        },
+        {
+          "file_nbr": "324292",
+          "name": "INSURANCE REQUIREMENTS 30DOE-S3984.pdf"
+        },
+        {
+          "file_nbr": "324289",
+          "name": "30DOE-S3984 Scope of Work.docx"
+        },
+        {
+          "file_nbr": "324293",
+          "name": "NV_ Data Sharing Agreement_.docx"
+        },
+        {
+          "file_nbr": "324294",
+          "name": "Certification-regarding-lobbying~2.pdf"
+        },
+        {
+          "file_nbr": "324295",
+          "name": "30DOE-S3984-Vendor-Information-Response.pdf"
+        }
+      ],
+      "detail_fetched": true,
+      "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=30DOE-S3984&external=true&parentUrl=close",
+      "first_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "43ADG-S3982",
@@ -95,8 +187,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=43ADG-S3982&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "43ADG-S3981",
@@ -129,8 +221,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=43ADG-S3981&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "43ADG-S3980",
@@ -159,8 +251,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=43ADG-S3980&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "43ADG-S3979",
@@ -221,8 +313,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=43ADG-S3979&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "44DOC-S3975",
@@ -319,8 +411,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=44DOC-S3975&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "70CNR-S3971",
@@ -349,8 +441,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=70CNR-S3971&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "43ADG-S3970",
@@ -391,8 +483,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=43ADG-S3970&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "90DETR-S3968",
@@ -453,8 +545,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=90DETR-S3968&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "70CNR-S3960",
@@ -507,8 +599,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=70CNR-S3960&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "44DOC-S3955",
@@ -589,8 +681,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=44DOC-S3955&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "72DOW-S3941",
@@ -683,8 +775,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=72DOW-S3941&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "80DOT-S3940",
@@ -717,8 +809,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=80DOT-S3940&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "40DHHS-S3910",
@@ -779,8 +871,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=40DHHS-S3910&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "01GO-S3906",
@@ -849,8 +941,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=01GO-S3906&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "70CNR-S3892",
@@ -923,8 +1015,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=70CNR-S3892&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "01GO-S3715",
@@ -997,8 +1089,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=01GO-S3715&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "01GO-S3713",
@@ -1071,8 +1163,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=01GO-S3713&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "99SWC-S3513",
@@ -1117,8 +1209,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=99SWC-S3513&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "40DHHS-S3292",
@@ -1235,8 +1327,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=40DHHS-S3292&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     },
     {
       "doc_id": "10TCA-S3261",
@@ -1297,8 +1389,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=10TCA-S3261&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-08-27T23:05:18.283Z",
-      "last_detail_fetched_at": "2026-08-27T23:05:18.283Z"
+      "last_seen_at": "2026-08-28T23:31:34.330Z",
+      "last_detail_fetched_at": "2026-08-28T23:31:34.330Z"
     }
   ]
 }
