@@ -89,7 +89,7 @@ export default async function handler(req) {
     if (!isPoll || verdicts.length) {
       [source, registry] = await Promise.all([candidateRows(url, key, states, nowIso), fetchRegistry(url, key, states)]);
     } else {
-      source = { rows: [], relation: DIRECT_TABLE, mode: 'poll-skipped-no-verdicts-yet', canonical_view_available: false, direct_table_fallback_used: false };
+      source = { rows: [], relation: DIRECT_TABLE, mode: 'poll-skipped-no-verdicts-yet' };
       registry = { publishers: [], publisherPlatforms: [], platforms: [], degraded: false, errors: [] };
     }
     const index = buildRegistryIndex(registry);
@@ -142,14 +142,17 @@ export default async function handler(req) {
       profile, source_candidate_count: candidates.length, candidate_count: judging.judged_candidates, excluded_candidate_count: 0,
       judging, release_rejection_summary: {}, result_count: results.length, minimum_score: minimumScore, summary,
       data_source: {
-        relation: `public.${source.relation}`, mode: source.mode, canonical_view_attempted: true,
-        canonical_view_available: source.canonical_view_available, direct_table_fallback_used: source.direct_table_fallback_used,
+        // No canonical-view attempt-then-fallback dance anymore -- removed
+        // 2026-08-28 after confirming aoie_opportunity_candidates_v1 never
+        // existed in the database, so every request was paying for one
+        // guaranteed-to-fail Supabase round trip before the real query ran.
+        relation: `public.${source.relation}`, mode: source.mode,
         capability_first_search: true, resident_state_is_presentation_filter: true,
         latest_version_filter_applied: true, duplicate_filter_applied: true, normalized_status_filter_applied: true,
-        deadline_current_or_open_ended_filter_applied: source.mode === 'direct-table-fallback',
-        apie_package_complete_filter_applied: source.mode === 'direct-table-fallback',
-        apie_requirements_complete_filter_applied: source.mode === 'direct-table-fallback',
-        apie_match_ready_filter_applied: source.mode === 'direct-table-fallback',
+        deadline_current_or_open_ended_filter_applied: source.mode === 'direct-table',
+        apie_package_complete_filter_applied: source.mode === 'direct-table',
+        apie_requirements_complete_filter_applied: source.mode === 'direct-table',
+        apie_match_ready_filter_applied: source.mode === 'direct-table',
         legacy_natcorp_qa_release_filter_applied: false, retrieved_at: nowIso,
       },
       registry: {

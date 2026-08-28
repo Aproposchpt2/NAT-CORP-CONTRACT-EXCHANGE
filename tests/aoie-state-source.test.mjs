@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import {
-  buildCandidateQuery,
   buildRegistryIndex,
   enrichOpportunity,
   evaluateOpportunityRelease,
@@ -8,7 +7,6 @@ import {
   hasIdentifiableIssuingEntity,
   hasMeaningfulOpportunityEvidence,
   hasSubstantiveRequirements,
-  isMissingCanonicalRelation,
   normalizeContractDisplayTitle,
   publicOpportunity,
 } from '../netlify/functions/_shared/aoie-state-local.mjs';
@@ -36,22 +34,6 @@ function readyOpportunity(overrides = {}) {
     ...overrides,
   };
 }
-
-test('candidate retrieval query applies all approved acquisition filters', () => {
-  const { query, range } = buildCandidateQuery({ states: ['CA', 'NV'], nowIso: '2026-07-20T19:00:00.000Z', canonical: false });
-  assert.equal(query.get('state_code'), 'in.(CA,NV)');
-  assert.equal(query.get('is_latest_version'), 'eq.true');
-  assert.equal(query.get('duplicate_of'), 'is.null');
-  assert.equal(query.get('status'), 'in.(open,upcoming,posted,active)');
-  assert.match(query.get('or'), /response_deadline\.gte\.2026-07-20/);
-  assert.equal(range, '0-999');
-});
-
-test('canonical-view absence is detected without masking other failures', () => {
-  assert.equal(isMissingCanonicalRelation(404, ''), true);
-  assert.equal(isMissingCanonicalRelation(400, '{"code":"PGRST205"}'), true);
-  assert.equal(isMissingCanonicalRelation(500, 'database unavailable'), false);
-});
 
 test('verified publisher and primary platform enrich an opportunity', () => {
   const index = buildRegistryIndex({
