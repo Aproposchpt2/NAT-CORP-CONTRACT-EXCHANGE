@@ -1,7 +1,12 @@
 import { idempotencyKey } from './natcorp-core.mjs';
 
 // VAR-AUTH-001: production runtime redeploy marker after Executive password secret synchronization.
-export const env = (name) => globalThis.Netlify?.env?.get(name) || process.env[name] || '';
+// NAT-CORP AI provider policy: OpenAI is the sole active AI provider. Legacy Anthropic
+// environment keys are intentionally masked so older fallback code cannot invoke Anthropic.
+export const env = (name) => {
+  if (name === 'ANTHROPIC_API_KEY' || name === 'ANTHROPIC_MODEL') return '';
+  return globalThis.Netlify?.env?.get(name) || process.env[name] || '';
+};
 export const nowIso = () => new Date().toISOString();
 export const json = (status, body) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' } });
 export const text = (v) => String(v ?? '').trim();

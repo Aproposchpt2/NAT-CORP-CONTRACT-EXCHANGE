@@ -7,12 +7,7 @@
 // Used to attempt a canonical view (aoie_opportunity_candidates_v1) before
 // falling back to this direct table on every single call -- removed
 // 2026-08-28 after confirming live that view never existed in the
-// database at all (checked pg_views/pg_matviews directly), so every
-// request was silently paying for one guaranteed-to-fail Supabase round
-// trip before the real query ever ran. Per Jeff, flagging real dashboard
-// slowness: "if it is causing the process an extra unwarranted step yes.
-// The site rendering contracts so slow." Query state_contract_opportunities
-// directly now, no attempt-then-catch.
+// database at all. Query state_contract_opportunities directly now.
 import { DIRECT_TABLE } from './aoie-state-local.mjs';
 import { env } from './natcorp-db.mjs';
 import { loadProfileSession } from './natcorp-profile-session.mjs';
@@ -43,6 +38,20 @@ export function normalizeStates(value) {
   return [...new Set(raw.map((v) => String(v || '').trim().toUpperCase()).filter((v) => /^[A-Z]{2}$/.test(v)))];
 }
 
+export function normalizeOwnerIntakeId(value) {
+  const raw = String(value || '').trim().toLowerCase();
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(raw) ? raw : '';
+}
+
+export function resolveOwnerAuthority(resolved, payload = {}, authMode = '') {
+  if (authMode === 'internal') {
+    const ownerIntakeId = normalizeOwnerIntakeId(payload?.owner_intake_id);
+    return ownerIntakeId ? { owner_intake_id: ownerIntakeId, source: 'trusted-internal-request' } : null;
+  }
+  const ownerIntakeId = normalizeOwnerIntakeId(resolved?.session?.intake_id);
+  return ownerIntakeId ? { owner_intake_id: ownerIntakeId, source: 'verified-session' } : null;
+}
+
 const DIRECT_SELECT = [
   'id','pdas_record_id','state_code','jurisdiction_type','jurisdiction_name','issuing_organization','issuing_department',
   'source_platform','source_record_id','source_url','official_source_url','vendor_registration_url','solicitation_number','title',
@@ -71,16 +80,6 @@ export function directQuery(states, nowIso) {
   });
 }
 
-// Timeouts here were 20000/15000/15000 until 2026-08-25, when the LLM
-// judging background worker (aoie-llm-relevance-run-background.mjs)
-// repeatedly failed with "The operation was aborted due to timeout" at
-// ~20.2-20.4s -- exactly fetchPaged's old 20000ms ceiling -- even though
-// the identical query completed quickly seconds later when called
-// synchronously from aoie-state-shadow.mjs. Background functions appear
-// to have slower/colder outbound networking on this account than
-// regular request-serving functions; raised across the board since the
-// background worker has minutes of budget and the common case (a fast
-// successful response) is unaffected either way.
 export async function fetchPaged(url, key, relation, states, nowIso) {
   const rows = [];
   for (let from = 0; ; from += PAGE_SIZE) {
