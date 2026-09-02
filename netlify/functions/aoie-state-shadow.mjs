@@ -37,16 +37,10 @@ async function latestJobFor(ownerIntakeId, fingerprint, states) {
 
 async function relevantVerdictsForJob(job) {
   if (!job?.id || !normalizeOwnerIntakeId(job?.owner_intake_id)) return [];
-  const links = await db(
-    'aoie_llm_relevance_job_verdicts', 'GET',
-    `?job_id=eq.${encodeURIComponent(job.id)}&select=verdict_id`,
-  );
+  const links = await db('aoie_llm_relevance_job_verdicts', 'GET', `?job_id=eq.${encodeURIComponent(job.id)}&select=verdict_id`);
   const ids = [...new Set((links || []).map((row) => String(row?.verdict_id || '').trim()).filter(Boolean))];
   if (!ids.length) return [];
-  const rows = await db(
-    'aoie_llm_relevance_verdicts', 'GET',
-    `?id=in.(${ids.map((id) => encodeURIComponent(id)).join(',')})&relevant=eq.true&select=*`,
-  );
+  const rows = await db('aoie_llm_relevance_verdicts', 'GET', `?id=in.(${ids.map((id) => encodeURIComponent(id)).join(',')})&relevant=eq.true&select=*`);
   return rows || [];
 }
 
@@ -61,7 +55,12 @@ export default async function handler(req) {
     let payload;
     try { payload = await req.json(); } catch { return json(400, { error: 'Invalid JSON.' }); }
 
-    const resolved = await resolveProfile(req, payload || {}, auth.mode);
+    const requestedStates = normalizeStates(payload.states);
+    const isPoll = payload.poll === true && requestedStates.length > 0;
+    const [resolved, inventoryStatesResult] = await Promise.all([
+      resolveProfile(req, payload || {}, auth.mode),
+      isPoll ? Promise.resolve(null) : availableStates(url, key),
+    ]);
     if (!resolved.profile) return json(401, { error: 'A verified Business Capability Profile is required.' });
     const ownerAuthority = resolveOwnerAuthority(resolved, payload || {}, auth.mode);
     if (!ownerAuthority) {
@@ -71,22 +70,20 @@ export default async function handler(req) {
           : 'A verified customer profile instance is required.',
       });
     }
+
     const profile = expandBusinessProfile({ ...resolved.profile, service_states: [] });
     const evidence = profile.keywords.length || profile.naics_codes.length || profile.unspsc_codes.length || profile.commodity_codes.length || profile.concepts.length;
     if (!profile.legal_name) return json(400, { error: 'A business name is required.' });
     if (!evidence) return json(400, { error: 'The verified profile does not contain enough capability evidence to search contracts.' });
 
-    const requestedStates = normalizeStates(payload.states);
     const scope = String(payload.scope || (requestedStates.length ? 'selected' : 'all')).toLowerCase();
     const residentState = String(payload.resident_state || resolved.profile.resident_state || resolved.session?.resident_state || '').trim().toUpperCase();
-
-    const isPoll = payload.poll === true && requestedStates.length > 0;
     let inventoryStates, states;
     if (isPoll) {
       inventoryStates = requestedStates;
       states = requestedStates;
     } else {
-      inventoryStates = await availableStates(url, key);
+      inventoryStates = inventoryStatesResult;
       states = inventoryStates;
       if (scope === 'resident') {
         if (!/^[A-Z]{2}$/.test(residentState)) return json(400, { error: 'Resident state is unavailable. Verify it in the Business Capability Profile first.' });
@@ -100,20 +97,29 @@ export default async function handler(req) {
     const resultLimit = Math.max(1, Math.min(500, Number(payload.limit ?? 250) || 250));
     const nowIso = new Date().toISOString();
     const fingerprint = profileFingerprint(resolved.profile);
-    const job = await latestJobFor(ownerAuthority.owner_intake_id, fingerprint, states);
-    const verdicts = await relevantVerdictsForJob(job);
 
-    let source, registry;
-    if (!isPoll || verdicts.length) {
-      [source, registry] = await Promise.all([candidateRows(url, key, states, nowIso), fetchRegistry(url, key, states)]);
+    let job, verdicts, source, registry;
+    if (!isPoll) {
+      [job, source, registry] = await Promise.all([
+        latestJobFor(ownerAuthority.owner_intake_id, fingerprint, states),
+        candidateRows(url, key, states, nowIso),
+        fetchRegistry(url, key, states),
+      ]);
+      verdicts = await relevantVerdictsForJob(job);
     } else {
-      source = { rows: [], relation: DIRECT_TABLE, mode: 'poll-skipped-no-verdicts-yet', canonical_view_available: false, direct_table_fallback_used: false };
-      registry = { publishers: [], publisherPlatforms: [], platforms: [], degraded: false, errors: [] };
+      job = await latestJobFor(ownerAuthority.owner_intake_id, fingerprint, states);
+      verdicts = await relevantVerdictsForJob(job);
+      if (verdicts.length) {
+        [source, registry] = await Promise.all([candidateRows(url, key, states, nowIso), fetchRegistry(url, key, states)]);
+      } else {
+        source = { rows: [], relation: DIRECT_TABLE, mode: 'poll-skipped-no-verdicts-yet' };
+        registry = { publishers: [], publisherPlatforms: [], platforms: [], degraded: false, errors: [] };
+      }
     }
+
     const index = buildRegistryIndex(registry);
     const candidates = source.rows.map((row) => enrichOpportunity(row, index, source.relation));
     const candidateById = new Map(candidates.map((row) => [row.id, row]));
-
     const scored = verdicts
       .map((verdict) => {
         const row = candidateById.get(verdict.opportunity_id);
@@ -138,11 +144,6 @@ export default async function handler(req) {
       acc[row.aoie.match_status] = (acc[row.aoie.match_status] || 0) + 1;
       return acc;
     }, {});
-
-    // CRITICAL CUSTOMER-TRUTH CONTROL:
-    // If no durable job exists for this exact owner + semantic profile +
-    // normalized geographic state set, report QUEUED. Semantic cache rows or
-    // legacy ownerless jobs can never establish customer completion authority.
     const judging = {
       status: job?.status || 'QUEUED',
       total_candidates: job?.total_candidates ?? candidates.length,
@@ -160,14 +161,13 @@ export default async function handler(req) {
       profile, source_candidate_count: candidates.length, candidate_count: judging.judged_candidates, excluded_candidate_count: 0,
       judging, release_rejection_summary: {}, result_count: results.length, minimum_score: minimumScore, summary,
       data_source: {
-        relation: `public.${source.relation}`, mode: source.mode, canonical_view_attempted: true,
-        canonical_view_available: source.canonical_view_available, direct_table_fallback_used: source.direct_table_fallback_used,
+        relation: `public.${source.relation}`, mode: source.mode,
         capability_first_search: true, resident_state_is_presentation_filter: true,
         latest_version_filter_applied: true, duplicate_filter_applied: true, normalized_status_filter_applied: true,
-        deadline_current_or_open_ended_filter_applied: source.mode === 'direct-table-fallback',
-        apie_package_complete_filter_applied: source.mode === 'direct-table-fallback',
-        apie_requirements_complete_filter_applied: source.mode === 'direct-table-fallback',
-        apie_match_ready_filter_applied: source.mode === 'direct-table-fallback',
+        deadline_current_or_open_ended_filter_applied: source.mode === 'direct-table',
+        apie_package_complete_filter_applied: source.mode === 'direct-table',
+        apie_requirements_complete_filter_applied: source.mode === 'direct-table',
+        apie_match_ready_filter_applied: source.mode === 'direct-table',
         legacy_natcorp_qa_release_filter_applied: false, retrieved_at: nowIso,
       },
       registry: {

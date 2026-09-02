@@ -1,12 +1,14 @@
 // Shared candidate-contract retrieval + request auth/profile-resolution
 // helpers, extracted from aoie-state-shadow.mjs so the LLM relevance worker
 // (aoie-llm-relevance-run-background.mjs) can query the exact same
-// MATCH_READY candidate set through the exact same canonical-view/
-// direct-table-fallback path, instead of a second, drift-prone copy of this
-// logic.
-import {
-  CANONICAL_VIEW, DIRECT_TABLE, buildCandidateQuery, isMissingCanonicalRelation,
-} from './aoie-state-local.mjs';
+// MATCH_READY candidate set through the exact same path, instead of a
+// second, drift-prone copy of this logic.
+//
+// Used to attempt a canonical view (aoie_opportunity_candidates_v1) before
+// falling back to this direct table on every single call -- removed
+// 2026-08-28 after confirming live that view never existed in the
+// database at all. Query state_contract_opportunities directly now.
+import { DIRECT_TABLE } from './aoie-state-local.mjs';
 import { env } from './natcorp-db.mjs';
 import { loadProfileSession } from './natcorp-profile-session.mjs';
 
@@ -41,10 +43,6 @@ export function normalizeOwnerIntakeId(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(raw) ? raw : '';
 }
 
-// Customer ownership is never inferred from mutable semantic content. Normal
-// browser requests inherit authority only from the verified server-side intake
-// session. Trusted internal callers must explicitly name the intake instance
-// they are operating for; a profile alone is not customer authority.
 export function resolveOwnerAuthority(resolved, payload = {}, authMode = '') {
   if (authMode === 'internal') {
     const ownerIntakeId = normalizeOwnerIntakeId(payload?.owner_intake_id);
@@ -82,24 +80,13 @@ export function directQuery(states, nowIso) {
   });
 }
 
-// Timeouts here were 20000/15000/15000 until 2026-08-25, when the LLM
-// judging background worker (aoie-llm-relevance-run-background.mjs)
-// repeatedly failed with "The operation was aborted due to timeout" at
-// ~20.2-20.4s -- exactly fetchPaged's old 20000ms ceiling -- even though
-// the identical query completed quickly seconds later when called
-// synchronously from aoie-state-shadow.mjs. Background functions appear
-// to have slower/colder outbound networking on this account than
-// regular request-serving functions; raised across the board since the
-// background worker has minutes of budget and the common case (a fast
-// successful response) is unaffected either way.
-export async function fetchPaged(url, key, relation, states, nowIso, canonical) {
+export async function fetchPaged(url, key, relation, states, nowIso) {
   const rows = [];
   for (let from = 0; ; from += PAGE_SIZE) {
-    const built = canonical
-      ? buildCandidateQuery({ states, nowIso, canonical: true, from, pageSize: PAGE_SIZE })
-      : { query: directQuery(states, nowIso), range: `${from}-${from + PAGE_SIZE - 1}` };
-    const response = await fetch(`${url}/rest/v1/${relation}?${built.query}`, {
-      headers: dbHeaders(key, { Range: built.range }), signal: AbortSignal.timeout(60000),
+    const query = directQuery(states, nowIso);
+    const range = `${from}-${from + PAGE_SIZE - 1}`;
+    const response = await fetch(`${url}/rest/v1/${relation}?${query}`, {
+      headers: dbHeaders(key, { Range: range }), signal: AbortSignal.timeout(60000),
     });
     if (!response.ok) {
       const body = await response.text().catch(() => '');
@@ -133,16 +120,8 @@ export async function availableStates(url, key) {
 }
 
 export async function candidateRows(url, key, states, nowIso) {
-  try {
-    const rows = await fetchPaged(url, key, CANONICAL_VIEW, states, nowIso, true);
-    return { rows, relation: CANONICAL_VIEW, mode: 'canonical-view', canonical_view_available: true, direct_table_fallback_used: false };
-  } catch (error) {
-    if (!isMissingCanonicalRelation(error.status, error.body || error.message)) throw error;
-    return {
-      rows: await fetchPaged(url, key, DIRECT_TABLE, states, nowIso, false),
-      relation: DIRECT_TABLE, mode: 'direct-table-fallback', canonical_view_available: false, direct_table_fallback_used: true,
-    };
-  }
+  const rows = await fetchPaged(url, key, DIRECT_TABLE, states, nowIso);
+  return { rows, relation: DIRECT_TABLE, mode: 'direct-table' };
 }
 
 export async function fetchJsonRows(url, key, relation, query) {

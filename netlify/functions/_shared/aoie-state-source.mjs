@@ -1,5 +1,4 @@
 export const SOURCE_CONTRACT_VERSION = 'aoie-state-local-source-v2';
-export const CANONICAL_VIEW = 'aoie_opportunity_candidates_v1';
 export const DIRECT_TABLE = 'state_contract_opportunities';
 
 const GENERIC_ORG_WORDS = new Set(['the','of','and','state','city','county','department','dept','office','division','authority','district','government','public']);
@@ -166,27 +165,6 @@ export function enrichOpportunity(row, index, sourceRelation = DIRECT_TABLE) {
       registry_enriched: Boolean(publisher || platform),
     },
   };
-}
-
-export function buildCandidateQuery({ states, nowIso, canonical = false, from = 0, pageSize = 1000 }) {
-  const select = canonical ? '*' : [
-    'id','pdas_record_id','state_code','jurisdiction_type','jurisdiction_name','issuing_organization','issuing_department','source_platform','source_record_id','source_url','official_source_url','vendor_registration_url','solicitation_number','title','description','procurement_type','notice_type','status','posted_at','response_deadline','prebid_datetime','question_deadline','place_of_performance_city','place_of_performance_county','place_of_performance_state','place_of_performance_zip','estimated_value_min','estimated_value_max','currency','contact_name','contact_email','contact_phone','naics_codes','nigp_codes','unspsc_codes','commodity_codes','set_asides','certifications_required','keywords','document_urls','classifications','requirements','amendment_number','amendment_count','is_latest_version','duplicate_of','last_verified_at','data_quality_score','qa_status'
-  ].join(',');
-  const query = new URLSearchParams({
-    select,
-    state_code: `in.(${states.join(',')})`,
-    is_latest_version: 'eq.true',
-    duplicate_of: 'is.null',
-    status: 'in.(open,upcoming,posted,active)',
-    or: `(response_deadline.is.null,response_deadline.gte.${nowIso})`,
-    order: 'response_deadline.asc.nullslast,posted_at.desc',
-  });
-  return { query, range: `${from}-${from + pageSize - 1}` };
-}
-
-export function isMissingCanonicalRelation(status, bodyText = '') {
-  const text = String(bodyText || '').toLowerCase();
-  return status === 404 || text.includes('pgrst205') || text.includes('42p01') || text.includes('could not find the table') || text.includes('does not exist');
 }
 
 export function publicOpportunity(row) {

@@ -1,18 +1,25 @@
-# CAL-GOV-CONTRACT-CENTER CLAUDE.md
+# NAT-CORP-CONTRACT-EXCHANGE CLAUDE.md
 
 @../CLAUDE.md
 
+## Naming history — read this before trusting any name in this file
+This repo/site has been renamed at least twice: `CALSTATEGEN` → `CAL-GOV-CONTRACT-CENTER` → **`NAT-CORP-CONTRACT-EXCHANGE`** (current, verified 2026-08-27 via `gh repo view` and the Netlify project). The git remote may still show an old URL (GitHub redirects renamed-repo clone URLs, so `git remote -v` can lie about the *current* name) — the sections below were themselves stale until this date, wrongly claiming this was still `CAL-GOV-CONTRACT-CENTER`/`calgovcc.aproposgroupllc.com`. **Do not trust this file's repo/site identity claims as current without re-checking the Netlify project first** — see [[feedback_github_url_source_of_truth]] and [[project_claude_md_inventory]] in Jeff's memory. This repo has also grown well beyond its original CA-only scope (see below) into the shared NAT-CORP multi-state (CA/NV/AZ) acquisition pipeline — the sections below describing it as CA-specific predate that expansion.
+
 ## Repo
-- GitHub: github.com/Aproposchpt2/CAL-GOV-CONTRACT-CENTER
+- GitHub: github.com/Aproposchpt2/NAT-CORP-CONTRACT-EXCHANGE
 - Production branch: `main`
 
 ## Deploy pipeline
-- Site: calgovcc.aproposgroupllc.com
-- Host: Netlify, project name `cal-gov-contract-center` (site id `35650334-7d30-459f-8369-8f5bbc7350ec`), auto-deploys from this repo's `main` on every push.
-- This is the **actual** live repo behind calgovcc.aproposgroupllc.com — confirmed 2026-07-16 by matching the site's deployed commit hash directly against this repo's git log. There is a separate, similarly-named `Aproposchpt2/calgovcc` GitHub repo that shares a lot of code/history with this one but has **no Netlify site linked to it at all** — do not confuse the two. If work needs to reach production, it happens here.
+- Site: natcorp.aproposgroupllc.com
+- Host: Netlify, project name `national-corp-contract-exchange` (site id `35650334-7d30-459f-8369-8f5bbc7350ec` — same id as this file's old `cal-gov-contract-center` reference; confirms it's the same site, renamed), auto-deploys from this repo's `main` on every push.
+- There is a separate, similarly-named `Aproposchpt2/calgovcc` GitHub repo that shares a lot of code/history with this one but has **no Netlify site linked to it at all** — do not confuse the two. If work needs to reach production, it happens here.
 - A force-push to `main` triggers an immediate production rebuild — treat any force-push as a production deploy, not just a git operation.
 - After any history rewrite (reset/revert), verify the new Netlify build succeeds before removing any manual "last known good" publish pin.
 - Don't trust a deploy is live from `state: ready` alone if it matters — fetch the actual page (or hit the actual function) and check the content, the way a deploy check was actually confirmed on 2026-07-16.
+
+## Acquisition pipeline (multi-state, grew out of the original CA-only scope)
+- `.github/workflows/scrape-caleprocure.yml` (every 4h) and `.github/workflows/scrape.yml`/`ingest-obas.yml` (daily/monthly) run the CA acquisition jobs (`CA-CALEPROCURE`, `CA-PLANETBIDS`, `CA-OBAS`), writing to the shared Supabase `state_contract_opportunities`/`pdas_acquisition_runs`/`apie_contract_identity` tables (project `judislfknmhofcgzyozc`, "Procurement Site Development").
+- As of 2026-08-27 there is no equivalent scheduled job for NV or AZ — the 19 NV / 11 AZ records present in `state_contract_opportunities` came from one-time manual pulls, not automation, and 100% of them are still stuck at `requirements_extraction_status=NOT_STARTED`. See [[project_procurement_warehouse_revenue_strategy]] for the acquisition backlog this created.
 
 ## Data architecture
 `netlify/functions/cal-pipeline.js` is the live dashboard's single bid feed. It blends two independently-resilient sources concurrently (`Promise.all`, each with its own try/catch so one failing never blocks the other):
