@@ -1,0 +1,93 @@
+/* NAT-CORP homepage restoration compatibility layer.
+ * Restores the pre-OPS premium homepage while preserving the newer
+ * Member / Agency access strip and current routing.
+ * Loaded by index.html only; interior pages keep natcorp-ops-parity.css.
+ */
+
+.access-strip{
+  border-top:1px solid rgba(255,255,255,.07);
+  border-bottom:1px solid rgba(215,195,152,.13);
+  background:linear-gradient(90deg,rgba(7,20,47,.96),rgba(9,26,61,.92));
+}
+.access-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:12px 0;
+}
+.access-label{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  color:rgba(255,255,255,.52);
+  font:300 13px/1.4 var(--body);
+}
+.access-label span{
+  color:var(--gold);
+  font-size:.58rem;
+  font-weight:600;
+  letter-spacing:.19em;
+  text-transform:uppercase;
+}
+.access-label strong{
+  color:#fff;
+  font:500 1.05rem/1.2 var(--serif);
+  letter-spacing:.01em;
+}
+.access-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.access-member,
+.advisor-dominant{
+  min-height:44px;
+  padding:.72rem 1.3rem;
+  border-radius:4px;
+  font-family:var(--body);
+  font-size:.66rem;
+  font-weight:600;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+.access-member{
+  min-width:164px;
+  color:#fff;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.24);
+}
+.access-member:hover{
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.42);
+}
+.advisor-dominant{
+  min-width:190px;
+  color:#08142d;
+  background:linear-gradient(135deg,var(--gold-bright),var(--gold));
+  border:1px solid rgba(234,216,178,.72);
+  box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+.advisor-dominant:hover{
+  color:#08142d;
+  filter:brightness(1.04);
+}
+
+/* Keep the restored photographic hero visually dominant, matching the
+ * premium pre-OPS homepage rather than the flat command-center overlay. */
+.hero{
+  background:
+    linear-gradient(90deg,rgba(5,11,25,.80) 0%,rgba(5,11,25,.64) 45%,rgba(15,42,106,.24) 100%),
+    url('/headquarters.webp') bottom/cover no-repeat;
+}
+
+@media(max-width:900px){
+  .access-inner{align-items:stretch;flex-direction:column}
+  .access-actions{display:grid;grid-template-columns:1fr 1.15fr}
+  .access-member,.advisor-dominant{min-width:0;width:100%}
+}
+@media(max-width:640px){
+  .access-label{display:none}
+  .access-actions{grid-template-columns:1fr}
+  .access-member,.advisor-dominant{min-height:48px}
+}
