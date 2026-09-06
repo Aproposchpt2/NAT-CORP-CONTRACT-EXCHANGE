@@ -1,14 +1,7 @@
-// Orchestrates one STATE_PUBLISHER_DEFINED run across all of a state's child
-// scopes. Ported from APROPOS-CONTRACT-BRIEF's cbrief-state-publisher-runner.mjs
-// (natcorp execution path), drastically simplified: the source file's
-// runnerFor(scope, project) picks between six discovery engines and forces a
-// natcorp guard so a Bonfire/BidNet/IonWave/NevadaEPro/Market child scope can
-// never fall through to a cbrief-only engine and misfile a record into the wrong
-// Supabase table/project. This site has no cbrief-only engines and no other
-// project to misfile into -- runOpenAIDiscovery is the ONLY acquisition engine
-// that exists here, so every child scope always uses it. No guard needed because
-// there is nothing else to guard against.
-import { runOpenAIDiscovery } from './command-center-openai-discovery.mjs';
+// Orchestrates a STATE_PUBLISHER_DEFINED run across its child publisher scopes.
+// Cost control is enforced here: every child scope receives exactly one OpenAI
+// Responses API discovery call per owner-triggered run.
+import { runOneCallOpenAIDiscovery } from './command-center-openai-discovery-one-call.mjs';
 
 function coverageEntry(child) {
   return {
@@ -50,7 +43,7 @@ export async function runStatePublisherDefinedDiscovery({ scope, target = 50, ru
     evidence.started_at = new Date().toISOString();
     await emit({ current_publisher: child.name, current_family: familyName });
     try {
-      const summary = await runOpenAIDiscovery({
+      const summary = await runOneCallOpenAIDiscovery({
         scope: child,
         target,
         runId,
