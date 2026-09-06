@@ -52,9 +52,35 @@ export async function getJob(jobId) {
   return (await db('pdas_acquisition_jobs', 'GET', `?job_id=eq.${encodeURIComponent(jobId)}&select=*&limit=1`))?.[0] || null;
 }
 
+function fallbackErrorReport(job, targetRecords) {
+  const failed = Number(job.last_records_failed || 0);
+  if (!failed) return null;
+  return {
+    report_version: 'natcorp_acquisition_error_report_v1_legacy_summary',
+    generated_at: job.last_completed_at || job.updated_at || null,
+    job_id: job.job_id,
+    job_name: job.job_name,
+    state_code: job.state_code || null,
+    source_platform: job.source_platform || null,
+    target_records: targetRecords,
+    totals: {
+      listed: Number(job.last_records_discovered || 0),
+      created: Number(job.last_records_inserted || 0),
+      updated: Number(job.last_records_updated || 0),
+      failed,
+    },
+    coverage_execution: [],
+    last_error: job.last_error || null,
+    historical_detail_available: false,
+    note: 'This run predates persisted connector diagnostics. Re-run Contract Acquisition to capture per-connector error details.',
+  };
+}
+
 export function jobAsRunSummary(job, targetRecords) {
   if (!job) return null;
   const processed = Number(job.last_records_inserted || 0) + Number(job.last_records_updated || 0);
+  const persistedDiagnostics = job.configuration?.diagnostics || null;
+  const errorReport = persistedDiagnostics || fallbackErrorReport(job, targetRecords);
   return {
     id: job.job_id,
     status: DISPLAY_STATUS[job.job_status] || 'QUEUED',
@@ -71,12 +97,13 @@ export function jobAsRunSummary(job, targetRecords) {
     updated_at: job.updated_at,
     error_message: job.last_error || null,
     publisher_name: job.job_name,
+    error_report: errorReport,
     activity: {
       stage: job.job_status === 'running' ? 'SCANNING' : job.job_status || 'WAITING',
       message: job.last_error || `pdas_acquisition_jobs status: ${job.job_status || 'not_started'}.`,
       last_activity_at: job.updated_at,
       current_publisher: job.job_name,
-      coverage_execution: [],
+      coverage_execution: persistedDiagnostics?.coverage_execution || [],
     },
   };
 }
