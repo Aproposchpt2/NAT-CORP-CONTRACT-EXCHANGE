@@ -1,5 +1,5 @@
-/command-center.html /command-center-v3.html 200!
+/command-center.html /command-center-v4.html 200!
 /opportunity-fulfillment /opportunity-fulfillment.html 200!
 /opportunity-review /opportunity-review.html 200
 /opportunity-services /opportunity-services.html 200
-/api/natcorp-command-center /.netlify/functions/natcorp-command-center 200!
+/api/natcorp-command-center /.netlify/functions/natcorp-command-center-parity 200!
