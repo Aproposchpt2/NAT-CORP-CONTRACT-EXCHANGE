@@ -22,7 +22,7 @@ export default async function handler(req) {
 
   try {
     await updateAcquisitionJob(jobId, {
-      job_status: 'RUNNING',
+      job_status: 'running',
       last_started_at: new Date().toISOString(),
       last_error: null,
     });
@@ -41,7 +41,7 @@ export default async function handler(req) {
     });
 
     await updateAcquisitionJob(jobId, {
-      job_status: 'COMPLETED',
+      job_status: 'healthy',
       last_records_discovered: summary.totalListed,
       last_records_inserted: summary.created,
       last_records_updated: summary.updated,
@@ -53,7 +53,7 @@ export default async function handler(req) {
   } catch (error) {
     const message = error instanceof Error ? error.message.slice(0, 700) : 'Discovery run failed.';
     await updateAcquisitionJob(jobId, {
-      job_status: 'FAILED',
+      job_status: 'failed',
       last_completed_at: new Date().toISOString(),
       last_failure_at: new Date().toISOString(),
       last_error: message,

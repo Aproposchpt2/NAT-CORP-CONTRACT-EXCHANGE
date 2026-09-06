@@ -11,12 +11,37 @@
 // distinct prefix keeps this site's job rows from ever colliding with
 // apropos-contract-brief's if both are run against production at once. See
 // natcorp-clone-trace.md for the full coexistence-risk note.
+//
+// FIXED 2026-09-06 per Jeff (production incident): pdas_acquisition_jobs.job_status
+// has a real CHECK constraint -- only 'not_started' | 'scheduled' | 'running' |
+// 'healthy' | 'degraded' | 'failed' | 'paused' | 'retired' are allowed (confirmed
+// via pg_constraint). Every write in this pipeline (this file and all four
+// natcorp-*-run-background.mjs workers) had been using 'READY'/'RUNNING'/
+// 'QUEUED'/'COMPLETED'/'FAILED' since the original clone -- none of which pass
+// that constraint, so ensureJob()'s very first INSERT always failed and
+// Launch Discovery/Extraction/Work Capability had never actually created a job
+// row. Storage now uses the real enum; jobAsRunSummary() translates it back to
+// the RUNNING/COMPLETED/FAILED vocabulary command-center.html's rendering
+// functions already check for, so the frontend needed no changes.
 import { db } from './natcorp-db.mjs';
 
 export const JOB_ID_PREFIX = 'natcorp_site_command_center';
 export const EXTRACTION_JOB_ID = `${JOB_ID_PREFIX}:extraction`;
 export const TAXONOMY_JOB_ID = `${JOB_ID_PREFIX}:taxonomy`;
 export const REPROCESS_JOB_ID = `${JOB_ID_PREFIX}:reprocess`;
+
+// Real DB value -> display vocabulary command-center.html checks for
+// (RUNNING / COMPLETED / FAILED; anything else renders as "Queued").
+const DISPLAY_STATUS = {
+  not_started: 'QUEUED',
+  scheduled: 'QUEUED',
+  running: 'RUNNING',
+  healthy: 'COMPLETED',
+  degraded: 'FAILED',
+  failed: 'FAILED',
+  paused: 'QUEUED',
+  retired: 'FAILED',
+};
 
 export function discoveryJobId(stateCode, scopeId) {
   return `${JOB_ID_PREFIX}:${stateCode}:${scopeId}`;
@@ -32,7 +57,7 @@ export async function ensureJob({ jobId, jobName, sourcePlatform, stateCode = nu
     state_code: stateCode,
     source_platform: sourcePlatform,
     enabled: true,
-    job_status: 'READY',
+    job_status: 'not_started',
     configuration: { origin: 'command-center.html', mode: 'MANUAL_TRIGGER', ...configuration },
     created_at: timestamp,
     updated_at: timestamp,
@@ -56,7 +81,7 @@ export function jobAsRunSummary(job, targetRecords) {
   const processed = Number(job.last_records_inserted || 0) + Number(job.last_records_updated || 0);
   return {
     id: job.job_id,
-    status: job.job_status || 'READY',
+    status: DISPLAY_STATUS[job.job_status] || 'QUEUED',
     target_records: targetRecords,
     processed,
     total_listed: Number(job.last_records_discovered || 0),
@@ -71,8 +96,8 @@ export function jobAsRunSummary(job, targetRecords) {
     error_message: job.last_error || null,
     publisher_name: job.job_name,
     activity: {
-      stage: job.job_status === 'RUNNING' ? 'SCANNING' : job.job_status || 'WAITING',
-      message: job.last_error || `pdas_acquisition_jobs status: ${job.job_status || 'READY'}.`,
+      stage: job.job_status === 'running' ? 'SCANNING' : job.job_status || 'WAITING',
+      message: job.last_error || `pdas_acquisition_jobs status: ${job.job_status || 'not_started'}.`,
       last_activity_at: job.updated_at,
       current_publisher: job.job_name,
       coverage_execution: [],
