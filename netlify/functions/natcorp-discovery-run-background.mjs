@@ -12,6 +12,23 @@ import { runStatePublisherDefinedDiscovery } from './_shared/command-center-publ
 import { updateAcquisitionJob } from './_shared/command-center-acquisition.mjs';
 import { getJob } from './_shared/command-center-jobs.mjs';
 
+function acquisitionScope(scopeId) {
+  const id = String(scopeId || '').toUpperCase();
+  const stateScope = getStatePublisherDefinedScope(id);
+  if (stateScope) return stateScope;
+  const california = getStatePublisherDefinedScope('CA_PUBLISHER_DEFINED');
+  return california?.child_scopes?.find((scope) => scope.id === id) || null;
+}
+
+function executionScope(scope) {
+  if (scope?.scope_type === 'STATE_PUBLISHER_DEFINED') return scope;
+  return {
+    ...scope,
+    scope_type: 'STATE_PUBLISHER_DEFINED',
+    child_scopes: [scope],
+  };
+}
+
 function diagnosticReport({ jobId, scope, coverageExecution = [], totals = {}, completedAt = null, lastError = null } = {}) {
   const connectorErrors = coverageExecution.filter((entry) => entry?.status === 'SOURCE_ERROR_CONTINUED');
   return {
@@ -44,9 +61,11 @@ export default async function handler(req) {
   let body;
   try { body = await req.json(); } catch { return; }
   const jobId = String(body?.job_id || '');
-  const scope = getStatePublisherDefinedScope(body?.scope_id);
+  const scope = acquisitionScope(body?.scope_id);
   if (!jobId || !scope) return;
-  if (!listStatePublisherDefinedScopes().some((s) => s.id === scope.id)) return;
+  const selectable = listStatePublisherDefinedScopes().some((s) => s.id === scope.id)
+    || getStatePublisherDefinedScope('CA_PUBLISHER_DEFINED')?.child_scopes?.some((s) => s.id === scope.id);
+  if (!selectable) return;
 
   const existingJob = await getJob(jobId).catch(() => null);
   const baseConfiguration = existingJob?.configuration && typeof existingJob.configuration === 'object'
@@ -67,7 +86,7 @@ export default async function handler(req) {
     });
 
     const summary = await runStatePublisherDefinedDiscovery({
-      scope,
+      scope: executionScope(scope),
       target: DISCOVERY_TARGET,
       onProgress: async (progress) => {
         latestCoverage = Array.isArray(progress.coverage_execution) ? progress.coverage_execution : latestCoverage;
