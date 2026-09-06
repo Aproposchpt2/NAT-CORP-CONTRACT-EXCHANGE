@@ -105,12 +105,7 @@ const fmt=v=>v?new Date(v).toLocaleString():'—';
 function duration(ms){if(!Number.isFinite(ms)||ms<0)return'—';const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return h?`${h}h ${m}m ${sec}s`:m?`${m}m ${sec}s`:`${sec}s`}
 let key=sessionStorage.getItem('natcorpCommandKey')||'';$('accessKey').value=key;
 let dismissedDiscoveryRunId=null,dismissedExtractionRunId=null,currentTaskReporting=null,currentWorkCapability=null,lastDiagnostics=null,publisherListing=[],lastDiscoveryRun=null;
-// NOTE: /api/natcorp-command-center would need a new line in this repo's existing
-// _redirects file to alias here -- out of scope for this branch ("do not modify
-// any existing file"). Using Netlify's default function path instead, which needs
-// no config change. Jeff: add `/api/natcorp-command-center /.netlify/functions/natcorp-command-center 200!`
-// to _redirects if you want the shorter URL; this file works either way.
-async function api(method,body){const res=await fetch('/.netlify/functions/natcorp-command-center',{method,headers:{'content-type':'application/json','x-natcorp-command-key':key},body:body?JSON.stringify(body):undefined,cache:'no-store'});const data=await res.json().catch(()=>({}));if(!res.ok||!data.ok)throw new Error(data.error||`HTTP ${res.status}`);return data}
+async function api(method,body){const res=await fetch('/api/natcorp-command-center',{method,headers:{'content-type':'application/json','x-natcorp-command-key':key},body:body?JSON.stringify(body):undefined,cache:'no-store'});const data=await res.json().catch(()=>({}));if(!res.ok||!data.ok)throw new Error(data.error||`HTTP ${res.status}`);return data}
 function stateOrder(s){return({California:1,Arizona:2,Nevada:3})[s]||99}
 function workButtons(){return[$('runWork25'),$('runWork50'),$('reprocessWork25')]}
 let workLaunchBaseline=null,workLaunchTarget=25;

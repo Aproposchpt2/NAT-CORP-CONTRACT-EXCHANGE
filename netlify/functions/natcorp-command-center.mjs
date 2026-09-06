@@ -153,7 +153,7 @@ export default async function handler(req) {
         return json(409, { ok: false, error: 'An acquisition job is already active for this scope.', run: jobAsRunSummary(job, DISCOVERY_TARGET) });
       }
 
-      const backgroundUrl = new URL('/.netlify/functions/natcorp-command-center-discovery-background', req.url);
+      const backgroundUrl = new URL('/.netlify/functions/natcorp-discovery-run-background', req.url);
       const queued = await fetch(backgroundUrl, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-natcorp-command-key': forwardKey },
@@ -166,7 +166,7 @@ export default async function handler(req) {
     if (action === 'launch_extraction') {
       if (!apiKey) return json(500, { ok: false, error: 'OPENAI_API_KEY is not configured.' });
       const targetRecords = Math.max(1, Math.min(50, Number(payload.limit) || EXTRACTION_TARGET));
-      const backgroundUrl = new URL('/.netlify/functions/natcorp-command-center-extraction-background', req.url);
+      const backgroundUrl = new URL('/.netlify/functions/natcorp-extraction-run-background', req.url);
       const queued = await fetch(backgroundUrl, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-natcorp-command-key': forwardKey },
@@ -182,7 +182,7 @@ export default async function handler(req) {
       const force = payload.force === true;
       // force === true is the Reprocess control: bypass-staging explainer +
       // classification batch against pre-existing canonical records.
-      const functionName = force ? 'natcorp-command-center-reprocess-background' : 'natcorp-command-center-taxonomy-background';
+      const functionName = force ? 'natcorp-reprocess-run-background' : 'natcorp-taxonomy-run-background';
       const backgroundUrl = new URL(`/.netlify/functions/${functionName}`, req.url);
       const queued = await fetch(backgroundUrl, {
         method: 'POST',
