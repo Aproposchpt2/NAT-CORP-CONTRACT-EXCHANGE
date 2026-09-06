@@ -1,5 +1,5 @@
 import { commandAuthorized, db, nowIso } from './_shared/natcorp-db.mjs';
-import { getStatePublisherDefinedScope } from './_shared/command-center-state-publisher-defined.mjs';
+import { asStatePublisherExecutionScope, getAcquisitionPublisherScope } from './_shared/command-center-state-publisher-defined.mjs';
 import { runStatePublisherDefinedDiscoveryParity } from './_shared/command-center-publisher-runner-parity.mjs';
 import { runIsCancelled } from './_shared/command-center-task-reporting.mjs';
 import { ensureAcquisitionJob, updateAcquisitionJob } from './_shared/command-center-acquisition.mjs';
@@ -15,7 +15,7 @@ async function patchRun(id,patch){await db('natcorp_discovery_runs','PATCH',`?id
 export default async function handler(req){
   if(!commandAuthorized(req))return;
   let body;try{body=await req.json()}catch{return}
-  const runId=String(body?.run_id||''),scope=getStatePublisherDefinedScope(body?.scope_id),taskSessionId=body?.task_session_id?String(body.task_session_id):null;
+  const runId=String(body?.run_id||''),selectedScope=getAcquisitionPublisherScope(body?.scope_id),scope=asStatePublisherExecutionScope(selectedScope),taskSessionId=body?.task_session_id?String(body.task_session_id):null;
   if(!runId||!scope)return;
   const stateCode=STATE_NAME_TO_CODE[scope.state];
   const job=await ensureAcquisitionJob({stateCode,scope}).catch(()=>null);
