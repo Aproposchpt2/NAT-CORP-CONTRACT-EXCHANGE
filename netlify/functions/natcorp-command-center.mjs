@@ -88,8 +88,8 @@ async function statusBundle() {
     extraction_runs: extraction.runs,
     work_capability: workCapability,
     errors: {
-      discovery_runs: (await listAcquisitionJobs(50)).filter((j) => j.job_status === 'FAILED'),
-      extraction_runs: [taxonomyJob].filter((j) => j?.job_status === 'FAILED'),
+      discovery_runs: (await listAcquisitionJobs(50)).filter((j) => j.job_status === 'failed' || j.job_status === 'degraded'),
+      extraction_runs: [taxonomyJob].filter((j) => j?.job_status === 'failed' || j?.job_status === 'degraded'),
       profiles_with_errors: [],
     },
     task_reporting: {
@@ -151,7 +151,7 @@ export default async function handler(req) {
       if (!stateCode) return json(400, { ok: false, error: `Unsupported state: ${scope.state}` });
 
       const job = await ensureAcquisitionJob({ stateCode, scope });
-      if (job.job_status === 'RUNNING' || job.job_status === 'QUEUED') {
+      if (job.job_status === 'running') {
         return json(409, { ok: false, error: 'An acquisition job is already active for this scope.', run: jobAsRunSummary(job, DISCOVERY_TARGET) });
       }
 
@@ -162,7 +162,7 @@ export default async function handler(req) {
         body: JSON.stringify({ job_id: job.job_id, scope_id: scope.id }),
       });
       if (!queued.ok && queued.status !== 202) return json(502, { ok: false, error: `Discovery background launch returned HTTP ${queued.status}.` });
-      return json(202, { ok: true, action, run: jobAsRunSummary({ ...job, job_status: 'QUEUED' }, DISCOVERY_TARGET) });
+      return json(202, { ok: true, action, run: jobAsRunSummary({ ...job, job_status: 'not_started' }, DISCOVERY_TARGET) });
     }
 
     if (action === 'launch_extraction') {

@@ -22,12 +22,12 @@ export default async function handler(req) {
   if (!job) return;
 
   if (!apiKey) {
-    await updateJob(TAXONOMY_JOB_ID, { job_status: 'FAILED', last_error: 'OPENAI_API_KEY is not configured.', last_failure_at: new Date().toISOString() });
+    await updateJob(TAXONOMY_JOB_ID, { job_status: 'failed', last_error: 'OPENAI_API_KEY is not configured.', last_failure_at: new Date().toISOString() });
     return;
   }
 
   try {
-    await updateJob(TAXONOMY_JOB_ID, { job_status: 'RUNNING', last_started_at: new Date().toISOString(), last_error: null });
+    await updateJob(TAXONOMY_JOB_ID, { job_status: 'running', last_started_at: new Date().toISOString(), last_error: null });
     const summary = await runTaxonomyBatch({
       apiKey, limit, force,
       onProgress: async (progress) => updateJob(TAXONOMY_JOB_ID, {
@@ -37,7 +37,7 @@ export default async function handler(req) {
       }),
     });
     await updateJob(TAXONOMY_JOB_ID, {
-      job_status: 'COMPLETED',
+      job_status: 'healthy',
       last_records_discovered: summary.totalEligible,
       last_records_inserted: summary.succeeded,
       last_records_failed: summary.failed,
@@ -50,7 +50,7 @@ export default async function handler(req) {
     });
   } catch (error) {
     await updateJob(TAXONOMY_JOB_ID, {
-      job_status: 'FAILED',
+      job_status: 'failed',
       last_completed_at: new Date().toISOString(),
       last_failure_at: new Date().toISOString(),
       last_error: error instanceof Error ? error.message : 'Taxonomy classification run failed.',
