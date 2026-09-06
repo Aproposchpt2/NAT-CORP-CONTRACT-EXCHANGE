@@ -30,6 +30,37 @@ function resolveChildScope(id) {
   return getVendorDiscoveryScope(id) || getDiscoveryScope(id) || null;
 }
 
+export function getPublisherDefinedChildScope(id) {
+  const normalized = String(id || '').toUpperCase();
+  for (const def of Object.values(DEFINITIONS)) {
+    if (!def.child_scope_ids.includes(normalized)) continue;
+    const scope = resolveChildScope(normalized);
+    return scope ? Object.freeze({ ...scope, parent_scope_id: def.id }) : null;
+  }
+  return null;
+}
+
+export function getAcquisitionPublisherScope(id) {
+  return getStatePublisherDefinedScope(id) || getPublisherDefinedChildScope(id);
+}
+
+export function asStatePublisherExecutionScope(scope) {
+  if (!scope || scope.scope_type === 'STATE_PUBLISHER_DEFINED') return scope;
+  return Object.freeze({
+    id: scope.id,
+    state: scope.state,
+    name: scope.name,
+    platform: scope.platform,
+    site_url: scope.site_url,
+    scope_type: 'STATE_PUBLISHER_DEFINED',
+    child_scopes: Object.freeze([scope]),
+    buyer_count: Array.isArray(scope.publishers) ? scope.publishers.length : 1,
+    publisher_family_count: 1,
+    authority_policy: 'SYSTEM_OF_RECORD_ONLY',
+    acquisition_rule: 'EXECUTE_SELECTED_PUBLISHER_ONLY',
+  });
+}
+
 export function getStatePublisherDefinedScope(id) {
   const def = DEFINITIONS[String(id || '').toUpperCase()];
   if (!def) return null;
@@ -74,4 +105,27 @@ export function listStatePublisherDefinedScopes() {
       acquisition_rule: scope.acquisition_rule,
     };
   });
+}
+
+
+export function listPublisherDefinedChildScopes() {
+  return Object.values(DEFINITIONS).flatMap((def) => def.child_scope_ids.map((id) => {
+    const scope = getPublisherDefinedChildScope(id);
+    if (!scope) return null;
+    return {
+      id: scope.id,
+      publisher_id: scope.publisher_id || scope.id,
+      name: scope.name,
+      state: scope.state,
+      market: scope.market,
+      platform: scope.platform,
+      scope_type: scope.scope_type,
+      site_url: scope.site_url,
+      buyer_count: Array.isArray(scope.publishers) ? scope.publishers.length : 1,
+      publisher_family_count: 1,
+      target_metros: scope.target_metros || [],
+      acquisition_rule: 'EXECUTE_SELECTED_PUBLISHER_ONLY',
+      parent_scope_id: def.id,
+    };
+  }).filter(Boolean));
 }
