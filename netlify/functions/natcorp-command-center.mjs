@@ -26,11 +26,42 @@ import {
 const EXTRACTION_TARGET = 25;
 const WORK_CAPABILITY_TARGET = 25;
 
+function californiaPublisherScopes() {
+  const california = getStatePublisherDefinedScope('CA_PUBLISHER_DEFINED');
+  return california?.child_scopes || [];
+}
+
+function acquisitionScope(scopeId) {
+  const id = String(scopeId || '').toUpperCase();
+  return getStatePublisherDefinedScope(id)
+    || californiaPublisherScopes().find((scope) => scope.id === id)
+    || null;
+}
+
+function acquisitionPublisherListing() {
+  const stateScopes = listStatePublisherDefinedScopes();
+  const californiaChildren = californiaPublisherScopes().map((scope) => ({
+    id: scope.id,
+    name: scope.name,
+    site_url: scope.site_url,
+    state: scope.state,
+    market: scope.market,
+    platform: scope.vendor_name || scope.platform || scope.name,
+    scope_type: scope.scope_type,
+    buyer_count: Array.isArray(scope.publishers) ? scope.publishers.length : 1,
+    publisher_family_count: 1,
+  }));
+  return [
+    ...californiaChildren,
+    ...stateScopes.filter((scope) => scope.state !== 'California'),
+  ];
+}
+
 async function discoveryStatus() {
   const jobs = await listAcquisitionJobs(20);
   const runs = jobs.map((job) => jobAsRunSummary(job, DISCOVERY_TARGET)).filter(Boolean);
   return {
-    publishers: listStatePublisherDefinedScopes(),
+    publishers: acquisitionPublisherListing(),
     target_records: DISCOVERY_TARGET,
     runs,
     selection_model: 'STATE_PUBLISHER_DEFINED',
@@ -167,9 +198,9 @@ export default async function handler(req) {
     if (action === 'launch_discovery') {
       if (!apiKey) return json(500, { ok: false, error: 'OPENAI_API_KEY is not configured.' });
       const scopeId = payload.scope_id || payload.publisher_id;
-      const scope = getStatePublisherDefinedScope(scopeId);
-      if (!scope || scope.scope_type !== 'STATE_PUBLISHER_DEFINED') {
-        return json(400, { ok: false, error: 'Select a state Publisher Defined acquisition scope.' });
+      const scope = acquisitionScope(scopeId);
+      if (!scope) {
+        return json(400, { ok: false, error: 'Select a configured acquisition publisher.' });
       }
       const stateCode = STATE_NAME_TO_CODE[scope.state];
       if (!stateCode) return json(400, { ok: false, error: `Unsupported state: ${scope.state}` });
