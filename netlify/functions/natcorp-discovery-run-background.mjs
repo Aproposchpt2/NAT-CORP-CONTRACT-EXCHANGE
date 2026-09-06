@@ -1,8 +1,8 @@
 // Stage 1 (Contract Acquisition) background worker. Naming keeps the
 // "-background" suffix Netlify requires to run this as an async background
-// function (longer execution budget than a synchronous function) -- this loop
-// can run up to 6 OpenAI passes per child scope across an entire state's
-// publisher roster, which would time out a normal function.
+// function (longer execution budget than a synchronous function). Owner policy
+// allows exactly one OpenAI discovery call per child publisher scope across the
+// state's publisher roster; no automatic second-through-sixth passes are allowed.
 //
 // Ported from APROPOS-CONTRACT-BRIEF's natcorp-discovery-run-background.mjs.
 import { commandAuthorized } from './_shared/natcorp-db.mjs';
