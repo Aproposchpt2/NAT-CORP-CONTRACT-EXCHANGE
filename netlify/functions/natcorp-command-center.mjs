@@ -1,31 +1,27 @@
 // NatCorp Contract Exchange internal operations endpoint behind command-center.html.
 //
-// This is the natcorp-only clone of APROPOS-CONTRACT-BRIEF's cbrief-command-center.mjs
-// natcorp branch (see natcorp-clone-trace.md at the repo root for the full trace and
-// review that preceded this port). Unlike the source file, there is no cbrief/natcorp
-// target switch here -- this site only ever has one target, so the action routing
-// below is the entire surface, not a branch inside a larger cbrief-mode handler.
+// Production pipeline:
+//   1. Contract Acquisition -> canonical state_contract_opportunities row.
+//   2. Contract Extraction  -> description + requirements JSON + plain-language explainer.
+//   3. Work Capability V2   -> precise work-subject/provider-domain profile answering
+//                              "Who can perform this work?" for later capability matching.
 //
-// Pipeline (REVISED 2026-09-06 per Jeff: single canonical table, same pattern
-// as ACB's cbrief_contract_opportunities -- no raw/normalized staging tables):
-//   1. Contract Acquisition   -> INSERTs the canonical state_contract_opportunities row.
-//   2. Contract Extraction    -> UPDATEs that row: description/requirements
-//                                 jsonb + five-field plain-language explainer,
-//                                 requirements_extraction_status -> COMPLETE.
-//   3. Work Capability         -> UPDATEs that row's classifications jsonb:
-//                                 aoie_taxonomy_capabilities match -> industry_label +
-//                                 confidence, aoie_opportunity_service_mappings.
-//                                 Deliberately NOT a Literal-Capability-Match-style
-//                                 contractor eligibility engine -- there is no
-//                                 business_profile_id anywhere in this pipeline.
+// Stage 3 remains contract-only. It does not accept a business_profile_id and does not
+// perform contractor eligibility, readiness, qualification, or matching.
 import { env, json, nowIso, commandAuthorized } from './_shared/natcorp-db.mjs';
 import { DISCOVERY_TARGET, STATE_NAME_TO_CODE } from './_shared/command-center-publisher-registry.mjs';
 import { getStatePublisherDefinedScope, listStatePublisherDefinedScopes } from './_shared/command-center-state-publisher-defined.mjs';
 import { ensureAcquisitionJob, listAcquisitionJobs, jobAsRunSummary } from './_shared/command-center-acquisition.mjs';
-import { getJob, EXTRACTION_JOB_ID, TAXONOMY_JOB_ID, REPROCESS_JOB_ID } from './_shared/command-center-jobs.mjs';
+import {
+  getJob,
+  EXTRACTION_JOB_ID,
+  WORK_CAPABILITY_JOB_ID,
+} from './_shared/command-center-jobs.mjs';
 import { extractionCoverage } from './_shared/command-center-extraction.mjs';
-import { taxonomyStatus } from './_shared/command-center-taxonomy.mjs';
-import { reprocessCoverage } from './_shared/command-center-reprocess.mjs';
+import {
+  WORK_CAPABILITY_VERSION,
+  workCapabilityStatus as getWorkCapabilityStatus,
+} from './_shared/command-center-work-capability.mjs';
 
 const EXTRACTION_TARGET = 25;
 const WORK_CAPABILITY_TARGET = 25;
@@ -52,23 +48,20 @@ async function extractionStatus() {
 }
 
 async function workCapabilityStatus() {
-  const status = await taxonomyStatus();
-  const reprocessJob = await getJob(REPROCESS_JOB_ID);
-  const reprocessCov = await reprocessCoverage();
+  const status = await getWorkCapabilityStatus();
+  const job = await getJob(WORK_CAPABILITY_JOB_ID);
   return {
-    mode: 'TAXONOMY_CLASSIFICATION',
+    mode: 'WORK_CAPABILITY_V2',
     target_records: WORK_CAPABILITY_TARGET,
     total: status.total,
     ready: status.ready,
     pending: status.pending,
-    taxonomy_capability_count: status.taxonomy_capability_count,
-    current_version: 'natcorp_site_taxonomy_classification_v1',
+    high: status.high,
+    moderate: status.moderate,
+    limited: status.limited,
+    current_version: WORK_CAPABILITY_VERSION,
     recent: status.recent,
-    reprocess: {
-      missing_response_deadline: reprocessCov.missing_response_deadline,
-      total: reprocessCov.total,
-      last_run: jobAsRunSummary(reprocessJob, WORK_CAPABILITY_TARGET),
-    },
+    last_run: jobAsRunSummary(job, WORK_CAPABILITY_TARGET),
   };
 }
 
@@ -78,26 +71,50 @@ async function statusBundle() {
     extractionStatus(),
     workCapabilityStatus(),
   ]);
-  const taxonomyJob = await getJob(TAXONOMY_JOB_ID);
+  const workJob = await getJob(WORK_CAPABILITY_JOB_ID);
   return {
     ok: true,
     retrieved_at: nowIso(),
-    operational_pipeline: ['CONTRACT_ACQUISITION', 'CONTRACT_EXTRACTION', 'TAXONOMY_CLASSIFICATION'],
+    operational_pipeline: ['CONTRACT_ACQUISITION', 'CONTRACT_EXTRACTION', 'WORK_CAPABILITY_V2'],
     discovery,
     extraction: extraction.coverage,
     extraction_runs: extraction.runs,
     work_capability: workCapability,
     errors: {
       discovery_runs: (await listAcquisitionJobs(50)).filter((j) => j.job_status === 'failed' || j.job_status === 'degraded'),
-      extraction_runs: [taxonomyJob].filter((j) => j?.job_status === 'failed' || j?.job_status === 'degraded'),
+      extraction_runs: extraction.runs.runs.filter((r) => r.status === 'FAILED'),
+      work_capability_runs: [jobAsRunSummary(workJob, WORK_CAPABILITY_TARGET)].filter((r) => r?.status === 'FAILED'),
       profiles_with_errors: [],
     },
     task_reporting: {
       active_sessions: {},
       recent_sessions: [],
       current_reports: {
-        ACQUISITION: { session: null, runs: discovery.runs, latest_run: discovery.runs[0] || null, candidate_decisions: [], summary: {} },
-        EXTRACTION: { session: null, runs: extraction.runs.runs, latest_run: extraction.runs.runs[0] || null, summary: {} },
+        ACQUISITION: {
+          session: null,
+          runs: discovery.runs,
+          latest_run: discovery.runs[0] || null,
+          candidate_decisions: [],
+          summary: {},
+        },
+        EXTRACTION: {
+          session: null,
+          runs: extraction.runs.runs,
+          latest_run: extraction.runs.runs[0] || null,
+          summary: {},
+        },
+        WORK_CAPABILITY: {
+          session: null,
+          runs: [workCapability.last_run].filter(Boolean),
+          latest_run: workCapability.last_run || null,
+          summary: {
+            ready: workCapability.ready,
+            pending: workCapability.pending,
+            high: workCapability.high,
+            moderate: workCapability.moderate,
+            limited: workCapability.limited,
+          },
+        },
       },
     },
   };
@@ -127,15 +144,16 @@ export default async function handler(req) {
   } catch {
     return json(400, { ok: false, error: 'Invalid JSON.' });
   }
+
   const action = String(payload?.action || '');
   const forwardKey = req.headers.get('x-natcorp-command-key') || req.headers.get('x-dashboard-password') || '';
 
   try {
     if (action === 'start_new_task') {
-      // This site's stages each track one rolling job status (pdas_acquisition_jobs),
-      // not a per-task-session ledger, so there is nothing to reset. Matches the
-      // source repo's natcorp-mode behavior for this action.
-      return json(400, { ok: false, error: 'Task-session resets are not applicable here: each stage tracks one rolling job status instead of per-task sessions.' });
+      return json(400, {
+        ok: false,
+        error: 'Task-session resets are not applicable here: each stage tracks one rolling job status instead of per-task sessions.',
+      });
     }
 
     const apiKey = env('OPENAI_API_KEY');
@@ -152,7 +170,11 @@ export default async function handler(req) {
 
       const job = await ensureAcquisitionJob({ stateCode, scope });
       if (job.job_status === 'running') {
-        return json(409, { ok: false, error: 'An acquisition job is already active for this scope.', run: jobAsRunSummary(job, DISCOVERY_TARGET) });
+        return json(409, {
+          ok: false,
+          error: 'An acquisition job is already active for this scope.',
+          run: jobAsRunSummary(job, DISCOVERY_TARGET),
+        });
       }
 
       const backgroundUrl = new URL('/.netlify/functions/natcorp-discovery-run-background', req.url);
@@ -161,8 +183,14 @@ export default async function handler(req) {
         headers: { 'content-type': 'application/json', 'x-natcorp-command-key': forwardKey },
         body: JSON.stringify({ job_id: job.job_id, scope_id: scope.id }),
       });
-      if (!queued.ok && queued.status !== 202) return json(502, { ok: false, error: `Discovery background launch returned HTTP ${queued.status}.` });
-      return json(202, { ok: true, action, run: jobAsRunSummary({ ...job, job_status: 'not_started' }, DISCOVERY_TARGET) });
+      if (!queued.ok && queued.status !== 202) {
+        return json(502, { ok: false, error: `Discovery background launch returned HTTP ${queued.status}.` });
+      }
+      return json(202, {
+        ok: true,
+        action,
+        run: jobAsRunSummary({ ...job, job_status: 'not_started' }, DISCOVERY_TARGET),
+      });
     }
 
     if (action === 'launch_extraction') {
@@ -174,25 +202,37 @@ export default async function handler(req) {
         headers: { 'content-type': 'application/json', 'x-natcorp-command-key': forwardKey },
         body: JSON.stringify({ target_records: targetRecords }),
       });
-      if (!queued.ok && queued.status !== 202) return json(502, { ok: false, error: `Extraction background launch returned HTTP ${queued.status}.` });
-      return json(202, { ok: true, action, run: { id: EXTRACTION_JOB_ID, status: 'QUEUED', target_records: targetRecords } });
+      if (!queued.ok && queued.status !== 202) {
+        return json(502, { ok: false, error: `Extraction background launch returned HTTP ${queued.status}.` });
+      }
+      return json(202, {
+        ok: true,
+        action,
+        run: { id: EXTRACTION_JOB_ID, status: 'QUEUED', target_records: targetRecords },
+      });
     }
 
     if (action === 'launch_work_capability') {
       if (!apiKey) return json(500, { ok: false, error: 'OPENAI_API_KEY is not configured.' });
       const batchLimit = Math.max(1, Math.min(100, Number(payload.limit) || WORK_CAPABILITY_TARGET));
       const force = payload.force === true;
-      // force === true is the Reprocess control: bypass-staging explainer +
-      // classification batch against pre-existing canonical records.
-      const functionName = force ? 'natcorp-reprocess-run-background' : 'natcorp-taxonomy-run-background';
-      const backgroundUrl = new URL(`/.netlify/functions/${functionName}`, req.url);
+      const backgroundUrl = new URL('/.netlify/functions/natcorp-work-capability-run-background', req.url);
       const queued = await fetch(backgroundUrl, {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-natcorp-command-key': forwardKey },
         body: JSON.stringify({ limit: batchLimit, force }),
       });
-      if (!queued.ok && queued.status !== 202) return json(502, { ok: false, error: `Work capability background launch returned HTTP ${queued.status}.` });
-      return json(202, { ok: true, action, batch_limit: batchLimit, force, mode: force ? 'REPROCESS' : 'TAXONOMY_CLASSIFICATION' });
+      if (!queued.ok && queued.status !== 202) {
+        return json(502, { ok: false, error: `Work Capability background launch returned HTTP ${queued.status}.` });
+      }
+      return json(202, {
+        ok: true,
+        action,
+        batch_limit: batchLimit,
+        force,
+        mode: 'WORK_CAPABILITY_V2',
+        run: { id: WORK_CAPABILITY_JOB_ID, status: 'QUEUED', target_records: batchLimit },
+      });
     }
 
     return json(400, { ok: false, error: `Unknown action: ${action}` });
