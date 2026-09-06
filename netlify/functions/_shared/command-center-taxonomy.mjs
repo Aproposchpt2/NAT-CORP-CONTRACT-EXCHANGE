@@ -1,8 +1,17 @@
-// Stage 3 (Taxonomy Classification): matches a contract to
+// Stage 3 (Work Capability / Taxonomy Classification): matches a contract to
 // aoie_taxonomy_capabilities and writes aoie_opportunity_service_mappings -- an
 // industry classification + confidence, not a contractor eligibility/capability
 // match. Ported from APROPOS-CONTRACT-BRIEF's natcorp-pipeline-taxonomy.mjs,
 // adapted to call db()/dbCount() directly from natcorp-db.mjs.
+//
+// REVISED 2026-09-06 per Jeff: runs against the same canonical
+// state_contract_opportunities row Contract Extraction already enriched --
+// eligibility is requirements_extraction_status=eq.COMPLETE (Extraction must
+// have run first), not just status=eq.open (also fixed the eq.OPEN casing
+// bug -- production status values are lowercase 'open', confirmed against
+// 395/395 real rows). The classification result now lives in that row's own
+// dedicated `classifications` jsonb column instead of being folded into
+// raw_source_payload, which is reserved for the as-acquired payload.
 //
 // KNOWN BLOCKER (inherited from the source repo, unresolved as of the port): every
 // aoie_taxonomy_* table is empty in the natcorp Supabase project. This code is
@@ -11,6 +20,7 @@
 // NO_TAXONOMY_AVAILABLE (an industry_label is still produced and shown).
 import { env, db, dbCount } from './natcorp-db.mjs';
 import { requestStructuredJson } from './openai-structured-json.mjs';
+import { ACQUISITION_METHOD } from './command-center-acquisition.mjs';
 
 export const TAXONOMY_CLASSIFICATION_VERSION = 'natcorp_site_taxonomy_classification_v1';
 const DEFAULT_MODEL = 'gpt-5-mini';
@@ -92,21 +102,17 @@ export async function classifyOpportunity(opportunity, { apiKey, model = DEFAULT
 
 export async function persistClassification(opportunity, classification) {
   const timestamp = new Date().toISOString();
-  const raw = opportunity.raw_source_payload && typeof opportunity.raw_source_payload === 'object' ? opportunity.raw_source_payload : {};
   await db('state_contract_opportunities', 'PATCH', `?id=eq.${opportunity.id}`, {
-    raw_source_payload: {
-      ...raw,
-      taxonomy_classification: {
-        industry_label: classification.industry_label,
-        confidence: classification.confidence,
-        reasoning: classification.reasoning,
-        matched_capability_id: classification.matched_capability?.id || null,
-        matched_capability_code: classification.matched_capability?.capability_code || null,
-        status: classification.matched_capability ? 'MATCHED' : (classification.taxonomy_available ? 'NO_MATCH' : 'NO_TAXONOMY_AVAILABLE'),
-        version: classification.version,
-        model: classification.model,
-        classified_at: classification.classified_at,
-      },
+    classifications: {
+      industry_label: classification.industry_label,
+      confidence: classification.confidence,
+      reasoning: classification.reasoning,
+      matched_capability_id: classification.matched_capability?.id || null,
+      matched_capability_code: classification.matched_capability?.capability_code || null,
+      status: classification.matched_capability ? 'MATCHED' : (classification.taxonomy_available ? 'NO_MATCH' : 'NO_TAXONOMY_AVAILABLE'),
+      version: classification.version,
+      model: classification.model,
+      classified_at: classification.classified_at,
     },
     updated_at: timestamp,
   }, 'return=minimal');
@@ -125,7 +131,7 @@ export async function persistClassification(opportunity, classification) {
 }
 
 function hasCurrentClassification(opportunity) {
-  return opportunity?.raw_source_payload?.taxonomy_classification?.version === TAXONOMY_CLASSIFICATION_VERSION;
+  return opportunity?.classifications?.version === TAXONOMY_CLASSIFICATION_VERSION;
 }
 
 export async function runTaxonomyBatch({ apiKey, limit = 25, force = false, onProgress = async () => {} } = {}) {
@@ -136,7 +142,7 @@ export async function runTaxonomyBatch({ apiKey, limit = 25, force = false, onPr
   for (let offset = 0; offset < 5000 && targets.length < safeLimit; offset += pageSize) {
     const page = (await db(
       'state_contract_opportunities', 'GET',
-      `?status=eq.OPEN&select=id,title,description,issuing_organization,procurement_type,raw_source_payload&order=created_at.asc&limit=${pageSize}&offset=${offset}`,
+      `?status=eq.open&requirements_extraction_status=eq.COMPLETE&select=id,title,description,issuing_organization,procurement_type,classifications&order=updated_at.asc&limit=${pageSize}&offset=${offset}`,
     )) || [];
     for (const row of page) {
       if (force || !hasCurrentClassification(row)) targets.push(row);
@@ -166,13 +172,14 @@ export async function runTaxonomyBatch({ apiKey, limit = 25, force = false, onPr
 }
 
 export async function taxonomyStatus() {
-  const total = await dbCount('state_contract_opportunities', '?status=eq.OPEN');
+  const scope = `acquisition_method=eq.${ACQUISITION_METHOD}&status=eq.open&requirements_extraction_status=eq.COMPLETE`;
+  const total = await dbCount('state_contract_opportunities', `?${scope}`);
   const rows = [];
   const pageSize = 500;
   for (let offset = 0; offset < 5000; offset += pageSize) {
     const page = (await db(
       'state_contract_opportunities', 'GET',
-      `?status=eq.OPEN&select=id,title,issuing_organization,response_deadline,raw_source_payload,updated_at&order=updated_at.desc&limit=${pageSize}&offset=${offset}`,
+      `?${scope}&select=id,title,issuing_organization,response_deadline,classifications,updated_at&order=updated_at.desc&limit=${pageSize}&offset=${offset}`,
     )) || [];
     rows.push(...page);
     if (page.length < pageSize) break;
@@ -188,10 +195,10 @@ export async function taxonomyStatus() {
       id: r.id,
       title: r.title,
       agency_name: r.issuing_organization,
-      industry_label: r.raw_source_payload.taxonomy_classification.industry_label,
-      confidence: r.raw_source_payload.taxonomy_classification.confidence,
-      status: r.raw_source_payload.taxonomy_classification.status,
-      processed_at: r.raw_source_payload.taxonomy_classification.classified_at,
+      industry_label: r.classifications.industry_label,
+      confidence: r.classifications.confidence,
+      status: r.classifications.status,
+      processed_at: r.classifications.classified_at,
     })),
   };
 }

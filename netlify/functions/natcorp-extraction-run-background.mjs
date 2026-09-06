@@ -1,6 +1,8 @@
-// Stage 2 (Contract Extraction) background worker: normalize + promote +
-// five-field explainer, on newly-acquired state_raw_records. "-background"
-// suffix required for Netlify's async execution budget (batch OpenAI calls).
+// Stage 2 (Contract Extraction) background worker: five-field plain-language
+// explainer, written directly onto newly-acquired state_contract_opportunities
+// rows (no raw/normalized staging tables -- see command-center-extraction.mjs
+// header, revised 2026-09-06). "-background" suffix required for Netlify's
+// async execution budget (batch OpenAI calls).
 //
 // Ported from APROPOS-CONTRACT-BRIEF's natcorp-extraction-run-background.mjs.
 import { env, commandAuthorized } from './_shared/natcorp-db.mjs';

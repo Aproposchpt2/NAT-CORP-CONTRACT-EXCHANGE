@@ -6,11 +6,14 @@
 // target switch here -- this site only ever has one target, so the action routing
 // below is the entire surface, not a branch inside a larger cbrief-mode handler.
 //
-// Pipeline:
-//   1. Contract Acquisition   -> state_raw_records
-//   2. Contract Extraction    -> state_normalized_records -> state_contract_opportunities
-//                                 + five-field plain-language explainer
-//   3. Taxonomy Classification -> aoie_taxonomy_capabilities match -> industry_label +
+// Pipeline (REVISED 2026-09-06 per Jeff: single canonical table, same pattern
+// as ACB's cbrief_contract_opportunities -- no raw/normalized staging tables):
+//   1. Contract Acquisition   -> INSERTs the canonical state_contract_opportunities row.
+//   2. Contract Extraction    -> UPDATEs that row: description/requirements
+//                                 jsonb + five-field plain-language explainer,
+//                                 requirements_extraction_status -> COMPLETE.
+//   3. Work Capability         -> UPDATEs that row's classifications jsonb:
+//                                 aoie_taxonomy_capabilities match -> industry_label +
 //                                 confidence, aoie_opportunity_service_mappings.
 //                                 Deliberately NOT a Literal-Capability-Match-style
 //                                 contractor eligibility engine -- there is no
@@ -18,7 +21,7 @@
 import { env, json, nowIso, commandAuthorized } from './_shared/natcorp-db.mjs';
 import { DISCOVERY_TARGET, STATE_NAME_TO_CODE } from './_shared/command-center-publisher-registry.mjs';
 import { getStatePublisherDefinedScope, listStatePublisherDefinedScopes } from './_shared/command-center-state-publisher-defined.mjs';
-import { ensureAcquisitionJob, listAcquisitionJobs, jobAsRunSummary, rawCoverage } from './_shared/command-center-acquisition.mjs';
+import { ensureAcquisitionJob, listAcquisitionJobs, jobAsRunSummary } from './_shared/command-center-acquisition.mjs';
 import { getJob, EXTRACTION_JOB_ID, TAXONOMY_JOB_ID, REPROCESS_JOB_ID } from './_shared/command-center-jobs.mjs';
 import { extractionCoverage } from './_shared/command-center-extraction.mjs';
 import { taxonomyStatus } from './_shared/command-center-taxonomy.mjs';
@@ -44,8 +47,7 @@ async function extractionStatus() {
   return {
     coverage: { extracted: coverage.extracted, total: coverage.total },
     runs: { target_records: EXTRACTION_TARGET, runs: [jobAsRunSummary(job, EXTRACTION_TARGET)].filter(Boolean) },
-    raw_pending: coverage.pending_raw,
-    raw_total: coverage.total_raw,
+    pending: coverage.pending,
   };
 }
 
