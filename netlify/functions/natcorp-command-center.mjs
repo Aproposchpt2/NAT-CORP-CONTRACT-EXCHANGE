@@ -72,6 +72,7 @@ async function statusBundle() {
     workCapabilityStatus(),
   ]);
   const workJob = await getJob(WORK_CAPABILITY_JOB_ID);
+  const acquisitionJobs = await listAcquisitionJobs(50);
   return {
     ok: true,
     retrieved_at: nowIso(),
@@ -81,7 +82,12 @@ async function statusBundle() {
     extraction_runs: extraction.runs,
     work_capability: workCapability,
     errors: {
-      discovery_runs: (await listAcquisitionJobs(50)).filter((j) => j.job_status === 'failed' || j.job_status === 'degraded'),
+      // Acquisition connector failures are operational failures even when the
+      // rolling job previously ended as healthy. This also keeps historical
+      // pre-hotfix runs visible until they are re-run with detailed diagnostics.
+      discovery_runs: acquisitionJobs
+        .filter((j) => j.job_status === 'failed' || j.job_status === 'degraded' || Number(j.last_records_failed || 0) > 0)
+        .map((j) => jobAsRunSummary(j, DISCOVERY_TARGET)),
       extraction_runs: extraction.runs.runs.filter((r) => r.status === 'FAILED'),
       work_capability_runs: [jobAsRunSummary(workJob, WORK_CAPABILITY_TARGET)].filter((r) => r?.status === 'FAILED'),
       profiles_with_errors: [],
