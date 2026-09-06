@@ -1,13 +1,12 @@
 // OpenAI web-search acquisition engine. Ported from APROPOS-CONTRACT-BRIEF's
 // cbrief-openai-discovery.mjs (natcorp execution path), with the cbrief/natcorp
 // project branch removed entirely: this site only ever has one target, so
-// upsertCandidate() always stores into state_raw_records via
-// command-center-acquisition.mjs's storeRawCandidate() -- there is no
-// cbrief_contract_opportunities table on this site's Supabase project to branch
-// away from.
+// upsertCandidate() always stores directly into state_contract_opportunities
+// via command-center-acquisition.mjs's storeAcquiredOpportunity() (revised
+// 2026-09-06, no state_raw_records staging table -- see that file's header).
 import { env } from './natcorp-db.mjs';
 import { DISCOVERY_TARGET, MIN_CLOSING_DAYS } from './command-center-publisher-registry.mjs';
-import { storeRawCandidate } from './command-center-acquisition.mjs';
+import { storeAcquiredOpportunity } from './command-center-acquisition.mjs';
 
 const DEFAULT_MODEL = 'gpt-5.5';
 const MAX_PASSES = 6;
@@ -154,7 +153,7 @@ async function upsertCandidate(candidate, evidence) {
   const agency = clean(candidate.agency_name, 300);
   if (!title || !agency) throw new Error('TITLE_AND_AGENCY_REQUIRED');
 
-  return storeRawCandidate({
+  return storeAcquiredOpportunity({
     candidate: { ...candidate, closes_at: closesAt },
     url,
     evidence,
