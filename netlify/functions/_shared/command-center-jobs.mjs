@@ -1,37 +1,16 @@
 // Rolling job-status tracking on pdas_acquisition_jobs, one row per stage,
 // updated in place rather than a per-run ledger (that table is a job-DEFINITION
-// registry, not a per-run history). Ported from APROPOS-CONTRACT-BRIEF's
-// natcorp-pipeline-jobs.mjs, adapted to call db() directly from natcorp-db.mjs --
-// this site's own SUPABASE_URL/SUPABASE_SERVICE_ROLE_KEY already point at the
-// natcorp Supabase project, so no cross-project client is needed here.
-//
-// Job id prefix is deliberately `natcorp_site_command_center:` rather than the
-// source repo's `cbrief_command_center:` -- both repos' natcorp-mode code paths
-// read/write the SAME Supabase project (judislfknmhofcgzyozc), so using a
-// distinct prefix keeps this site's job rows from ever colliding with
-// apropos-contract-brief's if both are run against production at once. See
-// natcorp-clone-trace.md for the full coexistence-risk note.
-//
-// FIXED 2026-09-06 per Jeff (production incident): pdas_acquisition_jobs.job_status
-// has a real CHECK constraint -- only 'not_started' | 'scheduled' | 'running' |
-// 'healthy' | 'degraded' | 'failed' | 'paused' | 'retired' are allowed (confirmed
-// via pg_constraint). Every write in this pipeline (this file and all four
-// natcorp-*-run-background.mjs workers) had been using 'READY'/'RUNNING'/
-// 'QUEUED'/'COMPLETED'/'FAILED' since the original clone -- none of which pass
-// that constraint, so ensureJob()'s very first INSERT always failed and
-// Launch Discovery/Extraction/Work Capability had never actually created a job
-// row. Storage now uses the real enum; jobAsRunSummary() translates it back to
-// the RUNNING/COMPLETED/FAILED vocabulary command-center.html's rendering
-// functions already check for, so the frontend needed no changes.
+// registry, not a per-run history). This site's own SUPABASE_URL and
+// SUPABASE_SERVICE_ROLE_KEY point at the NAT Corp Supabase project.
 import { db } from './natcorp-db.mjs';
 
 export const JOB_ID_PREFIX = 'natcorp_site_command_center';
 export const EXTRACTION_JOB_ID = `${JOB_ID_PREFIX}:extraction`;
 export const TAXONOMY_JOB_ID = `${JOB_ID_PREFIX}:taxonomy`;
+export const WORK_CAPABILITY_JOB_ID = `${JOB_ID_PREFIX}:work-capability-v2`;
 export const REPROCESS_JOB_ID = `${JOB_ID_PREFIX}:reprocess`;
 
-// Real DB value -> display vocabulary command-center.html checks for
-// (RUNNING / COMPLETED / FAILED; anything else renders as "Queued").
+// Real DB value -> display vocabulary used by command-center rendering.
 const DISPLAY_STATUS = {
   not_started: 'QUEUED',
   scheduled: 'QUEUED',
@@ -73,9 +52,6 @@ export async function getJob(jobId) {
   return (await db('pdas_acquisition_jobs', 'GET', `?job_id=eq.${encodeURIComponent(jobId)}&select=*&limit=1`))?.[0] || null;
 }
 
-// Shapes a pdas_acquisition_jobs row into the run-summary fields
-// command-center.html's rendering functions already read (from a
-// cbrief_discovery_runs / cbrief_extraction_runs-shaped row upstream).
 export function jobAsRunSummary(job, targetRecords) {
   if (!job) return null;
   const processed = Number(job.last_records_inserted || 0) + Number(job.last_records_updated || 0);
