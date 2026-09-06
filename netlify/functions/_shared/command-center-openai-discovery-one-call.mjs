@@ -20,6 +20,10 @@ const ALLOWED_HOST_SUFFIXES = [
 
 const BROWSER_DEPENDENT_AUTHORITIES = Object.freeze({
   CAL_EPROCURE:Object.freeze({hosts:Object.freeze(['caleprocure.ca.gov']),allowed_statuses:Object.freeze([401,403,405])}),
+  // OpenGov public procurement pages are browser-accessible but may return 403
+  // to NAT-CORP's server-side verification GET. Keep this exception scoped to
+  // the OpenGov publisher pathway and exact approved procurement hostname.
+  CA_OPENGOV:Object.freeze({hosts:Object.freeze(['procurement.opengov.com']),allowed_statuses:Object.freeze([403])}),
 });
 
 function clean(value,max=1000){const text=String(value??'').replace(/\s+/g,' ').trim();return text?text.slice(0,max):null}
