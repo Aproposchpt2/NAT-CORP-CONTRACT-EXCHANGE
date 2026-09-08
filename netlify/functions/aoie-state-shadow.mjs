@@ -5,28 +5,42 @@ import {
 import { db, env } from './_shared/natcorp-db.mjs';
 import {
   authenticate, availableStates, candidateRows, fetchRegistry,
-  normalizeStates, resolveProfile,
+  normalizeOwnerIntakeId, normalizeStates, resolveOwnerAuthority, resolveProfile,
 } from './_shared/aoie-candidates.mjs';
-import { profileFingerprint } from './_shared/aoie-llm-relevance.mjs';
+import { profileFingerprint, RELEVANCE_ENGINE_VERSION } from './_shared/aoie-llm-relevance.mjs';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' };
 const json = (status, body) => new Response(JSON.stringify(body), { status, headers: JSON_HEADERS });
-const LLM_ENGINE_VERSION = 'aoie_llm_relevance_v1';
+const LLM_ENGINE_VERSION = RELEVANCE_ENGINE_VERSION;
 
-async function latestJobFor(fingerprint, states) {
-  const rows = await db(
-    'aoie_llm_relevance_jobs', 'GET',
-    `?profile_fingerprint=eq.${encodeURIComponent(fingerprint)}&order=created_at.desc&limit=10&select=*`,
-  );
-  const sortedStates = [...states].sort().join(',');
-  return (rows || []).find((row) => [...(row.states || [])].sort().join(',') === sortedStates) || (rows || [])[0] || null;
+export function exactStateSetMatch(storedStates, requestedStates) {
+  const stored = normalizeStates(storedStates).sort();
+  const requested = normalizeStates(requestedStates).sort();
+  if (!requested.length || stored.length !== requested.length) return false;
+  return stored.every((state, index) => state === requested[index]);
 }
 
-async function relevantVerdicts(fingerprint) {
+export function jobAuthorityMatches(job, { ownerIntakeId, fingerprint, states }) {
+  const owner = normalizeOwnerIntakeId(ownerIntakeId);
+  if (!owner || normalizeOwnerIntakeId(job?.owner_intake_id) !== owner) return false;
+  if (!fingerprint || String(job?.profile_fingerprint || '') !== String(fingerprint)) return false;
+  return exactStateSetMatch(job?.states, states);
+}
+
+async function latestJobFor(ownerIntakeId, fingerprint, states) {
   const rows = await db(
-    'aoie_llm_relevance_verdicts', 'GET',
-    `?profile_fingerprint=eq.${encodeURIComponent(fingerprint)}&relevant=eq.true&select=*`,
+    'aoie_llm_relevance_jobs', 'GET',
+    `?owner_intake_id=eq.${encodeURIComponent(ownerIntakeId)}&profile_fingerprint=eq.${encodeURIComponent(fingerprint)}&order=created_at.desc&limit=10&select=*`,
   );
+  return (rows || []).find((row) => jobAuthorityMatches(row, { ownerIntakeId, fingerprint, states })) || null;
+}
+
+async function relevantVerdictsForJob(job) {
+  if (!job?.id || !normalizeOwnerIntakeId(job?.owner_intake_id)) return [];
+  const links = await db('aoie_llm_relevance_job_verdicts', 'GET', `?job_id=eq.${encodeURIComponent(job.id)}&select=verdict_id`);
+  const ids = [...new Set((links || []).map((row) => String(row?.verdict_id || '').trim()).filter(Boolean))];
+  if (!ids.length) return [];
+  const rows = await db('aoie_llm_relevance_verdicts', 'GET', `?id=in.(${ids.map((id) => encodeURIComponent(id)).join(',')})&relevant=eq.true&select=*`);
   return rows || [];
 }
 
@@ -42,29 +56,21 @@ export default async function handler(req) {
     try { payload = await req.json(); } catch { return json(400, { error: 'Invalid JSON.' }); }
 
     const requestedStates = normalizeStates(payload.states);
-    // A poll tick (the dashboard checking judging progress every few seconds
-    // while aoie-llm-relevance-run works through candidates) reuses the exact
-    // state scope its own initial, non-poll call already resolved -- state
-    // inventory doesn't change mid-judge, so re-running availableStates() on
-    // every tick is pure waste. Added 2026-08-24 after a real Supabase
-    // call-volume scare (1.8M calls/month on a different project) made this
-    // worth trimming before it became this project's problem too.
     const isPoll = payload.poll === true && requestedStates.length > 0;
-
-    // resolveProfile() and availableStates() share no dependency on each
-    // other -- they were running back-to-back for no reason, one full
-    // sequential network round trip apiece. Run them concurrently instead.
-    // (availableStates() is skipped outright for a poll tick, same as
-    // before -- states are already known, see the comment above.) Confirmed
-    // live 2026-08-28: this endpoint's own SQL runs in single-digit
-    // milliseconds (EXPLAIN ANALYZE), so an 8-11s response was entirely
-    // this kind of unnecessary stage-by-stage network round-tripping, not
-    // a slow query -- per Jeff: "The site rendering contracts so slow."
     const [resolved, inventoryStatesResult] = await Promise.all([
       resolveProfile(req, payload || {}, auth.mode),
       isPoll ? Promise.resolve(null) : availableStates(url, key),
     ]);
     if (!resolved.profile) return json(401, { error: 'A verified Business Capability Profile is required.' });
+    const ownerAuthority = resolveOwnerAuthority(resolved, payload || {}, auth.mode);
+    if (!ownerAuthority) {
+      return json(auth.mode === 'internal' ? 400 : 401, {
+        error: auth.mode === 'internal'
+          ? 'Internal matching requires an explicit trusted owner_intake_id.'
+          : 'A verified customer profile instance is required.',
+      });
+    }
+
     const profile = expandBusinessProfile({ ...resolved.profile, service_states: [] });
     const evidence = profile.keywords.length || profile.naics_codes.length || profile.unspsc_codes.length || profile.commodity_codes.length || profile.concepts.length;
     if (!profile.legal_name) return json(400, { error: 'A business name is required.' });
@@ -72,7 +78,6 @@ export default async function handler(req) {
 
     const scope = String(payload.scope || (requestedStates.length ? 'selected' : 'all')).toLowerCase();
     const residentState = String(payload.resident_state || resolved.profile.resident_state || resolved.session?.resident_state || '').trim().toUpperCase();
-
     let inventoryStates, states;
     if (isPoll) {
       inventoryStates = requestedStates;
@@ -93,22 +98,17 @@ export default async function handler(req) {
     const nowIso = new Date().toISOString();
     const fingerprint = profileFingerprint(resolved.profile);
 
-    // A non-poll request always needs the candidate pool + registry
-    // regardless of verdicts (the old code ran this unconditionally via
-    // `!isPoll || verdicts.length` short-circuiting on `!isPoll`), so
-    // there's no real dependency between it and the job/verdicts lookup --
-    // run all four together instead of two sequential Promise.all stages.
-    // A poll tick keeps the original two-stage shape: skip the 4-call
-    // candidate+registry fetch entirely until the first relevant verdict
-    // actually lands, preserving the call-volume guard noted above.
     let job, verdicts, source, registry;
     if (!isPoll) {
-      [job, verdicts, source, registry] = await Promise.all([
-        latestJobFor(fingerprint, states), relevantVerdicts(fingerprint),
-        candidateRows(url, key, states, nowIso), fetchRegistry(url, key, states),
+      [job, source, registry] = await Promise.all([
+        latestJobFor(ownerAuthority.owner_intake_id, fingerprint, states),
+        candidateRows(url, key, states, nowIso),
+        fetchRegistry(url, key, states),
       ]);
+      verdicts = await relevantVerdictsForJob(job);
     } else {
-      [job, verdicts] = await Promise.all([latestJobFor(fingerprint, states), relevantVerdicts(fingerprint)]);
+      job = await latestJobFor(ownerAuthority.owner_intake_id, fingerprint, states);
+      verdicts = await relevantVerdictsForJob(job);
       if (verdicts.length) {
         [source, registry] = await Promise.all([candidateRows(url, key, states, nowIso), fetchRegistry(url, key, states)]);
       } else {
@@ -116,16 +116,10 @@ export default async function handler(req) {
         registry = { publishers: [], publisherPlatforms: [], platforms: [], degraded: false, errors: [] };
       }
     }
+
     const index = buildRegistryIndex(registry);
     const candidates = source.rows.map((row) => enrichOpportunity(row, index, source.relation));
     const candidateById = new Map(candidates.map((row) => [row.id, row]));
-
-    // Relevance is decided ONLY by cached LLM judgments (aoie_llm_relevance_verdicts) --
-    // the keyword/ontology engine (aoie-state-scoring.mjs) was retired from this decision
-    // path 2026-08-24 after repeatedly failing Jeff's manual real-data cross-check. A
-    // candidate with no verdict yet simply isn't shown until aoie-llm-relevance-run has
-    // judged it; the `judging` block below tells the dashboard whether that's still in
-    // progress so it can show real progress instead of a false "no matches" state.
     const scored = verdicts
       .map((verdict) => {
         const row = candidateById.get(verdict.opportunity_id);
@@ -151,13 +145,14 @@ export default async function handler(req) {
       return acc;
     }, {});
     const judging = {
-      status: job?.status || 'NOT_STARTED',
+      status: job?.status || 'QUEUED',
       total_candidates: job?.total_candidates ?? candidates.length,
       judged_candidates: job?.judged_candidates ?? 0,
       relevant_count: job?.relevant_count ?? 0,
       started_at: job?.started_at || null,
       completed_at: job?.completed_at || null,
       error_message: job?.error_message || null,
+      durable_job_created: Boolean(job),
     };
 
     return json(200, {
@@ -166,10 +161,6 @@ export default async function handler(req) {
       profile, source_candidate_count: candidates.length, candidate_count: judging.judged_candidates, excluded_candidate_count: 0,
       judging, release_rejection_summary: {}, result_count: results.length, minimum_score: minimumScore, summary,
       data_source: {
-        // No canonical-view attempt-then-fallback dance anymore -- removed
-        // 2026-08-28 after confirming aoie_opportunity_candidates_v1 never
-        // existed in the database, so every request was paying for one
-        // guaranteed-to-fail Supabase round trip before the real query ran.
         relation: `public.${source.relation}`, mode: source.mode,
         capability_first_search: true, resident_state_is_presentation_filter: true,
         latest_version_filter_applied: true, duplicate_filter_applied: true, normalized_status_filter_applied: true,

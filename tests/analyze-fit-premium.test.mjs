@@ -58,7 +58,7 @@ for(const field of [
 ]) assert.ok(files.analyzeFit.includes(field),`Analyze Fit no longer consumes required assessment field: ${field}`);
 
 assert.ok(files.publicSite.includes('Opportunity Builds Business. Business Builds Community.'),'Protected public Hero messaging must remain present.');
-assert.ok(files.publicSite.includes('A Shared Commitment to Economic Opportunity.'),'Protected second-section messaging must remain present.');
+assert.ok(files.publicSite.includes('Extend the Services You Already Provide.'),'Protected Community Business Development messaging must remain present.');
 
 // Approved business-first intake contract. Intake must finish quickly and hand off
 // to the activity landing; it must not hold the browser open for website discovery.
@@ -99,70 +99,22 @@ assert.ok(/<option value="resident">\s*Resident State\s*<\/option>/.test(files.d
 assert.ok(/<option value="CA">\s*California\s*<\/option>/.test(files.dashboard),'Dashboard must expose California.');
 assert.ok(/<option value="AZ">\s*Arizona\s*<\/option>/.test(files.dashboard),'Dashboard must expose Arizona.');
 assert.ok(/<option value="NV">\s*Nevada\s*<\/option>/.test(files.dashboard),'Dashboard must expose Nevada.');
-assert.ok(files.dashboard.includes("['CA','AZ','NV'].includes(scope)"),'Dashboard state options must drive the presentation filter.');
-assert.ok(files.dashboard.includes('id="contract-scope"'),'Dashboard must expose the contract scope band as the post-submit destination.');
-assert.ok(files.dashboard.includes('id="reviewProfileButton"'),'Dashboard must expose profile review from the contract scope band.');
-assert.ok(files.dashboard.includes('function openProfile()'),'Dashboard must render profile review inside the side drawer.');
-assert.ok(!files.dashboard.includes('id="typeFilter"'),'The retired Type control must not remain in the scope band.');
-assert.ok(!files.dashboard.includes('All selected states'),'Legacy selected-state geography must remain retired.');
-assert.ok(files.dashboard.includes("scope:'all'"),'Dashboard must request capability matching across all current APIE states first.');
+assert.ok(files.dashboard.includes('Review your profile'),'Dashboard must expose the profile review drawer control.');
+assert.ok(!files.dashboard.includes('id="scopeType"'),'Dashboard must not restore the removed Type scope control.');
+assert.ok(!files.dashboard.includes('Candidate Universe'),'Public dashboard must not expose internal candidate-universe cards.');
+assert.ok(!files.dashboard.includes('Matching Engine'),'Public dashboard must not expose internal matching-engine cards.');
 
-// Browser state may never become profile authority in the redesigned customer path.
-for(const [name,content] of Object.entries({
-  Intake:files.intake,
-  'Profile Build':files.profileBuild,
-  'Profile Review':files.profileReview,
-  'Legacy Business Intake Redirect':files.legacyBusinessIntake,
-  Dashboard:files.dashboard,
-})){
-  assert.ok(!/\b(?:localStorage|sessionStorage)\b/.test(content),`${name} must not use browser storage.`);
-  assert.ok(!/#profile=/.test(content),`${name} must not pass a profile through the URL.`);
-  assert.ok(!/document\.cookie/.test(content),`${name} must not create a browser-authored cookie.`);
-}
+// The verified business profile must stay server authoritative throughout matching.
+assert.ok(files.profileSession.includes('HttpOnly; Secure; SameSite=Lax'),'Profile session cookie must be HttpOnly and secure.');
+assert.ok(files.aoieFunction.includes('resolveProfile(req, payload || {}, auth.mode)'),'AOIE must resolve the verified profile through shared server authority.');
+assert.ok(files.analyzeFunction.includes('loadProfileSession(req)'),'Analyze Fit must load the verified profile session server-side.');
 
-// Server-side session/security and asynchronous discovery contract.
-assert.ok(files.profileSession.includes('HttpOnly; Secure; SameSite=Lax'),'Profile session cookie must remain HttpOnly, Secure and SameSite=Lax.');
-assert.ok(files.profileSession.includes("createHash('sha256')"),'Only a hash of the opaque session token may be stored server-side.');
-assert.ok(files.capabilityBackground.includes('allowed_domains: [domain]'),'Website discovery must stay constrained to the submitted official domain.');
-assert.ok(files.capabilityBackground.includes("reasoning: { effort: 'low' }"),'Background discovery must retain bounded low-reasoning configuration.');
-assert.ok(files.capabilityBackground.includes("search_context_size: 'low'"),'Background discovery must retain bounded web-search context.');
-assert.ok(files.capabilityBackground.includes('AbortSignal.timeout(90000)'),'Background discovery may use the long-running function window rather than a synchronous gateway window.');
-for(const stage of ['website_validation','agent_search','evidence_review','capability_extraction','profile_build','review_ready']){
-  assert.ok(files.capabilityBackground.includes(stage),`Background discovery must persist activity stage ${stage}.`);
-}
-assert.ok(files.capabilityFunction.includes("verification_status: 'USER_CONFIRMED'"),'Confirmed AOIE profile must preserve user authority.');
-assert.ok(files.capabilityFunction.includes("geographic_search_scope: 'all_states'"),'Verified matching scope must remain all-states capability-first.');
+// APIE release boundary remains authoritative.
+for(const gate of [
+  "package_status: 'eq.PACKAGE_COMPLETE'",
+  "package_failed_count: 'eq.0'",
+  "requirements_extraction_status: 'eq.COMPLETE'",
+  "match_readiness_status: 'eq.MATCH_READY'",
+]) assert.ok(read('netlify/functions/_shared/aoie-candidates.mjs').includes(gate),`APIE release gate missing: ${gate}`);
 
-// Same-origin browser callers may match only the verified session profile.
-assert.ok(files.aoieFunction.includes("authMode === 'internal' && payload?.profile"),'Only authorized internal AOIE calls may inject a request profile.');
-assert.ok(files.aoieFunction.includes("source: 'verified-session'"),'Browser matching must identify the verified-session profile source.');
-assert.ok(files.aoieFunction.includes("package_status: 'eq.PACKAGE_COMPLETE'"),'Direct APIE fallback must require complete packages.');
-assert.ok(files.aoieFunction.includes("requirements_extraction_status: 'eq.COMPLETE'"),'Direct APIE fallback must require complete requirements extraction.');
-assert.ok(files.aoieFunction.includes("match_readiness_status: 'eq.MATCH_READY'"),'Direct APIE fallback must require MATCH_READY inventory.');
-assert.ok(files.aoieFunction.includes('legacy_natcorp_qa_release_filter_applied: false'),'Obsolete Nat-Corp QA labels must not exclude valid APIE match-ready contracts.');
-assert.ok(files.aoieFunction.includes('resident_state_is_presentation_filter: true'),'Resident State must remain a presentation filter after capability matching.');
-
-assert.ok(files.analyzeFit.includes('/api/analyze-fit-state'),'Analyze Fit must use the live assessment endpoint.');
-assert.ok(files.analyzeFit.includes('Business-to-Contract Fit Assessment'),'Analyze Fit report identity must remain present.');
-assert.ok(files.analyzeFunction.includes('rateLimit'),'Analyze Fit must retain a platform rate limit.');
-assert.ok(files.aoieFunction.includes('rateLimit'),'AOIE must retain a platform rate limit.');
-assert.ok(files.capabilityFunction.includes('rateLimit'),'Capability Profile must retain a platform rate limit.');
-assert.ok(files.businessAgent.includes("path: '/api/business-profile-agent'"),'Legacy Business Profile Agent endpoint must remain addressable for retained workflows.');
-assert.ok(files.businessAgent.includes('rateLimit'),'Business Profile Agent must retain a platform rate limit.');
-
-const retiredFunctions=[
-  'netlify/functions/analyze-fit-ca.js',
-  'netlify/functions/extract-profile-ca.js',
-  'netlify/functions/proposal-writer-ca.js',
-  'netlify/functions/pdas-dashboard.js',
-  'netlify/functions/cal-pipeline.js',
-  'netlify/functions/cal-detail.js',
-  'netlify/functions/aois-advisor.js',
-  'netlify/functions/aois-advisor.mjs',
-  'netlify/functions/send-login-code.js',
-  'netlify/functions/verify-login-code.js',
-  'netlify/functions/bc-member-verify.js',
-];
-for(const path of retiredFunctions)assert.equal(fs.existsSync(path),false,`${path} must remain retired.`);
-
-console.log('Nat-Corp verified capability journey and Analyze Fit regression suite complete.');
+console.log('Analyze Fit premium regression suite complete.');

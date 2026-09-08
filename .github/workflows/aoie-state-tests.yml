@@ -1,5 +1,6 @@
 name: AOIE State Local Tests
 
+# PR #75 exact-head validation trigger after geographic job-authority correction.
 on:
   push:
     branches:
@@ -9,10 +10,15 @@ on:
       - agent/premium-platinum-business-dna
       - agent/natcorp-website-capability-intake
       - hotfix/natcorp-capability-profile-502
+      - fix/openai-only-matching-reliability
     paths:
       - 'netlify/functions/_shared/aoie-state-*.mjs'
+      - 'netlify/functions/_shared/aoie-llm-relevance.mjs'
+      - 'netlify/functions/_shared/aoie-candidates.mjs'
+      - 'netlify/functions/_shared/natcorp-db.mjs'
       - 'netlify/functions/_shared/natcorp-profile-session.mjs'
       - 'netlify/functions/aoie-state-shadow.mjs'
+      - 'netlify/functions/aoie-llm-relevance-run-background.mjs'
       - 'netlify/functions/capability-profile.mjs'
       - 'netlify/functions/capability-profile-discover-background.mjs'
       - 'netlify/functions/analyze-fit-state.mjs'
@@ -37,8 +43,12 @@ on:
   pull_request:
     paths:
       - 'netlify/functions/_shared/aoie-state-*.mjs'
+      - 'netlify/functions/_shared/aoie-llm-relevance.mjs'
+      - 'netlify/functions/_shared/aoie-candidates.mjs'
+      - 'netlify/functions/_shared/natcorp-db.mjs'
       - 'netlify/functions/_shared/natcorp-profile-session.mjs'
       - 'netlify/functions/aoie-state-shadow.mjs'
+      - 'netlify/functions/aoie-llm-relevance-run-background.mjs'
       - 'netlify/functions/capability-profile.mjs'
       - 'netlify/functions/capability-profile-discover-background.mjs'
       - 'netlify/functions/analyze-fit-state.mjs'
@@ -81,6 +91,8 @@ jobs:
         run: node tests/aoie-state-local.test.mjs
       - name: Run state/local AOIE source-contract fixtures
         run: node tests/aoie-state-source.test.mjs
+      - name: Run OpenAI matching reliability fixtures
+        run: node --test tests/aoie-state-reliability.test.mjs
       - name: Run Business Profile Agent fixtures
         run: node tests/business-profile-agent.test.mjs
       - name: Run verified capability-flow fixtures
@@ -92,7 +104,11 @@ jobs:
           node --check assets/business-dna-builder-3.js
           node --check assets/business-dna-builder-4.js
       - name: Validate AOIE function syntax
-        run: node --check netlify/functions/aoie-state-shadow.mjs
+        run: |
+          node --check netlify/functions/aoie-state-shadow.mjs
+          node --check netlify/functions/aoie-llm-relevance-run-background.mjs
+          node --check netlify/functions/_shared/aoie-llm-relevance.mjs
+          node --check netlify/functions/_shared/aoie-candidates.mjs
       - name: Validate capability profile function syntax
         run: |
           node --check netlify/functions/capability-profile.mjs

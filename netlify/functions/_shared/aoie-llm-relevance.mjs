@@ -1,45 +1,34 @@
-// LLM-based contract relevance judgment.
+// OpenAI-based contract relevance judgment.
 //
-// Replaces the keyword/ontology-bucket matcher (aoie-state-scoring.mjs) as
-// the actual relevance decision. See the migration comment in
-// 20260824190000_aoie_llm_relevance_matching.sql for the full reasoning:
-// substring matching cannot distinguish "this contract's core subject
-// relates to X" from "the word X appears somewhere in this document" -- a
-// regulatory-act citation or a standard confidentiality clause reads
-// identically to a real subject-matter match to a keyword matcher. This
-// module asks the model to actually read the business profile against the
-// contract's real, extracted scope of work and reason about genuine fit,
-// citing specific evidence -- the same way a human procurement analyst
-// would, not pattern-matching strings.
-//
-// Moved from Anthropic (Claude Opus 5) to OpenAI 2026-08-25 -- Jeff's
-// Anthropic account kept running out of API credits mid-judging (two real
-// job failures the same night: one all-96-candidates-failed on a 400
-// "credit balance too low", one earlier still stuck at 0 judged), while
-// OPENAI_API_KEY on this same project was already funded and already
-// proven working (capability-profile.mjs's website-discovery step uses it
-// successfully). Judgment prompt/criteria/output shape are unchanged --
-// only the vendor call and response parsing changed.
+// Replaces the retired keyword/ontology-bucket matcher as the actual relevance
+// decision. NAT-CORP uses OpenAI as its sole active AI processing provider.
 
 import { createHash } from 'node:crypto';
 
 const VALID_TIERS = new Set(['Strong Match', 'Good Match', 'Review', 'Not Recommended']);
+export const RELEVANCE_ENGINE_VERSION = 'aoie_llm_relevance_v2';
+export const RELEVANCE_PROMPT_VERSION = 'semantic_evidence_v2';
 
-// Stable fingerprint of the parts of a profile that actually affect
-// relevance judgment. A verdict is cached per (opportunity, fingerprint)
-// pair -- this is what lets an unchanged profile skip re-judging contracts
-// it's already been evaluated against, while a real profile edit
-// (different services/capabilities/NAICS) correctly triggers fresh
-// judgments.
+// Stable fingerprint of every material business-side field that can affect
+// semantic relevance. Any meaningful profile or matching-concept edit must
+// invalidate cached verdicts so stale judgments cannot be reused.
 export function profileFingerprint(profile = {}) {
+  const sorted = (value) => [...(Array.isArray(value) ? value : [])].map((x) => String(x)).sort();
   const canonical = {
+    engine_version: RELEVANCE_ENGINE_VERSION,
+    prompt_version: RELEVANCE_PROMPT_VERSION,
     business_name: String(profile.business_name || '').trim(),
-    services: [...(profile.services || [])].sort(),
-    products: [...(profile.products || [])].sort(),
-    capabilities: [...(profile.capabilities || [])].sort(),
-    core_competencies: [...(profile.core_competencies || [])].sort(),
-    industries: [...(profile.industries || [])].sort(),
-    naics_candidates: [...(profile.naics_candidates || [])].sort(),
+    services: sorted(profile.services),
+    products: sorted(profile.products),
+    capabilities: sorted(profile.capabilities),
+    core_competencies: sorted(profile.core_competencies),
+    industries: sorted(profile.industries),
+    procurement_terms: sorted(profile.procurement_terms),
+    relevant_markets: sorted(profile.relevant_markets),
+    matching_concepts: sorted(profile.matching_concepts || profile.approved_matching_concepts),
+    naics_candidates: sorted(profile.naics_candidates),
+    unspsc_candidates: sorted(profile.unspsc_candidates),
+    commodity_codes: sorted(profile.commodity_codes),
     summary: String(profile.summary || '').trim(),
   };
   return createHash('sha256').update(JSON.stringify(canonical)).digest('hex');
@@ -58,6 +47,9 @@ function profileSummaryText(profile = {}) {
     list('Capabilities', profile.capabilities),
     list('Core competencies', profile.core_competencies),
     list('Industries served', profile.industries),
+    list('Procurement terms', profile.procurement_terms),
+    list('Relevant markets', profile.relevant_markets),
+    list('Approved matching concepts', profile.matching_concepts || profile.approved_matching_concepts),
     list('Derived NAICS candidates', profile.naics_candidates),
   ].filter(Boolean).join('\n');
 }
@@ -96,15 +88,6 @@ async function openaiMessage({ apiKey, model, prompt, fetchImpl = fetch, timeout
       body: JSON.stringify({
         model,
         store: false,
-        // effort:'low' + a generous max_output_tokens -- matches
-        // capability-profile.mjs's discoverWebsite() call, the only other
-        // proven-working GPT-5 Responses-API call in this repo. Learned
-        // live 2026-08-25: at effort:'medium' with max_output_tokens:1200,
-        // every single candidate silently failed -- reasoning tokens count
-        // against the same output budget on GPT-5 reasoning models, so a
-        // higher effort at a tight budget can consume the whole thing on
-        // hidden reasoning and leave nothing for the actual visible JSON,
-        // which then fails extractJsonObject() with no output text at all.
         reasoning: { effort: 'low' },
         input: [
           { role: 'system', content: 'You are a meticulous government procurement analyst. Return one valid JSON object and never invent contract content that was not provided.' },
@@ -143,9 +126,6 @@ function normalizeVerdict(parsed) {
     ? parsed.evidence.filter((e) => e && typeof e === 'object' && e.quote).map((e) => ({ quote: String(e.quote).slice(0, 500), note: String(e.note || '').slice(0, 300) }))
     : [];
   const concerns = Array.isArray(parsed?.concerns) ? parsed.concerns.filter(Boolean).map((c) => String(c).slice(0, 300)) : [];
-  // A tier above "Not Recommended" without relevant:true, or vice versa, is
-  // an internally inconsistent verdict -- treat it conservatively as not
-  // relevant rather than trusting a contradictory response.
   const consistentRelevant = relevant && tier !== 'Not Recommended';
   return {
     relevant: consistentRelevant,
@@ -162,34 +142,9 @@ export async function judgeRelevance({ apiKey, model = 'gpt-5-mini', profile, op
   const reqText = requirementsText(opportunity.requirements);
   const hasRealContent = reqText.length >= 100 || String(opportunity.description || '').length >= 300;
 
-  const prompt = `You are a government procurement analyst. Judge whether the contract below is a genuinely relevant business opportunity for the company described, the way an experienced human analyst would -- not by matching keywords, but by understanding what the contract actually requires and what the business actually does.
-
-BUSINESS PROFILE
-${profileSummaryText(profile)}
-
-CONTRACT
-Title: ${opportunity.title || 'Untitled'}
-Issuing organization: ${opportunity.issuing_organization || 'Not provided'}
-Procurement type: ${opportunity.procurement_type || 'Not provided'}
-${hasRealContent ? requirementsText(opportunity.requirements) || `Description: ${String(opportunity.description || '').slice(0, 4000)}` : 'No substantive scope-of-work text is available for this contract -- only a title and minimal metadata.'}
-
-INSTRUCTIONS
-- A contract is relevant only if its actual scope of work -- what the awarded vendor will be doing -- genuinely aligns with what this business does. A word appearing in unrelated boilerplate (a confidentiality clause, a regulatory-compliance citation like HIPAA/HITECH, a generic vendor-conduct requirement) does NOT make a contract relevant, even if that word also appears in the business profile.
-- If no substantive scope-of-work text is available (title/metadata only), do not guess relevance from the title alone unless it is unambiguous -- prefer "Not Recommended" with fit_score 0 and say so in reasoning, rather than inferring content that was not provided.
-- Cite specific evidence: quote the exact phrase(s) from the contract text that justify your judgment, and explain in your own words why that phrase indicates genuine relevance (or, if judging not-relevant, you may leave evidence empty).
-- Do not recommend a contract just because it superficially mentions technology, government, or business services in general -- most government contracts do, regardless of subject.
-
-Return ONLY a single JSON object, no markdown, no commentary, in exactly this shape:
-{
-  "relevant": true or false,
-  "tier": "Strong Match" | "Good Match" | "Review" | "Not Recommended",
-  "fit_score": integer 0-100 (0 if not relevant),
-  "reasoning": "one or two sentences explaining the judgment in plain language",
-  "evidence": [{"quote": "exact phrase from the contract text", "note": "why this phrase indicates genuine relevance"}],
-  "concerns": ["any real gaps or risks worth flagging before pursuit, or empty array"]
-}`;
+  const prompt = `You are a government procurement analyst. Judge whether the contract below is a genuinely relevant business opportunity for the company described, the way an experienced human analyst would -- not by matching keywords, but by understanding what the contract actually requires and what the business actually does.\n\nBUSINESS PROFILE\n${profileSummaryText(profile)}\n\nCONTRACT\nTitle: ${opportunity.title || 'Untitled'}\nIssuing organization: ${opportunity.issuing_organization || 'Not provided'}\nProcurement type: ${opportunity.procurement_type || 'Not provided'}\n${hasRealContent ? requirementsText(opportunity.requirements) || `Description: ${String(opportunity.description || '').slice(0, 4000)}` : 'No substantive scope-of-work text is available for this contract -- only a title and minimal metadata.'}\n\nINSTRUCTIONS\n- A contract is relevant only if its actual scope of work genuinely aligns with evidence-supported capabilities of this business.\n- Semantic expansion may broaden terminology and conceptual representation, but it must never invent or broaden the contractor's actual capability.\n- Never alter, weaken, remove, replace, or invent a government requirement.\n- A word appearing in unrelated boilerplate does NOT make a contract relevant.\n- If substantive scope-of-work text is unavailable, do not guess relevance from an ambiguous title; prefer Not Recommended.\n- Cite specific contract evidence for a positive relevance judgment.\n- Do not recommend a contract merely because it superficially mentions technology, government, or business services.\n\nReturn ONLY one JSON object in exactly this shape:\n{\n  "relevant": true or false,\n  "tier": "Strong Match" | "Good Match" | "Review" | "Not Recommended",\n  "fit_score": integer 0-100 (0 if not relevant),\n  "reasoning": "one or two sentences explaining the judgment in plain language",\n  "evidence": [{"quote": "exact phrase from the contract text", "note": "why this phrase indicates genuine relevance"}],\n  "concerns": ["any real gaps or risks worth flagging before pursuit, or empty array"]\n}`;
 
   const result = await openaiMessage({ apiKey, model, prompt, fetchImpl });
   const parsed = extractJsonObject(responseText(result));
-  return { ...normalizeVerdict(parsed), model, judged_at: new Date().toISOString() };
+  return { ...normalizeVerdict(parsed), model, engine_version: RELEVANCE_ENGINE_VERSION, prompt_version: RELEVANCE_PROMPT_VERSION, judged_at: new Date().toISOString() };
 }
