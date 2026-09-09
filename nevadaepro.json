@@ -1,7 +1,153 @@
 {
-  "fetched_at": "2026-09-08T17:53:28.688Z",
+  "fetched_at": "2026-09-09T17:47:16.963Z",
   "source_url": "https://nevadaepro.com/bso/view/search/external/advancedSearchBid.xhtml?openBids=true",
   "opportunities": [
+    {
+      "doc_id": "43ADG-S4008",
+      "title": "Add Shore Power Infrastructure for ALS/MWO at LVRC",
+      "organization": "Adjutant General",
+      "contact_org": "OTAG State Admin",
+      "buyer": "Carlos Fuentes",
+      "status": "Sent",
+      "contract_number": null,
+      "alternate_id": null,
+      "bid_opening_date_raw": "09/18/2026 23:59:59",
+      "close_date": "2026-09-19T06:59:59.000Z",
+      "scope": null,
+      "contact_email": "admin-mil@govmail.state.nv.us",
+      "contact_phone": "(775) 884-8457",
+      "attachments": [
+        {
+          "file_nbr": "19734",
+          "name": "Quote Instructions"
+        },
+        {
+          "file_nbr": "320629",
+          "name": "Invitation to Bid (ITB) LVRC Shore Power"
+        },
+        {
+          "file_nbr": "320630",
+          "name": "Proposal Evaluation and Scoring"
+        },
+        {
+          "file_nbr": "320631",
+          "name": "Scope of Work - LVRC Shore Power"
+        },
+        {
+          "file_nbr": "320633",
+          "name": "LVRC Shore Power Construction Documents"
+        }
+      ],
+      "detail_fetched": true,
+      "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=43ADG-S4008&external=true&parentUrl=close",
+      "first_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
+    },
+    {
+      "doc_id": "99SWC-S4004",
+      "title": "Employee Drug and Alcohol Testing",
+      "organization": "Statewide Contracts",
+      "contact_org": null,
+      "buyer": "Christian Armas",
+      "status": "Sent",
+      "contract_number": null,
+      "alternate_id": null,
+      "bid_opening_date_raw": "10/02/2026 14:00:00",
+      "close_date": "2026-10-02T21:00:00.000Z",
+      "scope": null,
+      "contact_email": "nvpurch@admin.nv.gov",
+      "contact_phone": "(775) 684-0170",
+      "attachments": [
+        {
+          "file_nbr": "325632",
+          "name": "RFQ_99SWC-S4004~1.docx"
+        },
+        {
+          "file_nbr": "309723",
+          "name": "Terms-and-conditions-for-services~9.pdf"
+        },
+        {
+          "file_nbr": "309722",
+          "name": "Standard-form-contract~7.docx"
+        },
+        {
+          "file_nbr": "322716",
+          "name": "INSURANCE REQUIREMENTS.docx"
+        },
+        {
+          "file_nbr": "325598",
+          "name": "Vendor_Qualifications_Response_RFQ_99SWC-S4004.xlsx"
+        },
+        {
+          "file_nbr": "325596",
+          "name": "Service Locations RFQ 99SWC-S4004.xlsx"
+        },
+        {
+          "file_nbr": "325595",
+          "name": "Scope_of_Work_99SWC-S4004.docx"
+        },
+        {
+          "file_nbr": "325593",
+          "name": "Cost Schedule 99SWC-S4004.xlsx"
+        },
+        {
+          "file_nbr": "322712",
+          "name": "Certification-regarding-lobbying~5.pdf"
+        },
+        {
+          "file_nbr": "19561",
+          "name": "Quote Instructions"
+        }
+      ],
+      "detail_fetched": true,
+      "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=99SWC-S4004&external=true&parentUrl=close",
+      "first_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
+    },
+    {
+      "doc_id": "80DOT-S4003",
+      "title": "De-Icing Sand & Cinders District 3 Elko/Ely",
+      "organization": "Department of Transportation",
+      "contact_org": null,
+      "buyer": "Mason Bondi",
+      "status": "Sent",
+      "contract_number": null,
+      "alternate_id": "De-Icing Sand & Cinders",
+      "bid_opening_date_raw": "09/30/2026 14:00:00",
+      "close_date": "2026-09-30T21:00:00.000Z",
+      "scope": null,
+      "contact_email": "mingle@dot.nv.gov",
+      "contact_phone": "(775) 834-8493",
+      "attachments": [
+        {
+          "file_nbr": "19837",
+          "name": "Quote Instructions"
+        },
+        {
+          "file_nbr": "19830",
+          "name": "0000 Standard Terms and Conditions for Commodities"
+        },
+        {
+          "file_nbr": "325613",
+          "name": "80DOT-S4003 De-Icing Sand and Cinders Specifications.docx"
+        },
+        {
+          "file_nbr": "325605",
+          "name": "80DOT-S4003 Additional Requirements.docx"
+        },
+        {
+          "file_nbr": "325611",
+          "name": "OTC-Vendor-Information-Response~1.pdf"
+        }
+      ],
+      "detail_fetched": true,
+      "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=80DOT-S4003&external=true&parentUrl=close",
+      "first_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
+    },
     {
       "doc_id": "43ADG-S4000",
       "title": "ACC Gate Replacement",
@@ -45,8 +191,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=43ADG-S4000&external=true&parentUrl=close",
       "first_seen_at": "2026-09-04T17:34:26.875Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "43ADG-S3999",
@@ -83,8 +229,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=43ADG-S3999&external=true&parentUrl=close",
       "first_seen_at": "2026-09-03T17:49:04.232Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "40DHHS-S3998",
@@ -113,8 +259,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=40DHHS-S3998&external=true&parentUrl=close",
       "first_seen_at": "2026-09-01T17:47:45.143Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "40DHHS-S3997",
@@ -143,8 +289,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=40DHHS-S3997&external=true&parentUrl=close",
       "first_seen_at": "2026-09-01T17:47:45.143Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "80DOT-S3994",
@@ -181,8 +327,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=80DOT-S3994&external=true&parentUrl=close",
       "first_seen_at": "2026-09-04T17:34:26.875Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "69CRC-S3991",
@@ -215,8 +361,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=69CRC-S3991&external=true&parentUrl=close",
       "first_seen_at": "2026-08-28T23:31:34.330Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "81DMV-S3990",
@@ -281,8 +427,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=81DMV-S3990&external=true&parentUrl=close",
       "first_seen_at": "2026-08-31T19:59:09.397Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "69CRC-S3987",
@@ -351,8 +497,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=69CRC-S3987&external=true&parentUrl=close",
       "first_seen_at": "2026-09-04T17:34:26.875Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "81DMV-S3985",
@@ -409,8 +555,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=81DMV-S3985&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "30DOE-S3984",
@@ -467,8 +613,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=30DOE-S3984&external=true&parentUrl=close",
       "first_seen_at": "2026-08-28T23:31:34.330Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "43ADG-S3982",
@@ -505,8 +651,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=43ADG-S3982&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "43ADG-S3981",
@@ -539,8 +685,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=43ADG-S3981&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "43ADG-S3979",
@@ -601,8 +747,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=43ADG-S3979&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "44DOC-S3975",
@@ -699,8 +845,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=44DOC-S3975&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "70CNR-S3971",
@@ -729,8 +875,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=70CNR-S3971&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "43ADG-S3970",
@@ -771,8 +917,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=43ADG-S3970&external=true&parentUrl=close",
       "first_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "90DETR-S3968",
@@ -833,8 +979,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=90DETR-S3968&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "99SWC-S3964",
@@ -875,8 +1021,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=99SWC-S3964&external=true&parentUrl=close",
       "first_seen_at": "2026-09-02T17:51:48.351Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "44DOC-S3955",
@@ -957,8 +1103,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=44DOC-S3955&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "72DOW-S3941",
@@ -1051,8 +1197,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=72DOW-S3941&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "80DOT-S3940",
@@ -1085,8 +1231,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=80DOT-S3940&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     },
     {
       "doc_id": "40DHHS-S3910",
@@ -1147,194 +1293,8 @@
       "detail_fetched": true,
       "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=40DHHS-S3910&external=true&parentUrl=close",
       "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
-    },
-    {
-      "doc_id": "01GO-S3906",
-      "title": "Disaster Response and Recovery Services",
-      "organization": "Governor&#039;s Office",
-      "contact_org": null,
-      "buyer": "Christian Armas",
-      "status": "Sent",
-      "contract_number": null,
-      "alternate_id": null,
-      "bid_opening_date_raw": "09/25/2026 14:00:00",
-      "close_date": "2026-09-25T21:00:00.000Z",
-      "scope": null,
-      "contact_email": null,
-      "contact_phone": null,
-      "attachments": [
-        {
-          "file_nbr": "321171",
-          "name": "01GO-S3906 Disaster Response and Recovery Services Answers.xlsx"
-        },
-        {
-          "file_nbr": "321160",
-          "name": "01GO-S3906 Disaster Response and Recovery Services RFP Revised.pdf"
-        },
-        {
-          "file_nbr": "313458",
-          "name": "Terms-and-conditions-for-services~1.pdf"
-        },
-        {
-          "file_nbr": "313460",
-          "name": "Standard-form-contract~1.docx"
-        },
-        {
-          "file_nbr": "313491",
-          "name": "01GO-S3906 INSURANCE REQUIREMENTS.pdf"
-        },
-        {
-          "file_nbr": "321161",
-          "name": "01GO-S3906 SOW Revised.pdf"
-        },
-        {
-          "file_nbr": "318991",
-          "name": "01GO-S3906-reference-questionnaire~1.docx"
-        },
-        {
-          "file_nbr": "321159",
-          "name": "01GO-S3906 Service_Identifier_Spreadsheet_Revised.xlsx"
-        },
-        {
-          "file_nbr": "313461",
-          "name": "Certification-regarding-lobbying~1.pdf"
-        },
-        {
-          "file_nbr": "313463",
-          "name": "01GO-S3906-Vendor-Information-Response.pdf"
-        },
-        {
-          "file_nbr": "316032",
-          "name": "Federal Funding.pdf"
-        },
-        {
-          "file_nbr": "19570",
-          "name": "Quote Instructions"
-        }
-      ],
-      "detail_fetched": true,
-      "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=01GO-S3906&external=true&parentUrl=close",
-      "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
-    },
-    {
-      "doc_id": "70CNR-S3892",
-      "title": "Uniform Provider for State Parks",
-      "organization": "Department of Conservation and Natural Resources",
-      "contact_org": "State Parks Bryan Building",
-      "buyer": "Nocoasha Henry",
-      "status": "Sent",
-      "contract_number": null,
-      "alternate_id": "70CNR-S3892",
-      "bid_opening_date_raw": "09/11/2026 14:00:00",
-      "close_date": "2026-09-11T21:00:00.000Z",
-      "scope": null,
-      "contact_email": "NDSPAccounting@parks.nv.gov",
-      "contact_phone": "(775) 684-2770",
-      "attachments": [
-        {
-          "file_nbr": "19810",
-          "name": "Quote Instructions"
-        },
-        {
-          "file_nbr": "322159",
-          "name": "70CNR-S3892 Bid_Q and A Responses 081726.xlsx"
-        },
-        {
-          "file_nbr": "321290",
-          "name": "70CNR-S3892 RFP for Uniform Provider for State Parks~6.docx"
-        },
-        {
-          "file_nbr": "321183",
-          "name": "70CNR-S3892 Attachment A Park Uniform Pictures and Patch Listing_FINAL.docx"
-        },
-        {
-          "file_nbr": "321184",
-          "name": "70CNR-S3892 Attachment B State Park Listing_FINAL.docx"
-        },
-        {
-          "file_nbr": "307567",
-          "name": "70CNR-S3892 Terms-and-Conditions-for-Services.pdf"
-        },
-        {
-          "file_nbr": "320473",
-          "name": "70CNR-S3892 Terms-and-conditions-for-goods.pdf"
-        },
-        {
-          "file_nbr": "307566",
-          "name": "70CNR-S3892 Standard-form-contract.docx"
-        },
-        {
-          "file_nbr": "307664",
-          "name": "70CNR-S3892 Insuranace Template.docx"
-        },
-        {
-          "file_nbr": "321255",
-          "name": "70CNR-S3892 Reference-Questionnaire~1.docx"
-        },
-        {
-          "file_nbr": "307568",
-          "name": "70CNR-S3892 Vendor-Information-Response.pdf"
-        },
-        {
-          "file_nbr": "321180",
-          "name": "70CNR-S3892 Cost Proposal for Uniform Provider for State Parks.xlsx"
-        },
-        {
-          "file_nbr": "307564",
-          "name": "70CNR-S3892 Certification-Regarding-Lobbying.pdf"
-        }
-      ],
-      "detail_fetched": true,
-      "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=70CNR-S3892&external=true&parentUrl=close",
-      "first_seen_at": "2026-08-27T22:51:14.199Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
-    },
-    {
-      "doc_id": "80DOT-S3845",
-      "title": "Traffic Paint - District 1 - 5 Gallon Paint Buckets",
-      "organization": "Department of Transportation",
-      "contact_org": null,
-      "buyer": "Mason Bondi",
-      "status": "Sent",
-      "contract_number": null,
-      "alternate_id": "OTC",
-      "bid_opening_date_raw": "09/28/2026 14:00:00",
-      "close_date": "2026-09-28T21:00:00.000Z",
-      "scope": null,
-      "contact_email": "mingle@dot.nv.gov",
-      "contact_phone": "(775) 834-8493",
-      "attachments": [
-        {
-          "file_nbr": "19837",
-          "name": "Quote Instructions"
-        },
-        {
-          "file_nbr": "304264",
-          "name": "0000 Standard Terms and Conditions for Commodities.pdf"
-        },
-        {
-          "file_nbr": "324208",
-          "name": "80DOT-S3845 Traffic Paint District 1 Specifications.pdf"
-        },
-        {
-          "file_nbr": "324207",
-          "name": "80DOT-S3845 Additional Requirements.pdf"
-        },
-        {
-          "file_nbr": "324209",
-          "name": "OTC-Vendor-Information-Response.pdf"
-        }
-      ],
-      "detail_fetched": true,
-      "detail_url": "https://nevadaepro.com/bso/external/bidDetail.sda?docId=80DOT-S3845&external=true&parentUrl=close",
-      "first_seen_at": "2026-08-31T19:59:09.397Z",
-      "last_seen_at": "2026-09-08T17:53:28.688Z",
-      "last_detail_fetched_at": "2026-09-08T17:53:28.688Z"
+      "last_seen_at": "2026-09-09T17:47:16.963Z",
+      "last_detail_fetched_at": "2026-09-09T17:47:16.963Z"
     }
   ]
 }
