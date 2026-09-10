@@ -1,20 +1,8 @@
 name: Acquire Cal eProcure
 
+# RETIRED 2026-09-10: automatic NAT-CORP/APIE acquisition halted by owner direction.
+# Retained as manual-only for audit/recovery purposes.
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/scrape-caleprocure.yml'
-      - 'scripts/scrape-caleprocure.js'
-      - 'scripts/sync-supabase.js'
-      - 'scripts/sync-supabase-grouped.js'
-      - 'scripts/lib/caleprocure-normalize.js'
-      - 'scripts/prepare-caleprocure-snapshot.js'
-      - 'scripts/resolve-caleprocure-business-units.js'
-      - 'tests/**'
-  schedule:
-    - cron: '17 */4 * * *' # every four hours, offset from the top of the hour
   workflow_dispatch:
 
 permissions:
