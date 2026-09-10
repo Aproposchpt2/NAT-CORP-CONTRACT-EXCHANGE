@@ -1,9 +1,9 @@
 name: Scrape CA bids
 
+# RETIRED 2026-09-10: automatic NAT-CORP/APIE acquisition halted by owner direction.
+# Retained as manual-only for audit/recovery purposes.
 on:
-  schedule:
-    - cron: '0 13 * * *'   # ~6am Pacific daily
-  workflow_dispatch:        # manual trigger
+  workflow_dispatch:
 
 permissions:
   contents: write
