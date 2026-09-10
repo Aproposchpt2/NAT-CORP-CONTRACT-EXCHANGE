@@ -1,9 +1,9 @@
 name: Acquire NevadaEPro
 
+# RETIRED 2026-09-10: automatic NAT-CORP/APIE acquisition halted by owner direction.
+# Retained as manual-only for audit/recovery purposes.
 on:
-  schedule:
-    - cron: '10 14 * * *'   # ~7:10am Pacific daily -- offset from the CA jobs (13:00 and :17 */4h)
-  workflow_dispatch:         # manual trigger
+  workflow_dispatch:
 
 permissions:
   contents: write
