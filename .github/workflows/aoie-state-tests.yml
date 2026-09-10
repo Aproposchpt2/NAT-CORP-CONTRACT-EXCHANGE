@@ -1,65 +1,8 @@
 name: AOIE State Local Tests
 
+# RETIRED 2026-09-10: automatic NAT-CORP/APIE execution halted by owner direction.
+# Retained as manual-only for audit/recovery purposes.
 on:
-  push:
-    branches:
-      - agent/aoie-state-local-shadow
-      - fix/dashboard-controls-premium-analyze-fit
-      - agent/var-session-revocation
-      - agent/premium-platinum-business-dna
-      - agent/natcorp-website-capability-intake
-      - hotfix/natcorp-capability-profile-502
-    paths:
-      - 'netlify/functions/_shared/aoie-state-*.mjs'
-      - 'netlify/functions/_shared/natcorp-profile-session.mjs'
-      - 'netlify/functions/aoie-state-shadow.mjs'
-      - 'netlify/functions/capability-profile.mjs'
-      - 'netlify/functions/capability-profile-discover-background.mjs'
-      - 'netlify/functions/analyze-fit-state.mjs'
-      - 'netlify/functions/business-profile-agent.mjs'
-      - 'tests/aoie-state-*.test.mjs'
-      - 'tests/analyze-fit-premium.test.mjs'
-      - 'tests/capability-profile-flow.test.js'
-      - 'tests/business-profile-agent.test.mjs'
-      - 'assets/business-dna-builder.css'
-      - 'assets/business-dna-builder-*.js'
-      - 'welcome.html'
-      - 'profile-building.html'
-      - 'profile-review.html'
-      - 'business-dna-builder-preview.html'
-      - 'aois-dashboard-preview.html'
-      - 'analyze-fit-v2.html'
-      - 'index.html'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'netlify.toml'
-      - '.github/workflows/aoie-state-tests.yml'
-  pull_request:
-    paths:
-      - 'netlify/functions/_shared/aoie-state-*.mjs'
-      - 'netlify/functions/_shared/natcorp-profile-session.mjs'
-      - 'netlify/functions/aoie-state-shadow.mjs'
-      - 'netlify/functions/capability-profile.mjs'
-      - 'netlify/functions/capability-profile-discover-background.mjs'
-      - 'netlify/functions/analyze-fit-state.mjs'
-      - 'netlify/functions/business-profile-agent.mjs'
-      - 'tests/aoie-state-*.test.mjs'
-      - 'tests/analyze-fit-premium.test.mjs'
-      - 'tests/capability-profile-flow.test.js'
-      - 'tests/business-profile-agent.test.mjs'
-      - 'assets/business-dna-builder.css'
-      - 'assets/business-dna-builder-*.js'
-      - 'welcome.html'
-      - 'profile-building.html'
-      - 'profile-review.html'
-      - 'business-dna-builder-preview.html'
-      - 'aois-dashboard-preview.html'
-      - 'analyze-fit-v2.html'
-      - 'index.html'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'netlify.toml'
-      - '.github/workflows/aoie-state-tests.yml'
   workflow_dispatch:
 
 permissions:
