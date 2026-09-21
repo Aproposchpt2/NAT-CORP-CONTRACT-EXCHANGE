@@ -17,16 +17,21 @@ export default async function handler(req) {
     const pageSize = intParam(url, 'page_size', 30, 1, 30);
     const page = intParam(url, 'page', 1, 1, 1000);
 
-    // Step 1 is an inventory browser, not a qualification filter.
-    // Return every canonical contract record and allow only optional state scoping.
+    // New contract selection is restricted to the canonical CBrief distribution mirror.
+    // Historical NAT-CORP rows remain in storage for prior claims/outreach, but are not selectable.
     const opportunities = await db(
       'state_contract_opportunities',
       'GET',
-      '?select=id,pdas_record_id,title,issuing_organization,issuing_department,state_code,status,response_deadline,procurement_type,natcorp_contract_dna_status,official_source_url,source_url,created_at,updated_at&order=created_at.desc.nullslast&limit=1000'
+      '?source_platform=eq.cbrief_canonical&status=eq.open&select=id,pdas_record_id,title,issuing_organization,issuing_department,state_code,status,response_deadline,procurement_type,natcorp_contract_dna_status,official_source_url,source_url,created_at,updated_at&order=created_at.desc.nullslast&limit=1000'
     );
 
+    const now = Date.now();
     let rows = (opportunities || []).filter((o) => {
       if (state !== 'ALL' && String(o.state_code || '').toUpperCase() !== state) return false;
+      if (o.response_deadline) {
+        const deadline = Date.parse(o.response_deadline);
+        if (Number.isFinite(deadline) && deadline < now) return false;
+      }
       return true;
     });
 
@@ -49,7 +54,7 @@ export default async function handler(req) {
     return json(200, {
       ok: true,
       queue: {
-        mode: 'all_contracts',
+        mode: 'cbrief_canonical_current',
         state,
         returned: pagedRows.length,
         total,
