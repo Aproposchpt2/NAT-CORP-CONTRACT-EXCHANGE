@@ -58,14 +58,12 @@ const DIRECT_SELECT = [
 export function directQuery(states, nowIso) {
   return new URLSearchParams({
     select: DIRECT_SELECT,
+    source_platform: 'eq.cbrief_canonical',
     state_code: `in.(${states.join(',')})`,
     is_latest_version: 'eq.true',
     duplicate_of: 'is.null',
-    status: 'in.(open,upcoming,posted,active)',
-    package_status: 'eq.PACKAGE_COMPLETE',
-    package_failed_count: 'eq.0',
+    status: 'eq.open',
     requirements_extraction_status: 'eq.COMPLETE',
-    match_readiness_status: 'eq.MATCH_READY',
     or: `(response_deadline.is.null,response_deadline.gte.${nowIso})`,
     order: 'response_deadline.asc.nullslast,posted_at.desc',
   });
@@ -105,7 +103,7 @@ export async function fetchPaged(url, key, relation, states, nowIso) {
 export async function availableStates(url, key) {
   const states = new Set();
   for (let from = 0; ; from += PAGE_SIZE) {
-    const response = await fetch(`${url}/rest/v1/${DIRECT_TABLE}?select=state_code&order=state_code.asc`, {
+    const response = await fetch(`${url}/rest/v1/${DIRECT_TABLE}?source_platform=eq.cbrief_canonical&select=state_code&order=state_code.asc`, {
       headers: dbHeaders(key, { Range: `${from}-${from + PAGE_SIZE - 1}` }), signal: AbortSignal.timeout(45000),
     });
     if (!response.ok) throw new Error(`State inventory query failed: ${response.status}`);
@@ -122,7 +120,7 @@ export async function availableStates(url, key) {
 
 export async function candidateRows(url, key, states, nowIso) {
   const rows = await fetchPaged(url, key, DIRECT_TABLE, states, nowIso);
-  return { rows, relation: DIRECT_TABLE, mode: 'direct-table' };
+  return { rows, relation: DIRECT_TABLE, mode: 'cbrief-canonical-mirror' };
 }
 
 export async function fetchJsonRows(url, key, relation, query) {
