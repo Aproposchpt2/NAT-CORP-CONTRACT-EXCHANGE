@@ -90,6 +90,7 @@ async function loadOpportunity(id) {
   return rows[0];
 }
 
+// Canonical CBrief admission gate for new mission starts only.
 async function loadCanonicalCurrentOpportunity(id) {
   const rows = await db(
     'state_contract_opportunities',
