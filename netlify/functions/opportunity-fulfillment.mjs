@@ -90,6 +90,21 @@ async function loadOpportunity(id) {
   return rows[0];
 }
 
+async function loadCanonicalCurrentOpportunity(id) {
+  const rows = await db(
+    'state_contract_opportunities',
+    'GET',
+    `?id=eq.${encodeURIComponent(id)}&source_platform=eq.cbrief_canonical&status=eq.open&select=*`
+  );
+  const opportunity = rows?.[0];
+  if (!opportunity) throw new Error('Opportunity is not available in the canonical CBrief distribution inventory.');
+  if (opportunity.response_deadline) {
+    const deadline = Date.parse(opportunity.response_deadline);
+    if (Number.isFinite(deadline) && deadline < Date.now()) throw new Error('Opportunity is no longer current.');
+  }
+  return opportunity;
+}
+
 async function loadDna(opportunityId) {
   const result = await rpc('natcorp_get_contract_dna', { p_opportunity_id: opportunityId });
   return Array.isArray(result) ? (result[0] || null) : (result || null);
@@ -294,7 +309,7 @@ async function recordResponse({ outreach_id, response_class, response_text }) {
 async function repositorySearch(opportunityId) {
   const members = await db('natcorp_contractor_repository', 'GET', '?subscription_status=eq.active&select=*&order=search_priority.asc&limit=100');
   if (!members?.length) return { status: 'no_repository_contractors', matches: [] };
-  const opportunity = await loadOpportunity(opportunityId);
+  const opportunity = await loadCanonicalCurrentOpportunity(opportunityId);
   const dna = await loadDna(opportunityId);
   const prompt = `Rank active NAT-CORP Contractor Repository members against this Contract DNA using only contract-relevant capability evidence. Return JSON {"matches":[{"membership_id":"","score":0,"reason":""}]}. Contract: ${JSON.stringify({ title: opportunity.title, description: clip(opportunity.description, 6000), dna })}\nRepository: ${JSON.stringify(members.map((m) => ({ membership_id: m.membership_id, capability_summary: m.capability_summary, service_territory: m.service_territory, qualification_summary: m.qualification_summary, capacity_summary: m.capacity_summary, past_performance_summary: m.past_performance_summary })))}.`;
   const ai = await openAIJson(prompt);
@@ -311,7 +326,8 @@ export default async function handler(req) {
       try { return json(200, { ok: true, ...(await context(id)) }); } catch (e) { return json(500, { ok: false, error: e.message }); }
     }
     try {
-      const rows = await db('state_contract_opportunities', 'GET', '?status=eq.open&response_deadline=gt.now()&select=id,pdas_record_id,title,issuing_organization,issuing_department,state_code,response_deadline,procurement_type,natcorp_contract_dna_status,official_source_url,source_url&order=response_deadline.asc.nullslast&limit=60');
+      const nowIso = encodeURIComponent(new Date().toISOString());
+      const rows = await db('state_contract_opportunities', 'GET', `?source_platform=eq.cbrief_canonical&status=eq.open&or=(response_deadline.is.null,response_deadline.gte.${nowIso})&select=id,pdas_record_id,title,issuing_organization,issuing_department,state_code,response_deadline,procurement_type,natcorp_contract_dna_status,official_source_url,source_url&order=response_deadline.asc.nullslast&limit=60`);
       return json(200, { ok: true, opportunities: rows || [] });
     } catch (e) { return json(500, { ok: false, error: e.message }); }
   }
@@ -320,8 +336,14 @@ export default async function handler(req) {
   let body; try { body = await req.json(); } catch { return json(400, { ok: false, error: 'Invalid JSON.' }); }
   const action = safe(body.action);
   try {
-    if (action === 'build_dna') return json(200, { ok: true, result: await rpc('natcorp_build_contract_dna', { p_opportunity_ids: [body.opportunity_id] }) });
-    if (action === 'create_search') return json(200, { ok: true, result: await rpc('natcorp_create_business_discovery_command', { p_opportunity_id: body.opportunity_id }) });
+    if (action === 'build_dna') {
+      await loadCanonicalCurrentOpportunity(body.opportunity_id);
+      return json(200, { ok: true, result: await rpc('natcorp_build_contract_dna', { p_opportunity_ids: [body.opportunity_id] }) });
+    }
+    if (action === 'create_search') {
+      await loadCanonicalCurrentOpportunity(body.opportunity_id);
+      return json(200, { ok: true, result: await rpc('natcorp_create_business_discovery_command', { p_opportunity_id: body.opportunity_id }) });
+    }
     if (action === 'repository_search') return json(200, { ok: true, result: await repositorySearch(body.opportunity_id) });
     if (action === 'discover_businesses') return json(200, { ok: true, result: await discoverBusinesses(body.command_id) });
     if (action === 'select_candidate') return json(200, { ok: true, result: await rpc('natcorp_select_business_discovery_candidate', { p_command_id: body.command_id, p_candidate_id: body.candidate_id }) });
