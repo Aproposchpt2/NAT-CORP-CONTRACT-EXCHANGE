@@ -38,7 +38,8 @@ async function resolveAnalyzeFitContext(businessName, opportunityReference) {
 
   if (!opportunity) {
     const tokens = referenceTokens(opportunityReference);
-    const rows = await db('state_contract_opportunities', 'GET', '?status=eq.open&select=id,pdas_record_id,title,issuing_organization,issuing_department,state_code,response_deadline,procurement_type,official_source_url,source_url,natcorp_contract_dna_status&order=response_deadline.asc.nullslast&limit=500');
+    const nowIso = encodeURIComponent(new Date().toISOString());
+    const rows = await db('state_contract_opportunities', 'GET', `?source_platform=eq.cbrief_canonical&status=eq.open&or=(response_deadline.is.null,response_deadline.gte.${nowIso})&select=id,pdas_record_id,title,issuing_organization,issuing_department,state_code,response_deadline,procurement_type,official_source_url,source_url,natcorp_contract_dna_status&order=response_deadline.asc.nullslast&limit=500`);
     opportunity = (rows || []).find((o) => {
       const hay = `${o.pdas_record_id || ''} ${o.title || ''}`.toLowerCase();
       return tokens.some((t) => hay.includes(t.toLowerCase()));
