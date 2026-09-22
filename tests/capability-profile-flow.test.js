@@ -35,7 +35,7 @@ test('profile build landing starts background Agent and shows persisted activity
   assert.match(text, /Nat-Corp is building/);
   assert.match(text, /Activity Progress/);
   assert.match(text, /capability-profile-discover/);
-  assert.match(text, /fetch\('\/api\/capability-profile'/);
+  assert.match(text, /fetch\(["']\/api\/capability-profile["']/);
   for (const stage of ['Website validation','Agent website search','Evidence review','Capability extraction','Business profile build','Ready for review']) {
     assert.match(text, new RegExp(stage));
   }
@@ -58,8 +58,27 @@ test('profile verification is a formal gate before dashboard', () => {
   const text = read('profile-review.html');
   assert.match(text, /Profile Is Correct/);
   assert.match(text, /Edit Profile/);
-  assert.match(text, /action:'confirm'/);
-  assert.match(text, /location\.assign\('\/dashboard#contract-scope'\)/);
+  assert.match(text, /action:\s*["']confirm["']/);
+  assert.match(text, /\/member-login\?email=/);
+});
+
+test('onboarding requires NAT-CORP entitlement before creating a permanent record', () => {
+  const endpoint = read('netlify/functions/capability-profile.mjs');
+  assert.match(endpoint, /product_entitlements/);
+  assert.match(endpoint, /product_code=eq\.natcorp/);
+  assert.match(endpoint, /status=in\.\(trialing,active\)/);
+  assert.match(endpoint, /No active NAT-CORP trial or subscription/);
+});
+
+test('verified member login restores the permanent profile session', () => {
+  const endpoint = read('netlify/functions/member-login-verify.mjs');
+  const login = read('member-login.html');
+  assert.match(endpoint, /discovery_status=eq\.verified/);
+  assert.match(endpoint, /select=intake_id,verified_profile/);
+  assert.match(endpoint, /issueProfileSession\(\)/);
+  assert.match(endpoint, /profileSessionCookie\(profileSession\.token\)/);
+  assert.match(login, /new URLSearchParams\(location\.search\)/);
+  assert.match(login, /location\.assign\(["']\/aois-dashboard-preview\.html["']\)/);
 });
 
 test('dashboard exposes All States, Resident State, California, Arizona, and Nevada geography views', () => {
