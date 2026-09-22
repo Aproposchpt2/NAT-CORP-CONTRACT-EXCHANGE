@@ -14,9 +14,8 @@ export default async function handler(req) {
     const code = String(body.code || '').trim();
     const window = Math.floor(Date.now() / 600000);
     if (!/^\d{6}$/.test(code) || ![window, window - 1].some((value) => equal(code, codeFor(email, value)))) return json(401, { ok: false, error: 'Invalid or expired code.' });
-    const entitlement = await db('product_entitlements', 'GET', `?product_code=eq.natcorp&customer_email=eq.${encodeURIComponent(email)}&status=in.(trialing,active)&select=id&limit=1`);
-    if (!entitlement?.length) return json(403, { ok: false, error: 'No active NAT-CORP membership was found.' });
-    const rows = await db('natcorp_business_intakes', 'GET', `?contact_email=eq.${encodeURIComponent(email)}&intake_kind=eq.business_profile&discovery_status=eq.verified&select=intake_id,verified_profile&order=verified_at.desc.nullslast,created_at.desc&limit=1`);
+    const trialCutoff = new Date(Date.now() - (14 * 24 * 60 * 60 * 1000)).toISOString();
+    const rows = await db('natcorp_business_intakes', 'GET', `?contact_email=eq.${encodeURIComponent(email)}&intake_kind=eq.business_profile&discovery_status=eq.verified&created_at=gte.${encodeURIComponent(trialCutoff)}&select=intake_id,verified_profile&order=created_at.desc&limit=1`);
     const intake = rows?.[0];
     const profile = intake?.verified_profile;
     if (!intake?.intake_id || !profile?.business_name) return json(404, { ok: false, error: 'No saved business profile was found. Complete Business Intake first.' });

@@ -3,7 +3,7 @@ import { isIP } from 'node:net';
 import { db, nowIso } from './natcorp-db.mjs';
 
 export const PROFILE_COOKIE = 'natcorp_profile_session';
-export const PROFILE_SESSION_TTL_SECONDS = 60 * 60 * 24 * 7;
+export const PROFILE_SESSION_TTL_SECONDS = 60 * 60 * 24 * 30;
 
 export const safe = (value, max = 4000) => String(value ?? '').trim().slice(0, max);
 export const asArray = (value) => Array.isArray(value) ? value : [];
@@ -112,5 +112,7 @@ export function publicProfileSession(session) {
     matching_scope: session.matching_scope || 'all_states',
     last_error: session.last_error || null,
     updated_at: session.updated_at || nowIso(),
+    trial_started_at: session.intake_payload?.started_at || session.created_at || null,
+    trial_expires_at: session.intake_payload?.trial_expires_at || null,
   };
 }

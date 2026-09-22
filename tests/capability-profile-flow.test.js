@@ -13,19 +13,16 @@ test('customer-facing flow does not use browser profile storage or URL profile h
   }
 });
 
-test('intake contains only approved business identity fields', () => {
+test('free-trial intake contains exactly the three approved identity fields', () => {
   const text = read('welcome.html');
-  // visitorEmail is optional server-side (capability-profile.mjs) but was
-  // deliberately dropped from the frontend form by "Reduce Nat-Corp to the
-  // universal four-field intake" (62147a8) -- not expected on the page.
-  for (const id of ['contactName','businessName','businessEmail','website']) assert.match(text, new RegExp(`id="${id}"`));
-  for (const retired of ['entityType','contactTitle','phone','dba','modeGrid','visitorEmail']) assert.doesNotMatch(text, new RegExp(`id="${retired}"`));
+  for (const id of ['contactName','businessName','businessEmail']) assert.match(text, new RegExp(`id="${id}"`));
+  for (const retired of ['website','entityType','contactTitle','phone','dba','modeGrid','visitorEmail']) assert.doesNotMatch(text, new RegExp(`id="${retired}"`));
 });
 
-test('intake stops after server session creation and redirects to profile build landing', () => {
+test('intake creates the server session and redirects directly to site access', () => {
   const text = read('welcome.html');
   assert.match(text, /await api\(payload\)/);
-  assert.match(text, /location\.assign\('\/profile-building\.html'\)/);
+  assert.match(text, /location\.assign\('\/aois-dashboard-preview\.html'\)/);
   assert.doesNotMatch(text, /action:'discover'/);
   assert.doesNotMatch(text, /capability-profile-discover/);
 });
@@ -62,12 +59,12 @@ test('profile verification is a formal gate before dashboard', () => {
   assert.match(text, /\/member-login\?email=/);
 });
 
-test('onboarding requires NAT-CORP entitlement before creating a permanent record', () => {
+test('onboarding creates immediate verified trial access without Stripe entitlement', () => {
   const endpoint = read('netlify/functions/capability-profile.mjs');
-  assert.match(endpoint, /product_entitlements/);
-  assert.match(endpoint, /product_code=eq\.natcorp/);
-  assert.match(endpoint, /status=in\.\(trialing,active\)/);
-  assert.match(endpoint, /No active NAT-CORP trial or subscription/);
+  assert.doesNotMatch(endpoint, /product_entitlements/);
+  assert.match(endpoint, /trial_expires_at/);
+  assert.match(endpoint, /discovery_status: 'verified'/);
+  assert.match(endpoint, /verification_status: 'USER_SUBMITTED'/);
 });
 
 test('verified member login restores the permanent profile session', () => {
@@ -92,14 +89,12 @@ test('dashboard exposes All States, Resident State, California, Arizona, and Nev
   assert.doesNotMatch(text, /All selected states/);
 });
 
-test('intake supports paste-friendly fields and supplies a secure website prefix', () => {
+test('intake supports the approved three-field form', () => {
   const text = read('welcome.html');
-  for (const id of ['contactName','businessName','businessEmail','website']) {
+  for (const id of ['contactName','businessName','businessEmail']) {
     assert.match(text, new RegExp(`id="${id}"[^>]*name="${id}"`));
   }
-  assert.match(text, /class="url-prefix"[^>]*>https:\/\//);
-  assert.match(text, /websiteUrl\(\$\('website'\)\.value\)/);
-  assert.match(text, /-webkit-user-select:text;user-select:text/);
+  assert.doesNotMatch(text, /Business Website URL|id="website"/);
   assert.doesNotMatch(text, /onpaste=|addEventListener\(['"]paste|clipboardData/);
 });
 

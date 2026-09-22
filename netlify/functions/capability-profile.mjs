@@ -252,38 +252,40 @@ async function start(req, payload) {
   const contactName = safe(payload.contact_name, 220);
   const businessName = safe(payload.business_name, 240);
   const businessEmail = validEmail(payload.business_email);
-  const visitorEmail = payload.visitor_email ? validEmail(payload.visitor_email) : '';
   if (contactName.length < 2) throw new Error('Name is required.');
   if (businessName.length < 2) throw new Error('Business name is required.');
   if (!businessEmail) throw new Error('Enter a valid business email address.');
-  if (payload.visitor_email && !visitorEmail) throw new Error('Optional owner / visiting customer email is not valid.');
-  const entitlement = await db(
-    'product_entitlements',
-    'GET',
-    `?product_code=eq.natcorp&customer_email=eq.${encodeURIComponent(businessEmail)}&status=in.(trialing,active)&select=id&limit=1`,
-  );
-  if (!entitlement?.length) {
-    return jsonResponse(403, {
-      ok: false,
-      error: 'No active NAT-CORP trial or subscription was found for this email. Start your 14-day trial before completing onboarding.',
-    });
-  }
-  const website = normalizeWebsite(payload.website);
   const issued = issueProfileSession();
   const now = nowIso();
+  const trialExpiresAt = new Date(Date.now() + (14 * 24 * 60 * 60 * 1000)).toISOString();
+  const verifiedProfile = {
+    profile_version: PROFILE_VERSION,
+    verification_status: 'USER_SUBMITTED',
+    business_name: businessName,
+    business_email: businessEmail,
+    contact_name: contactName,
+    summary: `${businessName} NAT-CORP member profile.`,
+    services: [],
+    products: [],
+    capabilities: [],
+    core_competencies: [],
+    industries: [],
+    procurement_terms: [],
+    naics_candidates: [],
+    geographic_search_scope: 'all_states',
+  };
   const intakePayload = {
     contact_name: contactName,
     business_name: businessName,
     business_email: businessEmail,
-    website: website.website,
-    visitor_email: visitorEmail || null,
-    source: 'natcorp-website-capability-intake-v1',
+    source: 'natcorp-direct-trial-intake-v1',
     started_at: now,
+    trial_expires_at: trialExpiresAt,
   };
   const rows = await db('natcorp_business_intakes', 'POST', '', [{
     opportunity_id: null,
     intake_kind: 'business_profile',
-    status: 'started',
+    status: 'dna_complete',
     contact_email: businessEmail,
     intake_payload: intakePayload,
     session_token_hash: issued.token_hash,
@@ -291,13 +293,14 @@ async function start(req, payload) {
     contact_name: contactName,
     business_name: businessName,
     business_email: businessEmail,
-    website: website.website,
-    visitor_email: visitorEmail || null,
-    canonical_domain: website.canonical_domain,
-    discovery_status: 'intake_created',
+    website: null,
+    visitor_email: null,
+    canonical_domain: null,
+    discovery_status: 'verified',
     draft_profile: {},
     discovery_evidence: [],
-    verified_profile: {},
+    verified_profile: verifiedProfile,
+    verified_at: now,
     matching_scope: 'all_states',
     created_at: now,
     updated_at: now,
