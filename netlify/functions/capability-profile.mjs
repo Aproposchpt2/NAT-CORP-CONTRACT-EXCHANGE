@@ -257,6 +257,17 @@ async function start(req, payload) {
   if (businessName.length < 2) throw new Error('Business name is required.');
   if (!businessEmail) throw new Error('Enter a valid business email address.');
   if (payload.visitor_email && !visitorEmail) throw new Error('Optional owner / visiting customer email is not valid.');
+  const entitlement = await db(
+    'product_entitlements',
+    'GET',
+    `?product_code=eq.natcorp&customer_email=eq.${encodeURIComponent(businessEmail)}&status=in.(trialing,active)&select=id&limit=1`,
+  );
+  if (!entitlement?.length) {
+    return jsonResponse(403, {
+      ok: false,
+      error: 'No active NAT-CORP trial or subscription was found for this email. Start your 14-day trial before completing onboarding.',
+    });
+  }
   const website = normalizeWebsite(payload.website);
   const issued = issueProfileSession();
   const now = nowIso();
