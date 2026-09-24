@@ -1,0 +1,264 @@
+// NAT-CORP self-serve contract search -- replaces the old AI-capability-
+// matching gate (Business Intake -> Website Discovery -> Verify Profile ->
+// fit-score matches) with the same user-select taxonomy pattern already
+// live on BDMS's Advisor Contract Search Portal and BODA's Licensed
+// Business Workspace: Industry -> Service Category -> Work Type + keyword/
+// state/agency/closing/posted filters, zero AI relevance scoring.
+//
+// NAT-CORP's own state_contract_opportunities table is now a Postgres VIEW
+// over cbrief_contract_opportunities -- both live in the same Supabase
+// project as BDMS/BODA -- so this reads the exact same
+// cbrief_distribution_ready_opportunities view and
+// cbrief_contract_taxonomy_assignments table those tools use, just wired
+// to NAT-CORP's own member session instead of an advisor or vendor one.
+//
+// Access model: NAT-CORP members are already paid/trial subscribers by the
+// time they reach this page (the /intake form issues a verified session
+// immediately -- there is no further paywall tier here), so unlike BODA's
+// vendor-licensed-search.mjs this returns full contract detail directly:
+// no teaser reduction, no locked fields.
+import { env } from './_shared/natcorp-db.mjs';
+import { loadProfileSession } from './_shared/natcorp-profile-session.mjs';
+import { dedupeRows } from './_shared/cbrief-open-contract-dedupe.mjs';
+import { parseNonTaxonomyFilters, applyNonTaxonomyFilters, normalizeState, dateValue as filterDateValue } from './_shared/cbrief-open-contract-filters.mjs';
+
+const json = (body, status = 200, headers = {}) =>
+  new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...headers } });
+
+const clean = (v, max = 5000) => String(v ?? '').trim().slice(0, max);
+const dateValue = v => { const d = v ? new Date(v) : null; return d && !Number.isNaN(d.valueOf()) ? d.valueOf() : null; };
+
+function dbConfig() {
+  const url = env('SUPABASE_URL');
+  const key = env('SUPABASE_SERVICE_ROLE_KEY') || env('SUPABASE_SERVICE_KEY');
+  if (!url || !key) throw new Error('Contract search service is unavailable.');
+  return { url: url.replace(/\/$/, ''), key };
+}
+
+async function dbGet(table, query = '') {
+  const { url, key } = dbConfig();
+  const r = await fetch(`${url}/rest/v1/${table}${query}`, {
+    headers: { apikey: key, authorization: `Bearer ${key}`, accept: 'application/json' },
+    signal: AbortSignal.timeout(20000)
+  });
+  const text = await r.text();
+  let data = null;
+  if (text) { try { data = JSON.parse(text); } catch { data = text; } }
+  if (!r.ok) {
+    console.error('natcorp-contract-search db error', table, r.status, data);
+    throw new Error(`Contract search service ${table} ${r.status}`);
+  }
+  return data;
+}
+
+const DISTRIBUTION_READY_VIEW = 'cbrief_distribution_ready_opportunities';
+const TAXONOMY_VERSION = 'gcp_selfserve_taxonomy_v2_2026_09_07';
+const UNCATEGORIZED = '__uncategorized__';
+const PAGE_SIZE = 1000;
+const MAX_RESULT_PAGE_SIZE = 25;
+
+const INDUSTRY_ORDER = [
+  'Construction & Public Works','Water, Wastewater & Utilities','Transportation, Roads & Mobility',
+  'Architecture, Engineering & Planning','Facilities, Maintenance & Skilled Trades',
+  'Information Technology, Software & Digital','Professional, Consulting & Administrative',
+  'Health & Medical Services','Human, Housing & Community Services','Public Safety, Security & Emergency',
+  'Environmental, Waste & Land Services','Vehicles, Fleet & Heavy Equipment','Goods, Supplies & General Materials',
+  'Food, Catering & Concessions','Legal Services','Financial, Insurance & Real Estate',
+  'Education, Training & Workforce','Arts, Media, Marketing & Communications','Energy & Power',
+  'Records, Document & Information Services','Parks, Recreation & Events','Industrial, Chemical & Laboratory Products'
+];
+const ALLOWED_INDUSTRIES = new Set(INDUSTRY_ORDER);
+
+const DIRECT_SELECT = [
+  'id','publisher_id','platform_id','solicitation_number','alternate_id','title','description','scope_summary',
+  'agency_name','department_name','opportunity_type','status','posted_at','closes_at','estimated_value_min',
+  'estimated_value_max','city','state','naics_codes','nigp_codes','psc_codes','commodity_codes',
+  'authoritative_detail_url','authoritative_response_url','last_verified_at','updated_at'
+].join(',');
+
+function directQuery(nowIso) {
+  const q = new URLSearchParams({
+    select: DIRECT_SELECT,
+    status: 'eq.open',
+    evidence_status: 'neq.NOT_DISCOVERED',
+    requirements_extracted_at: 'not.is.null',
+    or: `(closes_at.is.null,closes_at.gte.${nowIso})`,
+    order: 'closes_at.asc.nullslast,posted_at.desc'
+  });
+  return q.toString();
+}
+
+async function distributionReadyRows() {
+  const { url, key } = dbConfig();
+  const nowIso = new Date().toISOString();
+  const rows = [];
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const range = `${from}-${from + PAGE_SIZE - 1}`;
+    const r = await fetch(`${url}/rest/v1/${DISTRIBUTION_READY_VIEW}?${directQuery(nowIso)}`, {
+      headers: { apikey: key, authorization: `Bearer ${key}`, accept: 'application/json', Range: range },
+      signal: AbortSignal.timeout(30000)
+    });
+    if (!r.ok) { console.error('[natcorp-contract-search] distribution-ready fetch', r.status); break; }
+    const page = await r.json().catch(() => []);
+    if (!Array.isArray(page)) break;
+    rows.push(...page);
+    if (page.length < PAGE_SIZE) break;
+  }
+  return rows;
+}
+
+async function taxonomyAssignments({ industry, serviceCategory, workType } = {}) {
+  const rows = [];
+  for (let offset = 0; ; offset += PAGE_SIZE) {
+    let q = `?taxonomy_version=eq.${encodeURIComponent(TAXONOMY_VERSION)}&assignment_role=eq.PRIMARY&review_required=eq.false&select=opportunity_id,industry,service_category,work_type`;
+    if (industry) q += `&industry=eq.${encodeURIComponent(industry)}`;
+    if (serviceCategory) q += `&service_category=eq.${encodeURIComponent(serviceCategory)}`;
+    if (workType) q += `&work_type=eq.${encodeURIComponent(workType)}`;
+    q += `&limit=${PAGE_SIZE}&offset=${offset}`;
+    const page = await dbGet('cbrief_contract_taxonomy_assignments', q);
+    rows.push(...(Array.isArray(page) ? page : []));
+    if (!Array.isArray(page) || page.length < PAGE_SIZE) break;
+  }
+  return rows;
+}
+
+function buildTree(triples) {
+  const map = new Map(INDUSTRY_ORDER.map(name => [name, { name, count: 0, service_categories: new Map() }]));
+  for (const t of triples) {
+    const i = map.get(t.industry); if (!i) continue;
+    i.count++;
+    if (!i.service_categories.has(t.service_category)) i.service_categories.set(t.service_category, { name: t.service_category, count: 0, work_types: new Map() });
+    const s = i.service_categories.get(t.service_category);
+    s.count++;
+    s.work_types.set(t.work_type, (s.work_types.get(t.work_type) || 0) + 1);
+  }
+  return INDUSTRY_ORDER.map(name => map.get(name)).map(i => ({
+    name: i.name, count: i.count,
+    service_categories: [...i.service_categories.values()]
+      .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+      .map(s => ({
+        name: s.name, count: s.count,
+        work_types: [...s.work_types.entries()].map(([name, count]) => ({ name, count }))
+          .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+      }))
+  }));
+}
+
+// Full detail -- NAT-CORP members are already subscribers by the time they
+// reach this endpoint, so unlike BODA's teaserOpportunity() nothing here is
+// held back server-side.
+function fullOpportunity(row, assignment) {
+  const t = assignment || {};
+  const daysLeft = (() => {
+    const v = filterDateValue(row.closes_at);
+    return v == null ? null : Math.ceil((v - Date.now()) / 86400000);
+  })();
+  return {
+    id: row.id,
+    title: row.title || 'Untitled opportunity',
+    description: row.description || null,
+    scope_summary: row.scope_summary || null,
+    agency: row.agency_name || 'Public Agency',
+    department: row.department_name || null,
+    category_path: [t.industry, t.service_category, t.work_type].filter(Boolean).join(' › ') || 'Not yet categorized',
+    status: row.status === 'open' ? 'Open' : (row.status || 'Open'),
+    opportunity_type: row.opportunity_type || null,
+    location: [row.city, normalizeState(row.state)].filter(Boolean).join(', ') || null,
+    state: normalizeState(row.state) || null,
+    solicitation_number: row.solicitation_number || row.alternate_id || null,
+    posted_at: row.posted_at || null,
+    closes_at: row.closes_at || null,
+    days_left: daysLeft,
+    estimated_value_min: row.estimated_value_min || null,
+    estimated_value_max: row.estimated_value_max || null,
+    naics_codes: row.naics_codes || [],
+    nigp_codes: row.nigp_codes || [],
+    psc_codes: row.psc_codes || [],
+    commodity_codes: row.commodity_codes || [],
+    authoritative_detail_url: row.authoritative_detail_url || null,
+    authoritative_response_url: row.authoritative_response_url || null,
+    last_verified_at: row.last_verified_at || null
+  };
+}
+
+const tiebreak = (a, b) => clean(a.id).localeCompare(clean(b.id));
+function sortRows(rows, sort) {
+  if (sort === 'closing_latest') return rows.sort((a, b) => (dateValue(b.closes_at) ?? -Infinity) - (dateValue(a.closes_at) ?? -Infinity) || tiebreak(a, b));
+  if (sort === 'newest') return rows.sort((a, b) => (dateValue(b.posted_at) ?? 0) - (dateValue(a.posted_at) ?? 0) || tiebreak(a, b));
+  if (sort === 'agency') return rows.sort((a, b) => clean(a.agency_name).localeCompare(clean(b.agency_name)) || tiebreak(a, b));
+  return rows.sort((a, b) => (dateValue(a.closes_at) ?? Infinity) - (dateValue(b.closes_at) ?? Infinity) || tiebreak(a, b));
+}
+
+export default async function handler(req) {
+  const url = new URL(req.url);
+  const action = url.searchParams.get('action');
+
+  try {
+    const session = await loadProfileSession(req);
+    if (!session) return json({ ok: false, error: 'Sign in required.' }, 401);
+
+    if (req.method === 'GET' && action === 'taxonomy') {
+      const filters = parseNonTaxonomyFilters(url.searchParams);
+      const [allAssignments, source] = await Promise.all([taxonomyAssignments(), distributionReadyRows()]);
+      const validAssignments = allAssignments.filter(r => ALLOWED_INDUSTRIES.has(clean(r.industry)) && clean(r.service_category) && clean(r.work_type));
+      const assignmentMap = new Map(allAssignments.map(r => [clean(r.opportunity_id), r]));
+      const assignedIds = new Set(validAssignments.map(r => clean(r.opportunity_id)).filter(Boolean));
+
+      const matchingRows = applyNonTaxonomyFilters(dedupeRows(source, assignedIds), filters);
+      const categorizedTriples = [];
+      let uncategorizedCount = 0;
+      for (const row of matchingRows) {
+        const a = assignmentMap.get(clean(row.id));
+        const industry = clean(a?.industry), service = clean(a?.service_category), work = clean(a?.work_type);
+        if (a && ALLOWED_INDUSTRIES.has(industry) && service && work) categorizedTriples.push({ industry, service_category: service, work_type: work });
+        else uncategorizedCount++;
+      }
+      return json({
+        ok: true,
+        industries: buildTree(categorizedTriples),
+        uncategorized: { key: UNCATEGORIZED, name: 'Not Yet Categorized', count: uncategorizedCount }
+      });
+    }
+
+    if (req.method === 'GET' && action === 'search') {
+      const filters = parseNonTaxonomyFilters(url.searchParams);
+      const sort = clean(url.searchParams.get('sort')) || 'closing_soonest';
+      const page = Math.max(1, Math.min(2000, Number(url.searchParams.get('page')) || 1));
+      const pageSize = Math.max(10, Math.min(MAX_RESULT_PAGE_SIZE, Number(url.searchParams.get('page_size')) || 25));
+      const industryRaw = clean(url.searchParams.get('industry'));
+      const isUncategorized = industryRaw === UNCATEGORIZED;
+      const industry = isUncategorized ? '' : industryRaw;
+      const serviceCategory = clean(url.searchParams.get('service_category'));
+      const workType = clean(url.searchParams.get('work_type'));
+      const taxonomyFiltering = Boolean(industry || serviceCategory || workType || isUncategorized);
+
+      const [source, assignmentRows] = await Promise.all([distributionReadyRows(), taxonomyAssignments({ industry, serviceCategory, workType })]);
+      const assignmentMap = new Map(assignmentRows.map(a => [clean(a.opportunity_id), a]));
+      const assignedIds = new Set(assignmentRows.filter(a => clean(a.service_category) && clean(a.work_type)).map(a => clean(a.opportunity_id)).filter(Boolean));
+
+      let rows;
+      if (isUncategorized) rows = dedupeRows(source.filter(row => !assignmentMap.has(clean(row.id))));
+      else if (taxonomyFiltering) rows = dedupeRows(source.filter(row => assignmentMap.has(clean(row.id))), assignedIds);
+      else rows = dedupeRows(source, assignedIds);
+      rows = applyNonTaxonomyFilters(rows, filters);
+      sortRows(rows, sort);
+
+      const total = rows.length, start = (page - 1) * pageSize;
+      const selected = rows.slice(start, start + pageSize).map(row => fullOpportunity(row, assignmentMap.get(clean(row.id))));
+      const agencies = [...new Set(rows.map(row => clean(row.agency_name)).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+      const states = [...new Set(rows.map(row => normalizeState(row.state)).filter(Boolean))].sort();
+
+      return json({
+        ok: true, page, page_size: pageSize, total, total_pages: Math.max(1, Math.ceil(total / pageSize)),
+        filters: { states, agencies }, opportunities: selected
+      });
+    }
+
+    return json({ ok: false, error: 'Unknown action.' }, 400);
+  } catch (error) {
+    console.error('[natcorp-contract-search]', error);
+    return json({ ok: false, error: 'Contract search could not be completed.' }, 500);
+  }
+}
+
+export const config = { path: '/api/natcorp-contract-search' };
