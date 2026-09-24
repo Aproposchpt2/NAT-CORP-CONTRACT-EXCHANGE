@@ -174,7 +174,7 @@ tr.row:hover{background:rgba(199,167,90,.05)}
 'use strict';
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const TARGET_STATES=['Arizona','California','Florida','Georgia','Nevada','New York','North Carolina'];
+const TARGET_STATES=['California','Nevada','Arizona'];
 const state={page:1,totalPages:1,rows:[],tree:[],active:null,lastFocus:null};
 const UNCATEGORIZED='__uncategorized__';
 const fmt=v=>{if(!v)return'Not listed';const d=new Date(v);return Number.isNaN(d.valueOf())?'Not listed':new Intl.DateTimeFormat(undefined,{dateStyle:'medium'}).format(d)};
