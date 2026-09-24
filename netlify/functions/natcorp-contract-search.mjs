@@ -146,6 +146,11 @@ export default async function handler(req) {
     const session = await loadProfileSession(req);
     if (!session) return json({ ok: false, error: 'Sign in required.' }, 401);
 
+    if (req.method === 'GET' && action === 'debug_feed') {
+      const source = await distributionReadyRows();
+      return json({ ok: true, raw_count: source.length, sample: source.slice(0, 3) });
+    }
+
     if (req.method === 'GET' && action === 'taxonomy') {
       const filters = parseNonTaxonomyFilters(url.searchParams);
       const source = await distributionReadyRows();
