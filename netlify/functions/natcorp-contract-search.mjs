@@ -34,7 +34,7 @@ const clean = (v, max = 5000) => String(v ?? '').trim().slice(0, max);
 const dateValue = v => { const d = v ? new Date(v) : null; return d && !Number.isNaN(d.valueOf()) ? d.valueOf() : null; };
 
 const DISTRIBUTION_FEED_URL = 'https://bdms.aproposgroupllc.com/api/contract-distribution-feed';
-const SUPPORTED_STATES = ['California', 'Nevada', 'Arizona'];
+const SUPPORTED_STATES = ['CA', 'NV', 'AZ']; // the feed's states param takes 2-letter codes, not full names
 const UNCATEGORIZED = '__uncategorized__';
 const FEED_PAGE_SIZE = 1000;
 const MAX_RESULT_PAGE_SIZE = 25;
