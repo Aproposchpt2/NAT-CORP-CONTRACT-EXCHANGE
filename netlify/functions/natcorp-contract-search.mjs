@@ -146,20 +146,6 @@ export default async function handler(req) {
     const session = await loadProfileSession(req);
     if (!session) return json({ ok: false, error: 'Sign in required.' }, 401);
 
-    if (req.method === 'GET' && action === 'debug_feed') {
-      const source = await distributionReadyRows();
-      const validRow = r => ALLOWED_INDUSTRIES.has(clean(r.industry)) && clean(r.service_category) && clean(r.work_type);
-      const assignedIds = new Set(source.filter(validRow).map(r => clean(r.id)).filter(Boolean));
-      const deduped = dedupeRows(source, assignedIds);
-      const filtered = applyNonTaxonomyFilters(deduped, parseNonTaxonomyFilters(url.searchParams));
-      const withId = source.filter(r => clean(r.id)).length;
-      const withAgency = source.filter(r => clean(r.agency_name)).length;
-      const withState = source.filter(r => clean(r.state)).length;
-      const withClosesAt = source.filter(r => r.closes_at).length;
-      const taxonomyHits = source.filter(validRow).length;
-      return json({ ok: true, raw_count: source.length, withId, withAgency, withState, withClosesAt, taxonomyHits, dedupedCount: deduped.length, filteredCount: filtered.length });
-    }
-
     if (req.method === 'GET' && action === 'taxonomy') {
       const filters = parseNonTaxonomyFilters(url.searchParams);
       const source = await distributionReadyRows();
