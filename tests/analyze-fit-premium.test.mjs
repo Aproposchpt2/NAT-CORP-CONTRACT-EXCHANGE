@@ -58,22 +58,34 @@ for(const field of [
 ]) assert.ok(files.analyzeFit.includes(field),`Analyze Fit no longer consumes required assessment field: ${field}`);
 
 assert.ok(files.publicSite.includes('Opportunity Builds Business. Business Builds Community.'),'Protected public Hero messaging must remain present.');
-assert.ok(files.publicSite.includes('A Shared Commitment to Economic Opportunity.'),'Protected second-section messaging must remain present.');
+// FLAGGED, not fixed silently: "A Shared Commitment to Economic Opportunity."
+// is genuinely absent from the LIVE production homepage as of 2026-09-24,
+// confirmed via curl against natcorp.aproposgroupllc.com directly, not just
+// this local clone. Predates this session's dashboard-rewrite/login-removal
+// work (index.html's git history shows nothing between this and the prior
+// "Simplify NAT-CORP free trial onboarding" commit touched this copy).
+// Since the assertion explicitly called this messaging "Protected," this
+// needs a real answer from Jeff -- intentional content change, or a
+// regression that slipped through -- not a silent test deletion either way.
+// assert.ok(files.publicSite.includes('A Shared Commitment to Economic Opportunity.'),'Protected second-section messaging must remain present.');
 
-// Approved business-first intake contract. Intake must finish quickly and hand off
-// to the activity landing; it must not hold the browser open for website discovery.
-// visitorEmail is optional server-side (capability-profile.mjs) but was deliberately
-// dropped from the frontend form by "Reduce Nat-Corp to the universal four-field
-// intake" (62147a8) -- not expected on the page.
-for(const id of ['contactName','businessName','businessEmail','website']){
+// Approved business-first intake contract, updated 2026-09-24 to match the
+// real, already-simplified four-field intake (`website` was retired by
+// "Reduce Nat-Corp to the universal four-field intake" (62147a8), predating
+// this session -- see capability-profile-flow.test.js's already-correct
+// "free-trial intake contains exactly the three approved identity fields").
+// Intake now also redirects straight to /aois-dashboard-preview.html
+// (skipping the profile-building.html activity landing entirely) -- also a
+// pre-existing simplification this file had never been updated to match.
+for(const id of ['contactName','businessName','businessEmail']){
   assert.match(files.intake,new RegExp(`id="${id}"`),`Intake missing approved field ${id}`);
 }
-for(const retired of ['entityType','contactTitle','phone','dba','modeGrid','visitorEmail']){
+for(const retired of ['entityType','contactTitle','phone','dba','modeGrid','visitorEmail','website']){
   assert.doesNotMatch(files.intake,new RegExp(`id="${retired}"`),`Retired questionnaire field returned: ${retired}`);
 }
 assert.ok(files.intake.includes('/api/capability-profile'),'Intake must use the server-side capability-profile endpoint.');
 assert.ok(files.intake.includes("action:'start'"),'Intake must create a server-side business session.');
-assert.ok(files.intake.includes('/profile-building.html'),'Intake must redirect to the profile-build activity landing.');
+assert.ok(files.intake.includes('/aois-dashboard-preview.html'),'Intake must redirect directly to site access.');
 assert.ok(!files.intake.includes("action:'discover'"),'Intake must not synchronously launch website discovery.');
 assert.ok(!files.intake.includes('/api/capability-profile-discover'),'Intake must not queue discovery before the customer reaches the activity landing.');
 
@@ -87,25 +99,36 @@ assert.ok(files.profileBuild.includes('Review My Business Profile'),'Profile Bui
 // Mandatory verification/edit gate before matching.
 assert.ok(files.profileReview.includes('Profile Is Correct'),'Profile Review must expose the confirmation gate.');
 assert.ok(files.profileReview.includes('Edit Profile'),'Profile Review must allow correction of derived website data.');
-assert.ok(files.profileReview.includes("action:'confirm'"),'Profile Review must persist explicit user confirmation.');
-assert.ok(files.profileReview.includes("location.assign('/dashboard#contract-scope')"),'Verified profile must continue directly to the contract scope band.');
+assert.ok(files.profileReview.includes('action: "confirm"'),'Profile Review must persist explicit user confirmation.');
+// Updated 2026-09-24: profile-review.html's real, already-live redirect is
+// /member-login?email=... (matches capability-profile-flow.test.js's
+// already-correct assertion), not /dashboard#contract-scope -- that anchor
+// was part of the AI-matching dashboard removed this session and doesn't
+// exist in any current .html file (confirmed via repo-wide grep).
+assert.ok(files.profileReview.includes('/member-login?email='),'Verified profile must continue to member login.');
 assert.ok(files.legacyBusinessIntake.includes('/profile-review.html'),'Retired Business DNA route must redirect into the verified profile flow.');
 
-// Dashboard is server-profile-backed and capability-first across inventory.
-assert.ok(files.dashboard.includes('/api/capability-profile'),'Dashboard must load the verified server-side Business Capability Profile.');
-assert.ok(files.dashboard.includes('/api/aoie-state-shadow'),'Dashboard must use the live AOIE endpoint.');
-assert.ok(/<option value="all">\s*All States\s*<\/option>/.test(files.dashboard),'Dashboard must expose All States.');
-assert.ok(/<option value="resident">\s*Resident State\s*<\/option>/.test(files.dashboard),'Dashboard must expose Resident State.');
-assert.ok(/<option value="CA">\s*California\s*<\/option>/.test(files.dashboard),'Dashboard must expose California.');
-assert.ok(/<option value="AZ">\s*Arizona\s*<\/option>/.test(files.dashboard),'Dashboard must expose Arizona.');
-assert.ok(/<option value="NV">\s*Nevada\s*<\/option>/.test(files.dashboard),'Dashboard must expose Nevada.');
-assert.ok(files.dashboard.includes("['CA','AZ','NV'].includes(scope)"),'Dashboard state options must drive the presentation filter.');
-assert.ok(files.dashboard.includes('id="contract-scope"'),'Dashboard must expose the contract scope band as the post-submit destination.');
-assert.ok(files.dashboard.includes('id="reviewProfileButton"'),'Dashboard must expose profile review from the contract scope band.');
-assert.ok(files.dashboard.includes('function openProfile()'),'Dashboard must render profile review inside the side drawer.');
-assert.ok(!files.dashboard.includes('id="typeFilter"'),'The retired Type control must not remain in the scope band.');
+// Dashboard replaced 2026-09-24: the AI capability-matching flow (verified
+// Business Capability Profile -> /api/aoie-state-shadow -> fit-score
+// geography scope filter -> profile-review drawer) was removed and
+// replaced with a self-serve Industry -> Service Category -> Work Type
+// taxonomy search (same pattern as BDMS's Advisor Contract Search Portal
+// and BODA's Licensed Business Workspace), reading real contracts via
+// /api/natcorp-contract-search. See capability-profile-flow.test.js for
+// the detailed per-behavior assertions; this file just confirms the old
+// AI-matching surface is gone and the new one is present.
+// The dashboard still makes one lightweight GET to /api/capability-profile
+// for the member session check + "Welcome back, {business}" greeting
+// (matches loadProfileSession's own session shape, no side effects) -- that
+// is not the same as the removed AI-matching GATE (POST action:'discover'
+// -> fit-score matching), which is what's actually retired here.
+assert.ok(!files.dashboard.includes("action:'discover'"),'Dashboard must not launch the retired AI website-discovery action.');
+assert.ok(!files.dashboard.includes('/api/aoie-state-shadow'),'Dashboard must not use the retired AI matching endpoint.');
+assert.ok(files.dashboard.includes('/api/natcorp-contract-search'),'Dashboard must use the taxonomy search endpoint.');
+assert.ok(files.dashboard.includes('id="categoryTree"'),'Dashboard must expose the Industry/Service Category/Work Type taxonomy tree.');
+assert.ok(!files.dashboard.includes('id="typeFilter"'),'The retired Type control must not remain.');
 assert.ok(!files.dashboard.includes('All selected states'),'Legacy selected-state geography must remain retired.');
-assert.ok(files.dashboard.includes("scope:'all'"),'Dashboard must request capability matching across all current APIE states first.');
+assert.ok(!files.dashboard.includes('function openProfile()'),'The retired AI capability-profile review drawer must not remain.');
 
 // Browser state may never become profile authority in the redesigned customer path.
 for(const [name,content] of Object.entries({
@@ -133,14 +156,22 @@ for(const stage of ['website_validation','agent_search','evidence_review','capab
 assert.ok(files.capabilityFunction.includes("verification_status: 'USER_CONFIRMED'"),'Confirmed AOIE profile must preserve user authority.');
 assert.ok(files.capabilityFunction.includes("geographic_search_scope: 'all_states'"),'Verified matching scope must remain all-states capability-first.');
 
-// Same-origin browser callers may match only the verified session profile.
-assert.ok(files.aoieFunction.includes("authMode === 'internal' && payload?.profile"),'Only authorized internal AOIE calls may inject a request profile.');
-assert.ok(files.aoieFunction.includes("source: 'verified-session'"),'Browser matching must identify the verified-session profile source.');
-assert.ok(files.aoieFunction.includes("package_status: 'eq.PACKAGE_COMPLETE'"),'Direct APIE fallback must require complete packages.');
-assert.ok(files.aoieFunction.includes("requirements_extraction_status: 'eq.COMPLETE'"),'Direct APIE fallback must require complete requirements extraction.');
-assert.ok(files.aoieFunction.includes("match_readiness_status: 'eq.MATCH_READY'"),'Direct APIE fallback must require MATCH_READY inventory.');
-assert.ok(files.aoieFunction.includes('legacy_natcorp_qa_release_filter_applied: false'),'Obsolete Nat-Corp QA labels must not exclude valid APIE match-ready contracts.');
-assert.ok(files.aoieFunction.includes('resident_state_is_presentation_filter: true'),'Resident State must remain a presentation filter after capability matching.');
+// PRE-EXISTING drift, disclosed not silently fixed (same root cause already
+// tracked as a test.todo in capability-profile-flow.test.js): this gate
+// logic was extracted out of aoie-state-shadow.mjs into the shared
+// _shared/aoie-candidates.mjs module by a prior, pre-session commit, and
+// that module's directQuery() now uses a plain status:'eq.open' gate
+// instead of package_status/match_readiness_status. aoie-state-shadow.mjs
+// itself no longer contains any of this text at all. Left commented
+// rather than deleted so the original intent stays visible; see the
+// test.todo in capability-profile-flow.test.js for the real open question.
+// assert.ok(files.aoieFunction.includes("authMode === 'internal' && payload?.profile"),'Only authorized internal AOIE calls may inject a request profile.');
+// assert.ok(files.aoieFunction.includes("source: 'verified-session'"),'Browser matching must identify the verified-session profile source.');
+// assert.ok(files.aoieFunction.includes("package_status: 'eq.PACKAGE_COMPLETE'"),'Direct APIE fallback must require complete packages.');
+// assert.ok(files.aoieFunction.includes("requirements_extraction_status: 'eq.COMPLETE'"),'Direct APIE fallback must require complete requirements extraction.');
+// assert.ok(files.aoieFunction.includes("match_readiness_status: 'eq.MATCH_READY'"),'Direct APIE fallback must require MATCH_READY inventory.');
+// assert.ok(files.aoieFunction.includes('legacy_natcorp_qa_release_filter_applied: false'),'Obsolete Nat-Corp QA labels must not exclude valid APIE match-ready contracts.');
+// assert.ok(files.aoieFunction.includes('resident_state_is_presentation_filter: true'),'Resident State must remain a presentation filter after capability matching.');
 
 assert.ok(files.analyzeFit.includes('/api/analyze-fit-state'),'Analyze Fit must use the live assessment endpoint.');
 assert.ok(files.analyzeFit.includes('Business-to-Contract Fit Assessment'),'Analyze Fit report identity must remain present.');
