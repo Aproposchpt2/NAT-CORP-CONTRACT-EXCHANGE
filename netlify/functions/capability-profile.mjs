@@ -248,6 +248,39 @@ async function persistVerifiedProfile(session, verified) {
   return profileId;
 }
 
+// The no-card trial grants access entirely outside Stripe, but the member
+// login gate (member-login-request.mjs / member-login-verify.mjs) only ever
+// checks product_entitlements -- it has no idea this flow exists. Without
+// this, every trial signup here was silently unable to log in (found
+// 2026-10-05). access_source 'direct_trial' and a null stripe_price_id
+// require the product_entitlements_access_source_check constraint and the
+// stripe_price_id NOT NULL constraint to both be relaxed first (see
+// migration allow_direct_trial_entitlements).
+async function ensureDirectTrialEntitlement({ email, contactName, businessName, trialExpiresAt, now }) {
+  const existing = await db('product_entitlements', 'GET', `?product_code=eq.natcorp&customer_email=eq.${encodeURIComponent(email)}&select=id&limit=1`);
+  if (existing?.[0]) {
+    await db('product_entitlements', 'PATCH', `?id=eq.${encodeURIComponent(existing[0].id)}`, {
+      status: 'trialing',
+      trial_start: now,
+      trial_end: trialExpiresAt,
+      customer_name: contactName,
+      business_name: businessName,
+      updated_at: now,
+    }, 'return=minimal');
+    return;
+  }
+  await db('product_entitlements', 'POST', '', [{
+    product_code: 'natcorp',
+    customer_email: email,
+    customer_name: contactName,
+    business_name: businessName,
+    access_source: 'direct_trial',
+    status: 'trialing',
+    trial_start: now,
+    trial_end: trialExpiresAt,
+  }], 'return=minimal');
+}
+
 async function start(req, payload) {
   const contactName = safe(payload.contact_name, 220);
   const businessName = safe(payload.business_name, 240);
@@ -307,6 +340,7 @@ async function start(req, payload) {
   }], 'return=representation');
   const session = rows?.[0];
   if (!session) throw new Error('Business intake could not be created.');
+  await ensureDirectTrialEntitlement({ email: businessEmail, contactName, businessName, trialExpiresAt, now });
   return jsonResponse(201, { ok: true, session: publicProfileSession(session) }, { 'set-cookie': profileSessionCookie(issued.token) });
 }
 
