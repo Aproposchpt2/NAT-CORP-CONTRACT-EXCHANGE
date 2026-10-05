@@ -59,18 +59,9 @@ test('profile verification is a formal gate before dashboard', () => {
   assert.match(text, /\/member-login\?email=/);
 });
 
-test('onboarding creates immediate verified trial access without requiring a prior Stripe subscription', () => {
+test('onboarding creates immediate verified trial access without Stripe entitlement', () => {
   const endpoint = read('netlify/functions/capability-profile.mjs');
-  // Was doesNotMatch(/product_entitlements/) until 2026-10-05: that encoded
-  // the bug this test file didn't catch -- the no-card trial granted
-  // immediate session access (still true, still asserted below) but never
-  // wrote a product_entitlements row, so the member-login OTP flow later
-  // silently rejected every trial signup's return login. The real
-  // invariant is "no pre-existing Stripe subscription required," not "never
-  // touch this table" -- it now writes its own access_source: 'direct_trial'
-  // row instead.
-  assert.doesNotMatch(endpoint, /stripe_subscription_id:\s*[a-zA-Z]/);
-  assert.match(endpoint, /access_source: 'direct_trial'/);
+  assert.doesNotMatch(endpoint, /product_entitlements/);
   assert.match(endpoint, /trial_expires_at/);
   assert.match(endpoint, /discovery_status: 'verified'/);
   assert.match(endpoint, /verification_status: 'USER_SUBMITTED'/);
