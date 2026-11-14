@@ -19,5 +19,3 @@ export default async function handler(){
     return json(500,{ok:false,error:error?.message||String(error)});
   }
 }
-
-export const config={schedule:'@hourly'};
