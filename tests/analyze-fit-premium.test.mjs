@@ -113,7 +113,7 @@ assert.ok(files.legacyBusinessIntake.includes('/profile-review.html'),'Retired B
 // geography scope filter -> profile-review drawer) was removed and
 // replaced with a self-serve Industry -> Service Category -> Work Type
 // taxonomy search (same pattern as BDMS's Advisor Contract Search Portal
-// and BODA's Licensed Business Workspace), reading real contracts via
+// and SBDA's Licensed Business Workspace), reading real contracts via
 // /api/natcorp-contract-search. See capability-profile-flow.test.js for
 // the detailed per-behavior assertions; this file just confirms the old
 // AI-matching surface is gone and the new one is present.

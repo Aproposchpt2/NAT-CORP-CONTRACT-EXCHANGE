@@ -83,7 +83,7 @@ test('verified member login restores the permanent profile session', () => {
 // fit_score) was removed along with the whole website-discovery ->
 // verify-profile -> fit-score matching gate. The dashboard is now a
 // self-serve Industry -> Service Category -> Work Type taxonomy search
-// (same pattern as BDMS's Advisor Contract Search Portal and BODA's
+// (same pattern as BDMS's Advisor Contract Search Portal and SBDA's
 // Licensed Business Workspace), with a plain CA/NV/AZ state filter that
 // has no "resident state" concept at all -- there's no profile to be
 // resident to anymore.
@@ -126,7 +126,7 @@ test('dashboard opens a full-detail opportunity drawer, not an AI capability-pro
 // <main class="layout"> on the theory that only internal matching/
 // inventory tooling would ever need one. The new dashboard has a real,
 // intentional <aside class="sidebar"> for the Industry/Service Category/
-// Work Type taxonomy tree (same pattern as BDMS/BODA) -- that's not an
+// Work Type taxonomy tree (same pattern as BDMS/SBDA) -- that's not an
 // internal-tooling leak, so the structural assertion is updated to match
 // while keeping the actual internal-label leak checks unchanged.
 test('public dashboard does not expose internal matching and inventory cards', () => {
