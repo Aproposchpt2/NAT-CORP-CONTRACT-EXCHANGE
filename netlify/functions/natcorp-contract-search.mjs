@@ -1,12 +1,12 @@
 // NAT-CORP self-serve contract search -- replaces the old AI-capability-
 // matching gate (Business Intake -> Website Discovery -> Verify Profile ->
 // fit-score matches) with the same user-select taxonomy pattern already
-// live on BDMS's Advisor Contract Search Portal and BODA's Licensed
+// live on BDMS's Advisor Contract Search Portal and SBDA's Licensed
 // Business Workspace: Industry -> Service Category -> Work Type + keyword/
 // state/agency/closing/posted filters, zero AI relevance scoring.
 //
 // NAT-CORP's own Supabase project (judislfknmhofcgzyozc) is SEPARATE from
-// BDMS/BODA's (pwvstaigtdrccirdvqka), which is where
+// BDMS/SBDA's (pwvstaigtdrccirdvqka), which is where
 // cbrief_distribution_ready_opportunities and
 // cbrief_contract_taxonomy_assignments actually live -- NAT-CORP has no
 // direct DB credentials for that project. It does already have a working,
@@ -19,7 +19,7 @@
 //
 // Access model: NAT-CORP members are already paid/trial subscribers by the
 // time they reach this page (the /intake form issues a verified session
-// immediately -- there is no further paywall tier here), so unlike BODA's
+// immediately -- there is no further paywall tier here), so unlike SBDA's
 // vendor-licensed-search.mjs this returns full contract detail directly:
 // no teaser reduction, no locked fields.
 import { env } from './_shared/natcorp-db.mjs';
@@ -93,7 +93,7 @@ function buildTree(triples) {
 }
 
 // Full detail -- NAT-CORP members are already subscribers by the time they
-// reach this endpoint, so unlike BODA's teaserOpportunity() nothing here is
+// reach this endpoint, so unlike SBDA's teaserOpportunity() nothing here is
 // held back server-side. Taxonomy now arrives merged onto the row directly
 // (contract-distribution-feed.mjs joins it server-side on BDMS's end).
 function fullOpportunity(row) {
